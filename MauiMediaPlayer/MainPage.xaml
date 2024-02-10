@@ -31,6 +31,17 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
             HorizontalOptions="Center" />
+
+            <Label x:Name="counterText"
+                Text="Counter" 
+                Style="{StaticResource SubHeadline}"
+                   />
+            
+            <Label x:Name="pathText"
+                Text="Path" 
+                Style="{StaticResource NormalText}"
+                   />
+
         </VerticalStackLayout>
     </ScrollView>
 
