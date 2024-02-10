@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiMediaPlayer", "MauiMedi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngelHornetLibrary", "..\AngelHornetLibrary\AngelHornetLibrary.csproj", "{598B7096-FEA4-413D-A60A-E1CE689AB6A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "..\Sandbox\Sandbox.csproj", "{5684A0D0-FA5B-4379-898A-8EAD5CEB19D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{CA9EC9DD-9947-4336-8597-7608B524B3AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{598B7096-FEA4-413D-A60A-E1CE689AB6A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{598B7096-FEA4-413D-A60A-E1CE689AB6A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{598B7096-FEA4-413D-A60A-E1CE689AB6A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5684A0D0-FA5B-4379-898A-8EAD5CEB19D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5684A0D0-FA5B-4379-898A-8EAD5CEB19D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5684A0D0-FA5B-4379-898A-8EAD5CEB19D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5684A0D0-FA5B-4379-898A-8EAD5CEB19D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,6 +19,14 @@
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
 
+            <ListView x:Name="TestPlaylist">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Id}" Detail="{Binding Name}" TextColor="Black"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
             <Label
                 Text="Welcome to &#10;.NET Multi-platform App UI"
                 Style="{StaticResource SubHeadline}"
@@ -32,15 +40,15 @@
                 Clicked="OnCounterClicked"
             HorizontalOptions="Center" />
 
-            <Label x:Name="counterText"
+            <!--<Label x:Name="counterText"
                 Text="Counter" 
                 Style="{StaticResource SubHeadline}"
                    />
-            
+
             <Label x:Name="pathText"
                 Text="Path" 
                 Style="{StaticResource NormalText}"
-                   />
+                   />-->
 
         </VerticalStackLayout>
     </ScrollView>

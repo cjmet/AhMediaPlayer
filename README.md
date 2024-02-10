@@ -60,8 +60,15 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
-* ...
-	
+* The Desktop just repeatedly crashed with little information.  However, the notebook at home gave meaninful feedback and helped me track down the key issue.
+* MAUI: Data Annotations may not always work, use modelBuilder.Entity<Playlist>().HasKey(p => p.Id); instead.
+ 
+<br>
+ 	
 ## Dev Blog
-*  Initial Background Task
+*  [Key] Annotations do not seem to work in EF Maui.
+	* modelBuilder.Entity<Playlist>().HasKey(p => p.Id);
+*  Remember to set your Id properties to Public!
+*  Remember to set your Interfaces and DbContext to Public!
+*  A start on the Initial Background Task.
 *  My First MAUI App
