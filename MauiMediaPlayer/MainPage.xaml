@@ -22,7 +22,17 @@
             <ListView x:Name="TestPlaylist">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Id}" Detail="{Binding Name}" TextColor="Black"/>
+                        <!--<TextCell Text="{Binding LineItem}"  Detail="Id, Name, and Description" TextColor="Black"/>-->
+                        <!--<TextCell Text="{Binding LineItem}"  TextColor="Black"/>-->
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Id}" TextColor="Black"/>
+                                <Label Text=" - " />
+                                <Label Text="{Binding Name}" TextColor="Black"/>
+                                <Label Text=" - " />
+                                <Label Text="{Binding Description}" TextColor="Black"/>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -40,15 +50,16 @@
                 Clicked="OnCounterClicked"
             HorizontalOptions="Center" />
 
-            <!--<Label x:Name="counterText"
+            <Label x:Name="counterText"
                 Text="Counter" 
-                Style="{StaticResource SubHeadline}"
+                Style="{StaticResource NormalText}"
+                   HorizontalOptions="Center"
                    />
 
             <Label x:Name="pathText"
                 Text="Path" 
                 Style="{StaticResource NormalText}"
-                   />-->
+                   />
 
         </VerticalStackLayout>
     </ScrollView>

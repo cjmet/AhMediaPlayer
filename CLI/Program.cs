@@ -1,29 +1,68 @@
-﻿// See https://aka.ms/new-console-template for more information
-using AngelHornetLibrary.CLI;
+﻿
+using DataLibrary;
+using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 
-Console.WriteLine("Hello, World!");
-List<string> result = new List<string>();
-string searchStatus = "Searching...";
 
 
-Task task = new Task(() => { new AhsUtil().GetFilesRef("C:\\users\\cjmetcalfe\\Music", "*.mp3", ref result, ref searchStatus, SearchOption.AllDirectories); }, TaskCreationOptions.LongRunning);
-task.Start();
-
-Task.Run(() =>
+namespace MauiCli
 {
-    Console.WriteLine("Searching...");
-    do
+    internal class Program
     {
-        string tmp = searchStatus;
-        if (tmp == null) tmp = "null";
-        tmp = $"[{result.Count,10}] {result.LastOrDefault()} Searching: {tmp,80}\r";
-        Console.WriteLine(tmp);
-        Task.Delay(250).Wait();
-    } while (task.Status == TaskStatus.Running);
-    
-    foreach (string s in result)
-    {
-        Console.WriteLine(s);
+        static IServiceProvider CreateServiceCollection()
+        {
+            //  When using Dependency Injection,  
+            return new ServiceCollection()
+                .AddDbContext<PlaylistContext>()
+                .BuildServiceProvider();
+        }
+
+
+        static void Main(string[] args) // Main 
+        {
+
+            Console.WriteLine("Hello, World!");
+
+            {
+                var _dbContext = new PlaylistContext();
+                _dbContext.Database.EnsureDeleted();
+                _dbContext.Database.EnsureCreated();
+                Playlist playlist = new Playlist();
+                playlist.Name = "Test Playlist X";
+                playlist.Description = "Test Description X";
+                _dbContext.Playlists.Add(playlist);
+
+                _dbContext.Playlists.Add(new Playlist
+                {
+                    Name = "Test Playlist 11",
+                    Description = "Test Description 11"
+                });
+                _dbContext.Playlists.Add(new Playlist
+                {
+                    Name = "Test Playlist 12",
+                    Description = "Test Description 12"
+                });
+                _dbContext.SaveChanges();
+                _dbContext.Dispose();
+
+                // --- 
+
+                Debug.WriteLine("Reading Playlists from Db ...");
+                _dbContext = new PlaylistContext();
+                var playlists = _dbContext.Playlists.ToList();
+                _dbContext.Dispose();
+                int i = 0;
+                foreach (var p in playlists)
+                {
+                    Debug.WriteLine($"[{++i}] Playlist: {p.Name} - {p.Description}");
+                }
+                Debug.WriteLine("...");
+
+            }
+
+        }
     }
-    Console.WriteLine($"Found [{result.Count}] Mp3 files.");
-}).Wait();
+}

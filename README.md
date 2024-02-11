@@ -26,7 +26,10 @@ Create a music library Web API and simple Media Player
 
 * ### Music Player
 - [x] My First MAUI App
-- [ ] Initial Background Async Task
+- [x] Initial Test Background Async Task
+- [x] Initial EF Core Setup and Test
+- [ ] Move data files back out into a Maui Data Library for easier management. Particularly if we have any more migration issues and need to use copied and simplified CLI versions  of the data files for migrations.
+- [ ] Add the rest of the data structures back in, and to the Data Library.
 - [ ] Play a song
 - [ ] Play a static song from local storage
 - [ ] Create a Playlist class
@@ -35,7 +38,7 @@ Create a music library Web API and simple Media Player
 - [ ] Integrate with Music Library
 
 * ### Music Library
-- [ ] Search for MP3 files.
+- [ ] Search for MP3 files, with a Background Task.
 - [ ] Read Meta Data from MP3 files
 - [ ] Store in sqlite database
 - [ ] Integrate with Music Player
@@ -62,12 +65,13 @@ Create a music library Web API and simple Media Player
 ## Known Issues
 * The Desktop just repeatedly crashed with little information.  However, the notebook at home gave meaninful feedback and helped me track down the key issue.
 * MAUI: Data Annotations may not always work, use modelBuilder.Entity<Playlist>().HasKey(p => p.Id); instead.
- 
+
 <br>
- 	
+
 ## Dev Blog
-*  [Key] Annotations do not seem to work in EF Maui.
-	* modelBuilder.Entity<Playlist>().HasKey(p => p.Id);
+*  **MAKE SURE your DbSet data uses PROPERTIES and not fields nor variables!**
+  * USE: **public string Name { get; set; }**
+  * not: _public string Name;_
 *  Remember to set your Id properties to Public!
 *  Remember to set your Interfaces and DbContext to Public!
 *  A start on the Initial Background Task.
