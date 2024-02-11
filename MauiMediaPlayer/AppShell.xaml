@@ -5,11 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MauiMediaPlayer"
     Shell.FlyoutBehavior="Disabled"
-    Title="MauiMediaPlayer">
-
+    Title="MauiMediaPlayer"
+    >
+    
+    
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Route="MainPage" 
+        />
 
 </Shell>

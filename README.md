@@ -69,6 +69,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+*  Made progress on window size and location, as well as learning the initial basics of xaml layout.
 *  **MAKE SURE your DbSet data uses PROPERTIES and not fields nor variables!**
   * USE: **public string Name { get; set; }**
   * not: _public string Name;_

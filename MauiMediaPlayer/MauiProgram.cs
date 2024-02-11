@@ -14,6 +14,8 @@ namespace MauiMediaPlayer
 {
     public static class MauiProgram
     {
+
+        
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -67,6 +69,8 @@ namespace MauiMediaPlayer
                 Debug.WriteLine("...");
 
             }
+
+
 
 
             //return builder.Build();

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AngelHornetLibrary.CLI;
 using DataLibrary;
 
@@ -10,6 +12,7 @@ namespace MauiMediaPlayer
 {
     public partial class MainPage : ContentPage
     {
+
         int count = 0;
 
         private readonly PlaylistContext _dbContext;
@@ -20,7 +23,6 @@ namespace MauiMediaPlayer
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
         {
-
             _dbContext = dbcontext;
             InitializeComponent();
 
@@ -53,11 +55,12 @@ namespace MauiMediaPlayer
 
             Task task;
             //List<string> targetDirs = ["C:\\users\\cjmetcalfe\\Music"];
-            List<string> targetDirs = ["C:\\users\\cjmetcalfe", "c:\\users\\khaai",  ];
+            List<string> targetDirs = ["C:\\users\\cjmetcalfe", "c:\\users\\khaai", "k:\\",  ];
             task = new Task(() =>
             {
                 foreach (var dir in targetDirs)
                 {
+                    Debug.WriteLine($"\n*** Searching *** \n::> {dir}\n");
                     new AhsUtil().GetFilesRef(dir, "*.mp3", ref result, ref searchStatus, SearchOption.AllDirectories);
                 }
             }, TaskCreationOptions.LongRunning);
@@ -66,11 +69,16 @@ namespace MauiMediaPlayer
 
             Task.Run(() =>
             {
+                var spinner = 0;
                 do
                 {
-                    string tmp = searchStatus;
-                    if (tmp == null) tmp = "null";
-                    tmp = $"[{result.Count,10}] {result.LastOrDefault()} \nSearching: {tmp}";
+                    //string tmp = searchStatus;
+                    //if (tmp == null) tmp = "null";
+                    var tmp = $"{searchStatus}";
+                    var maxLength = 60;
+                    if (tmp.Length > maxLength) tmp = "" + tmp.Substring(tmp.Length - maxLength, maxLength);
+                    var spin = "|/-\\"[spinner++ % 4];
+                    tmp = $"[{result.Count}] {spin} {tmp}";
                     Application.Current.MainPage.Dispatcher.Dispatch(() => pathText.Text = tmp);
                     Task.Delay(250).Wait();
                 } while (task.Status == TaskStatus.Running);
