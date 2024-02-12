@@ -28,7 +28,7 @@ namespace MauiMediaPlayer
 
             // BONUS -> Center the window
             window.X = (displayInfo.Width / displayInfo.Density - window.Width) / 2;
-            window.Y = (displayInfo.Height / displayInfo.Density - window.Height) / 2;
+            window.Y = (displayInfo.Height / displayInfo.Density - window.Height) / 2 - borders/2;
 
             Debug.WriteLine($"\n************\nDisplay Info: {displayInfo.Width}x{displayInfo.Height} * {displayInfo.Density}");
             Debug.WriteLine($"Window Info: {window.Width}x{window.Height} @ {window.X}x{window.Y}\n");

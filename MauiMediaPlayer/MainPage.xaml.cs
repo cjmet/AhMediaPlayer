@@ -55,7 +55,7 @@ namespace MauiMediaPlayer
 
             Task task;
             //List<string> targetDirs = ["C:\\users\\cjmetcalfe\\Music"];
-            List<string> targetDirs = ["C:\\users\\cjmetcalfe", "c:\\users\\khaai", "k:\\",  ];
+            List<string> targetDirs = ["C:\\users\\cjmetcalfe\\music", "c:\\users\\khaai\\music",  ];
             task = new Task(() =>
             {
                 foreach (var dir in targetDirs)

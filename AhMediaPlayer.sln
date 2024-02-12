@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiMediaPlayer", "MauiMedi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngelHornetLibrary", "..\AngelHornetLibrary\AngelHornetLibrary.csproj", "{598B7096-FEA4-413D-A60A-E1CE689AB6A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{CA9EC9DD-9947-4336-8597-7608B524B3AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maui Cli", "CLI\Maui Cli.csproj", "{CA9EC9DD-9947-4336-8597-7608B524B3AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "..\Sandbox\Sandbox.csproj", "{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

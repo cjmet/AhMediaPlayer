@@ -13,7 +13,7 @@ namespace CLI
 
             Task task = new Task(() =>
             {
-                new AhsUtil().GetFilesRef("C:\\users\\cjmetcalfe\\Music", "*.mp3", ref result, ref searchStatus, SearchOption.AllDirectories);
+                //new AhsUtil().GetFilesRef("C:\\users\\cjmetcalfe\\Music", "*.mp3", ref result, ref searchStatus, SearchOption.AllDirectories);
             }, TaskCreationOptions.LongRunning);
             task.Start();
 

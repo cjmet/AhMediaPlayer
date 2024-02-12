@@ -24,11 +24,21 @@ https://code-you.org/
 ## Project Plan
 Create a music library Web API and simple Media Player
 
+## Current Questions
+* How to communicate between the background task and main task?
+   * Version 1 used unsafe refs
+   * Version 2 is using pulling and locking the data from the Background Task
+   * Version 3 is using callback with locking, concurrency, and done signal from the background task to the main.
+*  How to Async return a value, non-blocking, from a blockable operation
+
 * ### Music Player
 - [x] My First MAUI App
 - [x] Initial Test Background Async Task
+- [x] Improved Background Task
 - [x] Initial EF Core Setup and Test
-- [ ] Move data files back out into a Maui Data Library for easier management. Particularly if we have any more migration issues and need to use copied and simplified CLI versions  of the data files for migrations.
+- [x] Add Callback to the Background Task
+- [ ] Integrate FileFind Callback with EF Core.
+- [ ] Move data files back out into a DataLibrary .Net8 for easier management. Particularly if we have any more migration issues and need to use copied and simplified CLI versions  of the data files for migrations.
 - [ ] Add the rest of the data structures back in, and to the Data Library.
 - [ ] Play a song
 - [ ] Play a static song from local storage
@@ -63,12 +73,13 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
-* The Desktop just repeatedly crashed with little information.  However, the notebook at home gave meaninful feedback and helped me track down the key issue.
-* MAUI: Data Annotations may not always work, use modelBuilder.Entity<Playlist>().HasKey(p => p.Id); instead.
+* ...
 
 <br>
 
 ## Dev Blog
+* Rewrote FindFiles for the third time, to use a callback from the background task to the main task.
+*  Improved the Background Task in preparation for using an action task to integrate it with EF Core
 *  Made progress on window size and location, as well as learning the initial basics of xaml layout.
 *  **MAKE SURE your DbSet data uses PROPERTIES and not fields nor variables!**
   * USE: **public string Name { get; set; }**
