@@ -39,12 +39,16 @@ Create a music library Web API and simple Media Player
 - [x] Add Callback Ability to the Background Task
 - [ ] Integrate FileFind, Callback, EF Core, and Maui
 - [x] Move data files back out into a DataLibrary for easier management. 
-- [ ] Add the rest of the data structures back in, and to the Data Library.
+- [x] Add the rest of the data structures back in, and to the Data Library.
+- [ ] Work on general logic around the DB and App
+- [ ] Read and use Meta Data from MP3 files
+- [ ] Uniquely ID each song to eliminate duplicates
 - [ ] Play a song
 - [ ] Play a static song from local storage
 - [ ] Create a Playlist class
 - [ ] Play as song from a static Playlist
 - [ ] Play more than one song from a static Playlist
+- [ ] Work on the UI Layout
 - [ ] Integrate with Music Library
 
 * ### Music Library
@@ -82,11 +86,13 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
-* ...
+* %AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui
 
 <br>
 
 ## Dev Blog
+* Did more integration with FileFind, Callback, EF Core, and Maui.
+  * I'm not at all certain where various peices of code should go.  It's all very messy right now while I'm still learning to crawl around slowly 
 * **%AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui**
   * This means the database files were being stored in different locations.
   * Win11 is: "C:\Users\Username\AppData\Local\test_playlists.db"

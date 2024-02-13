@@ -10,21 +10,10 @@ namespace DataLibrary
     // All the code in this file is included in all platforms.
     public class Playlist
     {
-        //public Playlist() : this("null", null) { }
-        //public Playlist(string name) : this(name, null) { }
-        //public Playlist(string name, string description)
-        //public Playlist
-        //{
-        //    Name = name;
-        //    Description = description;
-        //}
-
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public string? LineItem { get => $"{Id} - {Name} - {Description}"; }
-
-        //public List<Song> Songs { get; set; }
+        public List<Song> Songs { get; set; }
     }
 }

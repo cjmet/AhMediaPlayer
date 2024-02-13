@@ -199,11 +199,11 @@ namespace MauiCli
             {
                 Console.WriteLine("Adding Songs ... ");
                 _dbContext = new PlaylistContext();
-                _dbContext.Songs.Add(new Song { Title = "Test Song 1", Comment = "Comment 1" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 2", Comment = "Comment 1" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 3", Comment = "Comment 1" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 4", Comment = "Comment 1" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 5", Comment = "Comment 1" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 1", Comment = "Comment 1", PathName ="File1.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 2", Comment = "Comment 1", PathName = "File2.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 3", Comment = "Comment 1", PathName = "File3.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 4", Comment = "Comment 1", PathName = "File4.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 5", Comment = "Comment 1", PathName = "File5.mp3" });
                 _dbContext.SaveChanges();
                 _dbContext.Dispose();
             }
@@ -215,7 +215,7 @@ namespace MauiCli
             i = 0;
             foreach (var s in songs)
             {
-                Console.WriteLine($"[{++i}] Song: {s.Title} - {s.Comment}");
+                Console.WriteLine($"[{++i}] {s.Title,-30} - {s.PathName,-30} - {s.Comment,-30}");
             }
             Console.WriteLine("...");
             Console.WriteLine("\n\n");

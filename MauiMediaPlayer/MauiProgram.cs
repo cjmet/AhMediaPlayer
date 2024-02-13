@@ -54,6 +54,8 @@ namespace MauiMediaPlayer
                 var playlists = _dbContext.Playlists.ToList();
                 var songs = _dbContext.Songs.ToList();
                 _dbContext.Dispose();
+
+                
                 int i = 0;
                 foreach (var p in playlists)
                 {
@@ -62,10 +64,21 @@ namespace MauiMediaPlayer
 
                 Debug.WriteLine("\n=== =================== ===\n");
 
+                _dbContext = new PlaylistContext();
                 foreach (var s in songs)
                 {
                     Debug.WriteLine($"[{++i}] Songs: {s.Title} - {s.Comment}");
                 }
+                foreach (var s in songs)
+                {
+                    _dbContext.Songs.Remove(s); // cjm
+                }
+                _dbContext.SaveChanges();
+                _dbContext.Dispose();
+
+                _dbContext = new PlaylistContext();
+                //_dbContext.Songs.Add(new Song { Title = "Songs Database Erased", Comment = "Bye, Bye, Baby, Goodbye!", PathName = "Eraser.mp3" });
+                _dbContext.SaveChanges();
 
                 Debug.WriteLine("\n=== =================== ===\n");
             }

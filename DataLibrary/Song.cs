@@ -13,16 +13,16 @@ namespace DataLibrary
     {
         [Key]
         public int Id { get; set; }
-        //public string FileName { get; set; }
+        public string PathName { get; set; }
         public string Title { get; set; }
         public string Comment { get; set; }
-        public string? LineItem { get => $"{Id} - {Title} - {Comment}"; }
-        //public string Artist { get; set; }
-        //public string Album { get; set; }
-        //public string Genre { get; set; }
-        //public int Year { get; set; }
-        //public string Length { get; set; }
-        //public List<Playlist> Playlists;
-
+        public string LineItem { get => $"{Id} - {Title} - {Comment}"; }
+        public string? Artist { get; set; }
+        public string? Album { get; set; }
+        public string? Genre { get; set; }
+        public int? Year { get; set; }
+        public string? Length { get; set; }
+        public List<Playlist> Playlists;
     }
 }
+
