@@ -12,26 +12,36 @@ namespace DataLibrary
     {
         private const string dbName = "test_playlists.db";
         public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<Song> Songs { get; set; }
         public string DbPath { get; private set; }
         public bool VerboseSQL { get; set; } = true;
 
         public PlaylistContext()
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
+            // The Win11 and Maui ApplicationData folders are different. Use .Desktop instead.  // cjm - change this later to use the correct folder.
+#if DEBUG
+            var folder = Environment.SpecialFolder.DesktopDirectory;
+#else
+            var folder = Environment.SpecialFolder.ApplicationData;
+#endif
             var path = Environment.GetFolderPath(folder);
             DbPath = Path.Join(path, dbName);
-            ConsoleLog($"\nDbContextId: {this.ContextId}\n");
+            Debug.WriteLine($"Folder: {folder}");   
+            Debug.WriteLine($"Path: {path}");
+            Debug.WriteLine($"DbPath   25: {DbPath}");
+            Debug.WriteLine($"DbContextId: {this.ContextId}");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-             .UseSqlite($"Data Source={DbPath}")
-             .EnableSensitiveDataLogging()
-             .LogTo(ConsoleLog,
-                 new[] { DbLoggerCategory.Database.Command.Name },
-                 LogLevel.Information,
-                 DbContextLoggerOptions.None
+                //.UseSqlite($"Data Source=c:\\tmp\\test.db") // cjm - hard coded path works, but the DbPath does not when running as an app.
+                .UseSqlite($"Data Source={DbPath}") // cjm
+                .EnableSensitiveDataLogging()
+                .LogTo(ConsoleLog,
+                new[] { DbLoggerCategory.Database.Command.Name },
+                LogLevel.Information,
+                DbContextLoggerOptions.None
                  );
         }
 

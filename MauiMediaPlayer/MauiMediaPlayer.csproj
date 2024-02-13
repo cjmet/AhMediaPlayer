@@ -58,32 +58,31 @@
 	  <AndroidResource Remove="Platforms\iOS\**" />
 	  <AndroidResource Remove="Platforms\MacCatalyst\**" />
 	  <AndroidResource Remove="Platforms\Tizen\**" />
+	  <Compile Remove="DataLibrary\**" />
 	  <Compile Remove="Platforms\Android\**" />
 	  <Compile Remove="Platforms\iOS\**" />
 	  <Compile Remove="Platforms\MacCatalyst\**" />
 	  <Compile Remove="Platforms\Tizen\**" />
+	  <EmbeddedResource Remove="DataLibrary\**" />
 	  <EmbeddedResource Remove="Platforms\Android\**" />
 	  <EmbeddedResource Remove="Platforms\iOS\**" />
 	  <EmbeddedResource Remove="Platforms\MacCatalyst\**" />
 	  <EmbeddedResource Remove="Platforms\Tizen\**" />
+	  <MauiCss Remove="DataLibrary\**" />
 	  <MauiCss Remove="Platforms\Android\**" />
 	  <MauiCss Remove="Platforms\iOS\**" />
 	  <MauiCss Remove="Platforms\MacCatalyst\**" />
 	  <MauiCss Remove="Platforms\Tizen\**" />
+	  <MauiXaml Remove="DataLibrary\**" />
 	  <MauiXaml Remove="Platforms\Android\**" />
 	  <MauiXaml Remove="Platforms\iOS\**" />
 	  <MauiXaml Remove="Platforms\MacCatalyst\**" />
 	  <MauiXaml Remove="Platforms\Tizen\**" />
+	  <None Remove="DataLibrary\**" />
 	  <None Remove="Platforms\Android\**" />
 	  <None Remove="Platforms\iOS\**" />
 	  <None Remove="Platforms\MacCatalyst\**" />
 	  <None Remove="Platforms\Tizen\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Remove="DataLibrary\ISongRepository.cs" />
-	  <Compile Remove="DataLibrary\Song.cs" />
-	  <Compile Remove="DataLibrary\SongRepository.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -106,6 +105,11 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\AngelHornetLibrary\AngelHornetLibrary.csproj" />
+	  <ProjectReference Include="..\DataLibrary\DataLibrary.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PRIResource Remove="DataLibrary\**" />
 	</ItemGroup>
 
 </Project>

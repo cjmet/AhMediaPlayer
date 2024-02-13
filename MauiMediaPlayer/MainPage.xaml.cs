@@ -23,19 +23,20 @@ namespace MauiMediaPlayer
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
         {
-            _dbContext = dbcontext;
             InitializeComponent();
-
-
-            _dbContext.Playlists.Add(new Playlist { Name = "Test Playlist 1", Description = "No Description" });
-            _dbContext.Playlists.Add(new Playlist { Name = "Test Playlist 2", Description = "Now Words to Describe it" });
-            //_dbContext.Songs.Add(new Song { Title = "Test Song 1", Comment = "Comment 1" });
-            //_dbContext.Songs.Add(new Song { Title = "Test Song 2", Comment = "Comment 1" });
-            //_dbContext.Songs.Add(new Song { Title = "Test Song 3", Comment = "Comment 1" });
-            _dbContext.SaveChanges();
-
+            _dbContext = dbcontext;
+//#if DEBUG
+//            const string dbName = "test_playlists.db";
+//            var folder = Environment.SpecialFolder.LocalApplicationData;
+//            var path = Environment.GetFolderPath(folder);
+//            var DbPath = Path.Join(path, dbName);
+//            Debug.WriteLine($"\n**********************");
+//            Debug.WriteLine($"MAUI  DbPath: {DbPath}");
+//            Debug.WriteLine($"\n**********************\n");
+//#endif
+        
             TestPlaylist.ItemsSource = _dbContext.Playlists.ToList();
-
+            TestSonglist.ItemsSource = _dbContext.Songs.ToList();
 
 
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

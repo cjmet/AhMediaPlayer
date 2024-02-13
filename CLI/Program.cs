@@ -31,23 +31,28 @@ namespace MauiCli
 
             CliMenu mainMenu = new CliMenu();
             mainMenu.Message = "\nMain Menu";
-            mainMenu.AddItem(new List<string> { "Find MP3 Files in ~/Music" }, () => { 
-                FindFilesQueueFunc(new List<string> 
-                    { "c:\\users\\cjmetcalfe\\music", "c:\\users\\khaai\\music" }); });
-            mainMenu.AddItem(new List<string> { "Search C:\\" }, () => {
+            mainMenu.AddItem(new List<string> { "Find MP3 Files in ~/Music" }, () =>
+            {
+                FindFilesQueueFunc(new List<string>
+                    { "c:\\users\\cjmetcalfe\\music", "c:\\users\\khaai\\music" });
+            });
+            mainMenu.AddItem(new List<string> { "Search C:\\" }, () =>
+            {
                 FindFilesQueueFunc(new List<string>
                     { "C:\\" });
             });
-            mainMenu.AddItem(new List<string> { "Search M:\\" }, () => {
+            mainMenu.AddItem(new List<string> { "Search M:\\" }, () =>
+            {
                 FindFilesQueueFunc(new List<string>
                     { "M:\\" });
             });
-            mainMenu.AddItem(new List<string> { "DbContext Test" }, () => { DbContextTest(); });
+            mainMenu.AddItem(new List<string> { "Db Read" }, () => { DbContextTest(false); });
+            mainMenu.AddItem(new List<string> { "Db Reset" }, () => { DbContextTest(true); });
             mainMenu.AddItem(new List<string> { "Quit", "Exit" }, () => { mainMenu.Exit(); });
             mainMenu.AddDefault(() => { });
-        
-            
-            
+
+
+
             mainMenu.Loop();
             Environment.Exit(0);
         }
@@ -56,7 +61,7 @@ namespace MauiCli
 
         // ========================================
 
-        
+
         public static void FindFilesQueueFunc(List<string> paths)
         {
             //Action<ConcurrentQueue<string>, bool> _callback = (ConcurrentQueue<string> q, bool d) => { string r; while (q.TryDequeue(out r)) { Console.WriteLine(r); } };
@@ -75,7 +80,7 @@ namespace MauiCli
         public static void callback(ConcurrentQueue<string> queue, bool done = false)
         {
             string result = "result";
-            int i = 0; 
+            int i = 0;
 
             int start = totalFiles;
             Console.WriteLine($"Starting at [{start.ToString("N0")}]+[{i.ToString("N0")}] and Attempting to Read Results");
@@ -85,7 +90,7 @@ namespace MauiCli
 
             if (done) Console.WriteLine("*** FindFiles Completed. ***");
             Debug.WriteLine($"Exiting Callback [{done}");
-            return;       
+            return;
         }
 
 
@@ -93,7 +98,7 @@ namespace MauiCli
         public static void FindFilesTaskFunc(List<string> paths)
         {
             int spinner = 0;
-            FindFilesTask task = new FindFilesTask(paths , "*.mp3", SearchOption.AllDirectories);
+            FindFilesTask task = new FindFilesTask(paths, "*.mp3", SearchOption.AllDirectories);
             do
             {
                 var spin = "|/-\\"[spinner++ % 4];
@@ -125,48 +130,96 @@ namespace MauiCli
 
 
 
-        public static void DbContextTest()
+        public static void DbContextTest(bool reSeed)
         {
 
             Console.WriteLine("DbContext Test");
-            Console.WriteLine("Test Disabled.");
-            Console.WriteLine();
-            return;
-
+            //Console.WriteLine("Test Disabled.\n");  return;
             var _dbContext = new PlaylistContext();
-            _dbContext.Database.EnsureDeleted();
+            Console.WriteLine($"DbPath: {_dbContext.DbPath}\n");
+            Console.WriteLine($"ContextId: {_dbContext.ContextId}");
             _dbContext.Database.EnsureCreated();
-            Playlist playlist = new Playlist();
-            playlist.Name = "Test Playlist X";
-            playlist.Description = "Test Description X";
-            _dbContext.Playlists.Add(playlist);
-
-            _dbContext.Playlists.Add(new Playlist
-            {
-                Name = "Test Playlist 11",
-                Description = "Test Description 11"
-            });
-            _dbContext.Playlists.Add(new Playlist
-            {
-                Name = "Test Playlist 12",
-                Description = "Test Description 12"
-            });
-            _dbContext.SaveChanges();
             _dbContext.Dispose();
+
+            if (reSeed)
+            {
+                Console.WriteLine("Adding Playlists ...");
+                _dbContext = new PlaylistContext();
+
+                _dbContext.Database.EnsureDeleted();
+                _dbContext.Database.EnsureCreated();
+
+                //Environment.Exit(0);
+
+                Playlist playlist = new Playlist();
+                playlist.Name = "Test Playlist CLI";
+                playlist.Description = "Test Description CLI";
+                _dbContext.Playlists.Add(playlist);
+
+                _dbContext.Playlists.Add(new Playlist
+                {
+                    Name = "Test Playlist 11",
+                    Description = "Test Description 11"
+                });
+                _dbContext.Playlists.Add(new Playlist
+                {
+                    Name = "Test Playlist 12",
+                    Description = "Test Description 12"
+                });
+                _dbContext.Playlists.Add(new Playlist
+                {
+                    Name = "Test Playlist 23",
+                    Description = "Test Description 23"
+                });
+                _dbContext.Playlists.Add(new Playlist
+                {
+                    Name = "Test Playlist 24",
+                    Description = "Test Description 24"
+                });
+                _dbContext.SaveChanges();
+                _dbContext.Dispose();
+            }
 
             // --- 
 
-            Debug.WriteLine("Reading Playlists from Db ...");
+            Console.WriteLine("Reading Playlists from Db ...");
             _dbContext = new PlaylistContext();
             var playlists = _dbContext.Playlists.ToList();
             _dbContext.Dispose();
             int i = 0;
             foreach (var p in playlists)
             {
-                Debug.WriteLine($"[{++i}] Playlist: {p.Name} - {p.Description}");
+                Console.WriteLine($"[{++i}] Playlist: {p.Name} - {p.Description}");
             }
-            Debug.WriteLine("...");
+            Console.WriteLine("...");
             Console.WriteLine("\n\n");
+
+
+            if (reSeed)
+            {
+                Console.WriteLine("Adding Songs ... ");
+                _dbContext = new PlaylistContext();
+                _dbContext.Songs.Add(new Song { Title = "Test Song 1", Comment = "Comment 1" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 2", Comment = "Comment 1" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 3", Comment = "Comment 1" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 4", Comment = "Comment 1" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 5", Comment = "Comment 1" });
+                _dbContext.SaveChanges();
+                _dbContext.Dispose();
+            }
+
+            Console.WriteLine("Reading Songs from Db ...");
+            _dbContext = new PlaylistContext();
+            var songs = _dbContext.Songs.ToList();
+            _dbContext.Dispose();
+            i = 0;
+            foreach (var s in songs)
+            {
+                Console.WriteLine($"[{++i}] Song: {s.Title} - {s.Comment}");
+            }
+            Console.WriteLine("...");
+            Console.WriteLine("\n\n");
+
         }
 
 

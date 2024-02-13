@@ -20,27 +20,60 @@
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
 
-            <ListView x:Name="TestPlaylist">
+            <Label
+                Text="Test Text Before the Lists"
+                Style="{StaticResource NormalText}"
+                 />
+
+            <ListView x:Name="TestPlaylist" MaximumHeightRequest="100">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <!--<TextCell Text="{Binding LineItem}"  Detail="Id, Name, and Description" TextColor="Black"/>-->
+                        <TextCell Text="{Binding LineItem}"  Detail="Id, Name, and Description" TextColor="Black"/>
                         <!--<TextCell Text="{Binding LineItem}"  TextColor="Black"/>-->
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
+                        <!--<ViewCell>
+                            <StackLayout Orientation="Horizontal" >
                                 <Label Text="{Binding Id}" TextColor="Black"/>
                                 <Label Text=" - " />
                                 <Label Text="{Binding Name}" TextColor="Black"/>
                                 <Label Text=" - " />
                                 <Label Text="{Binding Description}" TextColor="Black"/>
                             </StackLayout>
-                        </ViewCell>
+                        </ViewCell>-->
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
+            <Label
+                Text="Test Text Between Lists"
+                Style="{StaticResource NormalText}"
+                 />
+
+            <ListView x:Name="TestSonglist" MaximumHeightRequest="100">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding LineItem}"  Detail="Id, Title, and Comment" TextColor="Black"/>
+                        <!--<TextCell Text="{Binding LineItem}"  TextColor="Black"/>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" >
+                                <Label Text="{Binding Id}" TextColor="Black"/>
+                                <Label Text=" - " />
+                                <Label Text="{Binding Title}" TextColor="Black"/>
+                                <Label Text=" - " />
+                                <Label Text="{Binding Comment}" TextColor="Black"/>
+                            </StackLayout>
+                        </ViewCell>-->
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label
+                Text="Test Text After the Lists"
+                Style="{StaticResource NormalText}"
+                 />
+
             <!--<Label
                 Text="Welcome to &#10;.NET Multi-platform App UI"
-                Style="{StaticResource SubHeadline}"
+                Style="{StaticResource NormalText}"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I" />-->
 
@@ -55,7 +88,7 @@
                 Text="Counter" 
                 Style="{StaticResource NormalText}"
                    HorizontalOptions="Center" />
-
+            
             <Label x:Name="pathText"
                 Text="Path" 
                 Style="{StaticResource NormalText}"

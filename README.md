@@ -21,9 +21,6 @@ https://code-you.org/
 
 <br>
 
-## Project Plan
-Create a music library Web API and simple Media Player
-
 ## Current Questions
 * How to communicate between the background task and main task?
    * Version 1 used unsafe refs
@@ -31,14 +28,17 @@ Create a music library Web API and simple Media Player
    * Version 3 is using callback with locking, concurrency, and done signal from the background task to the main.
 *  How to Async return a value, non-blocking, from a blockable operation
 
+## Project Plan
+Create a music library Web API and simple Media Player
+
 * ### Music Player
 - [x] My First MAUI App
 - [x] Initial Test Background Async Task
 - [x] Improved Background Task
 - [x] Initial EF Core Setup and Test
-- [x] Add Callback to the Background Task
-- [ ] Integrate FileFind Callback with EF Core.
-- [ ] Move data files back out into a DataLibrary .Net8 for easier management. Particularly if we have any more migration issues and need to use copied and simplified CLI versions  of the data files for migrations.
+- [x] Add Callback Ability to the Background Task
+- [ ] Integrate FileFind, Callback, EF Core, and Maui
+- [x] Move data files back out into a DataLibrary for easier management. 
 - [ ] Add the rest of the data structures back in, and to the Data Library.
 - [ ] Play a song
 - [ ] Play a static song from local storage
@@ -63,12 +63,21 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Project Requirements
-- [ ] Async Task
-- [ ] List or Dictionary
+- [x] Async Task
+- [x] List or Dictionary
 - [ ] API
 - [ ] Logging
 - [ ] Unit Testing
 
+<br>
+
+## Instructions
+* Requires: Visual Studio 2022, C#12, .Net 8, .Net MAUI
+* Use: Solution Configuration: Debug
+  * This will put the DB on your desktop so that the CLI, API, and MAUI all use the same DB.  Otherwise, chaos ensues.
+* You'll Also need: https://github.com/cjmet/AngelHornetLibrary
+  * It has the File Search code.
+* ...
 
 <br>
 
@@ -78,13 +87,17 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* **%AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui**
+  * This means the database files were being stored in different locations.
+  * Win11 is: "C:\Users\Username\AppData\Local\test_playlists.db"
+  * MAUI  is: "C:\Users\Username\AppData\Local\Packages\ ... mauimediaplayer ... \LocalCache\Local\test_playlists.db"
 * Rewrote FindFiles for the third time, to use a callback from the background task to the main task.
-*  Improved the Background Task in preparation for using an action task to integrate it with EF Core
-*  Made progress on window size and location, as well as learning the initial basics of xaml layout.
-*  **MAKE SURE your DbSet data uses PROPERTIES and not fields nor variables!**
+* Improved the Background Task in preparation for using an action task to integrate it with EF Core
+* Made progress on window size and location, as well as learning the initial basics of xaml layout.
+* **MAKE SURE your DbSet data uses PROPERTIES and not fields nor variables!**
   * USE: **public string Name { get; set; }**
   * not: _public string Name;_
-*  Remember to set your Id properties to Public!
-*  Remember to set your Interfaces and DbContext to Public!
-*  A start on the Initial Background Task.
-*  My First MAUI App
+* Remember to set your Id properties to Public!
+* Remember to set your Interfaces and DbContext to Public!
+* A start on the Initial Background Task.
+* My First MAUI App

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Maui.Controls.Platform.Compatibility;
+using System.Diagnostics;
 
 namespace MauiMediaPlayer
 {
@@ -11,20 +12,25 @@ namespace MauiMediaPlayer
             MainPage = new AppShell();
         }
 
+        const int SCALE = 720;
         protected override Window CreateWindow(IActivationState activationState)
         {
             var window = base.CreateWindow(activationState);
             // if(OperatingSystem.IsWindows())  // cjm - might need this if it causes issues on other platforms
             // Change the window Size
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
-            window.Width = 720; window.Height = 720;
+            window.Width = SCALE; window.Height = SCALE;
 
             // Fit Win 11 Height
-            var borders = 48;
-            window.Height = displayInfo.Height / displayInfo.Density - borders; // * displayInfo.Density;
-
-            // 16:9 Aspect Ratio, Portrait Mode, This will be similar to a phone  Phones are 2.22h instead of 1.78h
-            window.Width = window.Height * 9 / 16;
+            int borders = 48;
+            int width = (int) (SCALE * 9 / 16);         // 16:9 aspect ratio Widescreen 
+            int height = SCALE;
+            int phoneHeight = (int) (2.22 * width);     // 2.22 is the aspect ratio of a typical phone
+            int maxDisplayHeight = (int) (displayInfo.Height / displayInfo.Density - borders); // * displayInfo.Density;
+            if (phoneHeight < maxDisplayHeight) height = phoneHeight;
+            else height = maxDisplayHeight;
+            window.Width = width;
+            window.Height = height;
 
             // BONUS -> Center the window
             window.X = (displayInfo.Width / displayInfo.Density - window.Width) / 2;

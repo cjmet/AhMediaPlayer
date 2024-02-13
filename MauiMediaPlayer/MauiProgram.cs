@@ -15,9 +15,13 @@ namespace MauiMediaPlayer
     public static class MauiProgram
     {
 
-        
+
         public static MauiApp CreateMauiApp()
         {
+            Debug.WriteLine("\n=== ======================================== ===\n");
+            Debug.WriteLine($"AppInfo.PackageName: {AppInfo.PackageName}");
+            Debug.WriteLine("\n=== ======================================== ===\n");
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -31,7 +35,7 @@ namespace MauiMediaPlayer
 
             builder.Services.AddDbContext<PlaylistContext>();
             builder.Services.AddTransient<IPlaylistRepository, PlaylistRepository>();
-            //builder.Services.AddTransient<ISongRepository, SongRepository>();
+            builder.Services.AddTransient<ISongRepository, SongRepository>();
             builder.Services.AddTransient<MainPage>();
 
 #if DEBUG
@@ -40,38 +44,31 @@ namespace MauiMediaPlayer
             var result = builder.Build();
 
             {
+                Debug.WriteLine("\n\n*** Testing DbContext ***\n");
+
                 var _dbContext = new PlaylistContext();
-                _dbContext.Database.EnsureDeleted();
-                _dbContext.Database.EnsureCreated();    
-                Playlist playlist = new Playlist();
-                playlist.Name = "Test Playlist X";
-                playlist.Description = "Test Description X";
-                _dbContext.Playlists.Add(playlist);
+                Debug.WriteLine($"Win11 DbPath: {_dbContext.DbPath}\n");
+                Debug.WriteLine($"ContextId   : {_dbContext.ContextId}");
+                _dbContext.Database.EnsureCreated();
 
-                _dbContext.Playlists.Add(new Playlist { Name = "Test Playlist 11", 
-                    Description = "Test Description 11"
-                });
-                _dbContext.Playlists.Add(new Playlist { Name = "Test Playlist 12", 
-                    Description = "Test Description 12" });
-                _dbContext.SaveChanges();
-                _dbContext.Dispose();
-
-                // --- 
-
-                _dbContext = new PlaylistContext();
                 var playlists = _dbContext.Playlists.ToList();
+                var songs = _dbContext.Songs.ToList();
                 _dbContext.Dispose();
-                int i = 0; 
+                int i = 0;
                 foreach (var p in playlists)
                 {
                     Debug.WriteLine($"[{++i}] Playlist: {p.Name} - {p.Description}");
-                }   
-                Debug.WriteLine("...");
+                }
 
+                Debug.WriteLine("\n=== =================== ===\n");
+
+                foreach (var s in songs)
+                {
+                    Debug.WriteLine($"[{++i}] Songs: {s.Title} - {s.Comment}");
+                }
+
+                Debug.WriteLine("\n=== =================== ===\n");
             }
-
-
-
 
             //return builder.Build();
             return result;
