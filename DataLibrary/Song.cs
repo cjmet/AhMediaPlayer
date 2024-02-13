@@ -14,6 +14,7 @@ namespace DataLibrary
         [Key]
         public int Id { get; set; }
         public string PathName { get; set; }
+        public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
         public string Title { get; set; }
         public string Comment { get; set; }
         public string LineItem { get => $"{Id} - {Title} - {Comment}"; }

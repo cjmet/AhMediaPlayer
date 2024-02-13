@@ -24,9 +24,15 @@ https://code-you.org/
 ## Current Questions
 * How to communicate between the background task and main task?
    * Version 1 used unsafe refs
-   * Version 2 is using pulling and locking the data from the Background Task
+   * Version 2 is using pulling and locking the data from the Background Task, possibly leaving the background task to never get cleaned up.
    * Version 3 is using callback with locking, concurrency, and done signal from the background task to the main.
-*  How to Async return a value, non-blocking, from a blockable operation
+* How to Async return a value, non-blocking, from a blockable operation.  (See Sandbox)
+* DataLibary -> Models, Interfaces, and (Services or Contexts)
+* Where do you put general code in a Maui App?  /ProgramLogic?
+* Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
+* More info on lockable objects and concurrency
+  * Maybe a generic lockable object extension class?   locked<T>? 
+
 
 ## Project Plan
 Create a music library Web API and simple Media Player
@@ -91,6 +97,9 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* General House Keeping and cleaning up various experiment messes made while learning.
+  * Constants.cs
+* Changed the Title in Appshell.xaml
 * Did more integration with FileFind, Callback, EF Core, and Maui.
   * I'm not at all certain where various peices of code should go.  It's all very messy right now while I'm still learning to crawl around slowly 
 * **%AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui**
@@ -105,5 +114,7 @@ Create a music library Web API and simple Media Player
   * not: _public string Name;_
 * Remember to set your Id properties to Public!
 * Remember to set your Interfaces and DbContext to Public!
+* Move DataLibrary to a .Net Library for compatibility with API and CLI projects
+  * A MauiLibrary is not the same as a .Net Library.  The MauiLibrary may? only compatible with Maui?  While the .Net Library works with API and CLI as well.  This might be an issue later if I try to develop an Android app.
 * A start on the Initial Background Task.
 * My First MAUI App

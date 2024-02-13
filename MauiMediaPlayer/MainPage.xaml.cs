@@ -34,73 +34,89 @@ namespace MauiMediaPlayer
             //=== ======================================
             //vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-
-
+            // Callback for FindFilesConcurrentQueue
             Action<ConcurrentQueue<string>, bool> callback = (ConcurrentQueue<string> q, bool d) =>
             {
-                string r; while (q.TryDequeue(out r))
+                string r;
+
+                var _adbContext = new PlaylistContext();
+                while (q.TryDequeue(out r))
                 {
-                    Debug.WriteLine(r);
+                    Debug.WriteLine($"*** DeQueueing: {r}");
                     var _dirName = Path.GetDirectoryName(r);
                     var _fileName = Path.GetFileNameWithoutExtension(r);
-                    _dbContext.Songs.Add(new Song
+                    Debug.WriteLine($"*** Adding: {r}");
+                    _adbContext.Songs.Add(new Song
                     {
                         Title = _fileName,
                         PathName = r,
                         Comment = _dirName
                     });
+                    Debug.WriteLine($"*** Added: {r}");
                 }
-                dbcontext.SaveChanges();
-                var _songs = _dbContext.Songs.ToList();
-                _songs = _songs.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
-                Application.Current.MainPage.Dispatcher.Dispatch(() =>
-                    TestSonglist.ItemsSource = _songs);
-                // cjm - StringComparer.OrdinalIgnoreCase is causing a crash here
-                // changed to query into a tmp List, then sort the tmp List, then set the ItemSource
-                //_dbContext.Songs.OrderBy(s => s.Title));   
+                Debug.WriteLine(" *** Saving Changes: _adbContext ***");
+                _adbContext.SaveChanges();
+                Debug.WriteLine(" *** Saved ***");
 
-                Application.Current.MainPage.Dispatcher.Dispatch(() =>
-                    pathText.Text = $"{_dbContext.Songs.Count().ToString()} Songs Found.");
-
-
-
-                // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                Task.Delay(25).Wait();
-                string _filename = _dbContext.Songs.FirstOrDefault ().PathName;
-                Debug.WriteLine("\n=== ======================================== ===\n");
-                Debug.WriteLine($"_filename = {_filename}");
-                Debug.WriteLine("\n=== ======================================== ===\n");
-                MediaSource _mediaSource;
-                if (_filename != null && File.Exists(_filename))
+                if (_adbContext.Songs.Count() > 0 || true)
                 {
-                    _mediaSource = MediaSource.FromFile(_filename);
-                    if (_mediaSource != null)
+                    Debug.WriteLine(" *** _adbContext.Songs.Count() > 0 ***");
+                    var _songs = _adbContext.Songs.ToList();
+                    _songs = _songs.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+                    Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                        TestSonglist.ItemsSource = _songs);
+                    // cjm - StringComparer.OrdinalIgnoreCase is causing a crash here
+                    // changed to query into a tmp List, then sort the tmp List, then set the ItemSource
+                    //_adbContext.Songs.OrderBy(s => s.Title));   
+
+                    Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                        pathText.Text = $"{_adbContext.Songs.Count().ToString()} Songs Found.");
+
+                    // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+                    if (d || true)
                     {
-                        mediaElement.Source = _mediaSource;
+                        string _filename = _adbContext.Songs.FirstOrDefault().PathName;
+                        Debug.WriteLine("\n=== ======================================== ===\n");
+                        Debug.WriteLine($"Attempting to set _mediaSource = {_filename}");
+                        Debug.WriteLine("\n=== ======================================== ===\n");
+                        MediaSource _mediaSource;
+                        //if (_filename != null && File.Exists(_filename))
+                        //{
+                        //    _mediaSource = MediaSource.FromFile(_filename);
+                        //    if (_mediaSource != null)
+                        //    {
+                        //        mediaElement.Source = _mediaSource;
+                        //    }
+                        //}
                     }
+                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 }
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
+                //_adbContext.Dispose();  // cjm - this is causing a crash ... so don't dispose of it, let the program do it for me?
             };
+            // /Callback for FindFilesConcurrentQueue
 
+            {
+                List<string> paths = new List<string> { "C:\\users\\cjmetcalfe\\Music", "c:\\users\\khaai\\Music" };
+                Debug.WriteLine("\n=== ======================================== ===\n");
+                Debug.WriteLine("FindFilesConcurrentQueue ... ");
+                foreach (var _path in paths)
+                    Debug.WriteLine($"::> {_path}");
+                Debug.WriteLine("\n=== ======================================== ===\n");
 
-
-            List<string> paths = new List<string> { "C:\\users\\cjmetcalfe\\Music", "c:\\users\\khaai\\Music" };
-            new FindFilesConcurrentQueue(callback, paths, "*.mp3", SearchOption.AllDirectories);
-
-
+                new FindFilesConcurrentQueue(callback, paths, "*.mp3", SearchOption.AllDirectories);
+            }
 
             //^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             //=== ======================================
 
 
-                
+
             TestPlaylist.ItemsSource = _dbContext.Playlists.ToList();
             TestSonglist.ItemsSource = _dbContext.Songs.ToList();
 
 
-            
+
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // ==========================================================
             // Test Background Tasks .... 

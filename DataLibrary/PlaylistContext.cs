@@ -26,10 +26,12 @@ namespace DataLibrary
 #endif
             var path = Environment.GetFolderPath(folder);
             DbPath = Path.Join(path, dbName);
-            Debug.WriteLine($"Folder: {folder}");   
-            Debug.WriteLine($"Path: {path}");
-            Debug.WriteLine($"DbPath   25: {DbPath}");
-            Debug.WriteLine($"DbContextId: {this.ContextId}");
+            Debug.WriteLine("\n=== ======================================== ===\n");
+            Debug.WriteLine($"*** Folder: {folder}");
+            Debug.WriteLine($"*** Path: {path}");
+            Debug.WriteLine($"*** DbPath   25: {DbPath}");
+            Debug.WriteLine($"*** DbContextId: {this.ContextId}");
+            Debug.WriteLine("\n=== /DbInfo ================================ ===\n");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
