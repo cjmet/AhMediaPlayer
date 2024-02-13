@@ -7,21 +7,17 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="14,0"
-            Spacing="14">
+            Padding="20,0"
+            Spacing="0">
             <Image
                 Source="angel_hornet_logo.png"
                 HeightRequest="185"
                 Aspect="AspectFit"
                 SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" />
 
-
-
             <toolkit:MediaElement x:Name="mediaElement" Source="embed://angel_hornet_logo.png"
               ShouldShowPlaybackControls="True" />
-            
-            
-            
+
             <!--<Label
                 Text="Hello, World!"
                 Style="{StaticResource Headline}"
@@ -32,10 +28,10 @@
                 Style="{StaticResource NormalText}"
                  />-->
 
-            <ListView x:Name="TestPlaylist" MaximumHeightRequest="80">
+            <ListView x:Name="TestPlaylist" MaximumHeightRequest="40">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding LineItem}"  Detail="Id, Name, and Description" TextColor="Black"/>
+                        <TextCell Text="{Binding LineItem}"  Detail="{Binding Description}" TextColor="Black"/>
                         <!--<TextCell Text="{Binding LineItem}"  TextColor="Black"/>-->
                         <!--<ViewCell>
                             <StackLayout Orientation="Horizontal" >
@@ -50,12 +46,12 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <!--<Label
-                Text="Test Text Between Lists"
+            <Label 
+                Text=""
                 Style="{StaticResource NormalText}"
-                 />-->
+                 />
 
-            <ListView x:Name="TestSonglist" MaximumHeightRequest="125">
+            <ListView x:Name="TestSonglist" MaximumHeightRequest="280">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Title}"  Detail="{Binding Comment}" TextColor="Black"/>
@@ -91,16 +87,31 @@
                 Clicked="OnCounterClicked"
             HorizontalOptions="Center" />-->
 
-            <Label x:Name="counterText"
-                Text="Counter" 
-                Style="{StaticResource NormalText}"
-                   HorizontalOptions="Center" />
-            
-            <Label x:Name="pathText"
-                Text="Path" 
-                Style="{StaticResource NormalText}"
-                   LineBreakMode="MiddleTruncation"
+            <StackLayout Orientation="Horizontal"  Margin="5" HorizontalOptions="FillAndExpand">
+
+                <Label x:Name="pathText" 
+                  Text="Path" 
+                  Style="{StaticResource NormalText}"
+                  LineBreakMode="MiddleTruncation"
+                  HorizontalOptions="StartAndExpand"
+                   />
+
+
+                <Label x:Name="counterText" 
+                    Text="Counter" 
+                    Style="{StaticResource NormalText}"
+                    HorizontalOptions="EndAndExpand"
                      />
+
+            </StackLayout>
+
+
+
+
+
+
+
+
 
         </VerticalStackLayout>
     </ScrollView>

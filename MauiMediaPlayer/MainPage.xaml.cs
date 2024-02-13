@@ -60,17 +60,23 @@ namespace MauiMediaPlayer
 
                 if (_adbContext.Songs.Count() > 0 || true)
                 {
+                    
                     Debug.WriteLine(" *** _adbContext.Songs.Count() > 0 ***");
+                    // cjm - StringComparer.OrdinalIgnoreCase is causing a crash here
+                    // changed to query into a tmp List, then sort the tmp List, then set the ItemSource
+                    //_adbContext.Songs.OrderBy(s => s.Title));   
+                    Debug.WriteLine(" *** Dispatch Playlists to UI");
+                    // cjm - Add Code Here Later, if needed, and if this is the right place for it?
+                    Debug.WriteLine(" *** Doh, there are none, because I cleared them out.  Rewrite this later and insert it.");
+                    // ---
+                    Debug.WriteLine(" *** Dispatch Songs to UI");
                     var _songs = _adbContext.Songs.ToList();
                     _songs = _songs.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
                     Application.Current.MainPage.Dispatcher.Dispatch(() =>
                         TestSonglist.ItemsSource = _songs);
-                    // cjm - StringComparer.OrdinalIgnoreCase is causing a crash here
-                    // changed to query into a tmp List, then sort the tmp List, then set the ItemSource
-                    //_adbContext.Songs.OrderBy(s => s.Title));   
 
                     Application.Current.MainPage.Dispatcher.Dispatch(() =>
-                        pathText.Text = $"{_adbContext.Songs.Count().ToString()} Songs Found.");
+                        pathText.Text = $"{_adbContext.Songs.Count().ToString()} Songs Found");
 
                     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 

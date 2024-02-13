@@ -51,6 +51,11 @@ namespace MauiMediaPlayer
             var _dbContext = new PlaylistContext();
             _dbContext.Database.EnsureDeleted();
             _dbContext.Database.EnsureCreated();
+            _dbContext.Playlists.Add(new Playlist { Name = "Default", Description="The Default Play List"});
+            _dbContext.Playlists.Add(new Playlist { Name = "Test", Description = "The Test Play List" });
+            _dbContext.Playlists.Add(new Playlist { Name = "Test2", Description = "The Test2 Play List" });
+            _dbContext.Playlists.Add(new Playlist { Name = "Test3", Description = "The Test3 Play List" });
+            _dbContext.SaveChanges();
             _dbContext.Dispose();
             Debug.WriteLine("\n=== /Database Rebuild ====================== ===\n");
 
