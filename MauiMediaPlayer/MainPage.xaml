@@ -9,24 +9,15 @@
         <VerticalStackLayout
             Padding="20,0"
             Spacing="0">
-            <Image
-                Source="angel_hornet_logo.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" />
 
-            <toolkit:MediaElement x:Name="mediaElement" Source="embed://angel_hornet_logo.png"
-              ShouldShowPlaybackControls="True" />
 
-            <!--<Label
-                Text="Hello, World!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />-->
 
-            <!--<Label
-                Text="Test Text Before the Lists"
+            <Label 
+                Text=""
                 Style="{StaticResource NormalText}"
-                 />-->
+                 />
+
+            
 
             <ListView x:Name="TestPlaylist" MaximumHeightRequest="40">
                 <ListView.ItemTemplate>
@@ -46,10 +37,32 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Label 
-                Text=""
+            
+            
+            <Image
+                Source="angel_hornet_logo_cropped.png"
+                HeightRequest="185"
+                Aspect="AspectFit"
+                SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" />
+
+           
+            
+            <toolkit:MediaElement x:Name="mediaElement" Source="embed://angel_hornet_logo.png"
+              ShouldShowPlaybackControls="True" />
+
+            
+            
+            <!--<Label
+                Text="Hello, World!"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />-->
+
+            <!--<Label
+                Text="Test Text Before the Lists"
                 Style="{StaticResource NormalText}"
-                 />
+                 />-->
+
+
 
             <ListView x:Name="TestSonglist" MaximumHeightRequest="280">
                 <ListView.ItemTemplate>

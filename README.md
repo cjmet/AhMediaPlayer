@@ -44,6 +44,7 @@ Create a music library Web API and simple Media Player
 - [x] Initial EF Core Setup and Test
 - [x] Add Callback Ability to the Background Task
 - [ ] Integrate FileFind, Callback, EF Core, and Maui
+- [ ] Extract ScanForMedia() into /ProgramLogic/ProgramLogic.cs 
 - [x] Move data files back out into a DataLibrary for easier management. 
 - [x] Add the rest of the data structures back in, and to the Data Library.
 - [ ] Work on general logic around the DB and App
@@ -92,11 +93,17 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
+* Use the latest update of Visual Studio 2022, .Net 8, and .Net MAUI
 * %AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui
+* Extra Wholesale Bag of Salt:
+  * Advice from earlier than Dec 2023 may be outdated or even incorrect.
+  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with caution, particularly on any more complicated issues.
 
 <br>
 
 ## Dev Blog
+* Use   <StackLayout Orientation="Horizontal" or "Vertical">
+  * VerticalStackLayout and HorizontalStackLayout do not always respect all placement options. These are apparently depreciated?
 * General House Keeping and cleaning up various experiment messes made while learning.
   * Constants.cs
 * Changed the Title in Appshell.xaml
