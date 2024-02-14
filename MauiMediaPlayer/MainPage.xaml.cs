@@ -35,7 +35,7 @@ namespace MauiMediaPlayer
             //vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
             // Callback for FindFilesConcurrentQueue
-            Action<ConcurrentQueue<string>, bool> callback = (ConcurrentQueue<string> q, bool d) =>
+            Action<ConcurrentQueue<string>, bool> callback = (ConcurrentQueue<string> q, bool doneFlag) =>
             {
                 string r;
 
@@ -58,7 +58,7 @@ namespace MauiMediaPlayer
                 _adbContext.SaveChanges();
                 Debug.WriteLine(" *** Saved ***");
 
-                if (_adbContext.Songs.Count() > 0 || true)
+                if (_adbContext.Songs.Count() > 0 || doneFlag)
                 {
                     
                     Debug.WriteLine(" *** _adbContext.Songs.Count() > 0 ***");
@@ -76,25 +76,34 @@ namespace MauiMediaPlayer
                         TestSonglist.ItemsSource = _songs);
 
                     Application.Current.MainPage.Dispatcher.Dispatch(() =>
-                        pathText.Text = $"{_adbContext.Songs.Count().ToString()} Songs Found");
+                        messageText.Text = $"{_adbContext.Songs.Count().ToString()} Songs Found");
 
                     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-                    if (d || true)
+                    if (doneFlag)
                     {
-                        string _filename = _adbContext.Songs.FirstOrDefault().PathName;
+                        _songs = _adbContext.Songs.ToList();
+                        _songs = _songs.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+                        var _song = _songs.FirstOrDefault();
+                        
                         Debug.WriteLine("\n=== ======================================== ===\n");
-                        Debug.WriteLine($"Attempting to set _mediaSource = {_filename}");
+                        Debug.WriteLine($"Attempting to set _mediaSource = {_song.PathName}");
                         Debug.WriteLine("\n=== ======================================== ===\n");
                         MediaSource _mediaSource;
-                        //if (_filename != null && File.Exists(_filename))
-                        //{
-                        //    _mediaSource = MediaSource.FromFile(_filename);
-                        //    if (_mediaSource != null)
-                        //    {
-                        //        mediaElement.Source = _mediaSource;
-                        //    }
-                        //}
+                        // cjm - this is causing a crash here
+                        if (_song.PathName != null && File.Exists(_song.PathName))
+                        {
+                            _mediaSource = MediaSource.FromFile(_song.PathName);
+                            if (_mediaSource != null)
+                            {
+                                mediaElement.Source = _mediaSource;
+                                Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                                    mediaTitle.Text = _song.Title);
+                                Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                                    mediaArtist.Text = $"{_song.Artist} - {_song.Album}");
+                            }
+                        }
+                        // /cjm - this is causing a crash here
                     }
                     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 }
@@ -128,15 +137,15 @@ namespace MauiMediaPlayer
             // Test Background Tasks .... 
 
 
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    Task.Delay(1000).Wait();
-                    count++;
-                    Application.Current.MainPage.Dispatcher.Dispatch(() => counterText.Text = count.ToString()); //  String.Format("Downloading {0}%", count)); 
-                }
-            });
+            //Task.Run(() =>
+            //{
+            //    while (true)
+            //    {
+            //        Task.Delay(1000).Wait();
+            //        count++;
+            //        Application.Current.MainPage.Dispatcher.Dispatch(() => counterText.Text = count.ToString()); //  String.Format("Downloading {0}%", count)); 
+            //    }
+            //});
 
 
             //    Task task;

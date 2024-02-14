@@ -6,7 +6,11 @@ The goal is to create a simple Media Player, with Media Library and WebAPI using
 
 CLI (and later API and Web) application using Entity Framework Core.  The application will have a simple menu system and will allow the user to add, update?, and delete products and orders.  This is a learning experience.
 
-**See Also:** https://github.com/cjmet/AngelHornetLibrary
+
+### See Also: 
+* One nice example of what Microsoft has done with Maui
+  * https://dotnetpodcasts.azurewebsites.net/
+  * https://github.com/microsoft/dotnet-podcasts
 
 <br>
 
@@ -21,7 +25,7 @@ https://code-you.org/
 
 <br>
 
-## Current Questions
+## Current Project Questions
 * How to communicate between the background task and main task?
    * Version 1 used unsafe refs
    * Version 2 is using pulling and locking the data from the Background Task, possibly leaving the background task to never get cleaned up.
@@ -33,6 +37,7 @@ https://code-you.org/
 * More info on lockable objects and concurrency
   * Maybe a generic lockable object extension class?   locked<T>? 
 
+<br>
 
 ## Project Plan
 Create a music library Web API and simple Media Player
@@ -45,9 +50,11 @@ Create a music library Web API and simple Media Player
 - [x] Add Callback Ability to the Background Task
 - [ ] Integrate FileFind, Callback, EF Core, and Maui
 - [ ] Extract ScanForMedia() into /ProgramLogic/ProgramLogic.cs 
+- [ ] Maybe add /ProgramLogic as a .Net 8 Library to share general logic between the CLI, API, and Maui Projects.
 - [x] Move data files back out into a DataLibrary for easier management. 
 - [x] Add the rest of the data structures back in, and to the Data Library.
 - [ ] Work on general logic around the DB and App
+
 - [ ] Read and use Meta Data from MP3 files
 - [ ] Uniquely ID each song to eliminate duplicates
 - [ ] Play a song
@@ -70,15 +77,24 @@ Create a music library Web API and simple Media Player
 - [ ] Chances are most of this work will be done in the Music Library Project
 - [ ] Add an API Project to the solution
 - [ ] Develop basic API to match basic functionality of Music Library
+- [ ] Using the Repository Pattern and scaffolding will effetively do this for us.
 
 <br>
 
 ## Project Requirements
 - [x] Async Task
+  * Created an background task to scan local and remote smb drives for media files, using callbacks to deliver results back to the main task asynchronously.
 - [x] List or Dictionary
+  * Multiple lists as well as use of the ConcurrentQueue class in the background task.
 - [ ] API
-- [ ] Logging
+- [ ] CRUD API
+- [ ] Multiple Data Tables
+- [ ] Logging of Errors and Debug Info.
 - [ ] Unit Testing
+- [ ] SOLID Principles
+- [ ] SQL Queries
+- [ ] Regex
+- [ ] Generic Class, Locked\<T>?
 
 <br>
 
@@ -94,10 +110,12 @@ Create a music library Web API and simple Media Player
 
 ## Known Issues
 * Use the latest update of Visual Studio 2022, .Net 8, and .Net MAUI
-* %AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui
+* MAUI Debugging is very generic and unhelpful.  It's hard to know what's wrong.  Any advice here would be greatly appreciated.
+* %AppData% is a Different location in Win11/Console, Win11/Web, and Win11/Maui.
+  * Mauit has a virtual filesystem redirect for %AppData%
 * Extra Wholesale Bag of Salt:
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
-  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with caution, particularly on any more complicated issues.
+  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
 
 <br>
 
