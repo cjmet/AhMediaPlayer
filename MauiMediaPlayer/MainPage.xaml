@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="MauiMediaPlayer.MainPage"
-             >
+             x:Class="MauiMediaPlayer.MainPage" >
 
     <!-- Text Sizes:
                 Header
@@ -158,6 +157,19 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
+                                        <!--   Command="MainMediaElementPagePlaySong"
+                                            CommandParameter="{Binding PathName}"       -->
+                                        <Button 
+                                            Style="{StaticResource NormalText}" 
+                                            Padding="0" Margin="-25"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Grid.Row="0"
+                                            MaximumHeightRequest="1"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="FillAndExpand"
+                                            Opacity=".10"
+                                            ZIndex="2"/>
                                         <Label Text="{Binding Artist}"  
                                             Style="{StaticResource NormalText}" 
                                             Grid.Column="0"
@@ -195,8 +207,7 @@
                 HorizontalOptions="StartAndExpand"
                 HeightRequest="20"
                 MinimumHeightRequest="20"
-                MaximumHeightRequest="20"
-/>
+                MaximumHeightRequest="20"/>
     </Grid>
 
 

@@ -10,6 +10,11 @@ using AngelHornetLibrary.CLI;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Maui.Views;
+using MetadataExtractor;
+using FFMpegCore;
+using Id3;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Platform;
 
 
 
@@ -30,7 +35,13 @@ namespace MauiCli
         static void Main(string[] args) // Main 
         {
 
+
+
+
+
+
             CliMenu mainMenu = new CliMenu();
+            mainMenu.MenuMaxWidth = 80;
             mainMenu.Message = "\nMain Menu";
             // 1. Find MP3 Files in ~/Music
             mainMenu.AddItem(new List<string> { "Find MP3 Files in ~/Music" }, () =>
@@ -39,30 +50,36 @@ namespace MauiCli
                     { "c:\\users\\cjmetcalfe\\music", "c:\\users\\khaai\\music" });
             });
 
-            // 2. Find MP3 Files in ~/Music
+            // 2. Test Mp3 Data using Id3
+            mainMenu.AddItem(new List<string> { "Test MP3 MetaData using Id3" }, () =>
+            {
+                Mp3Test();
+            });
+
+            // 3. Find MP3 Files in ~/Music
             mainMenu.AddItem(new List<string> { "Search C:\\" }, () =>
             {
                 FindFilesQueueFunc(new List<string>
                     { "C:\\" });
             });
 
-            // 3. Find MP3 Files in ~/Music
+            // 4. Find MP3 Files in ~/Music
             mainMenu.AddItem(new List<string> { "Search M:\\" }, () =>
             {
                 FindFilesQueueFunc(new List<string>
                     { "M:\\" });
             });
 
-            // 4. Test MauiMainPage Logic
+            // 5. Test MauiMainPage Logic
             mainMenu.AddItem(new List<string> { "MauiMainPage" }, () => { MauiMainPage(); });
 
-            // 5. Read DbContext
+            // 6. Read DbContext
             mainMenu.AddItem(new List<string> { "Db Read" }, () => { DbContextTest(false); });
 
-            // 6. Reset DbContext
+            // 7. Reset DbContext
             mainMenu.AddItem(new List<string> { "Db Reset" }, () => { DbContextTest(true); });
 
-            // 7. Quit
+            // 8. Quit
             mainMenu.AddItem(new List<string> { "Quit", "Exit" }, () => { mainMenu.Exit(); });
             mainMenu.AddDefault(() => { });
 
@@ -103,19 +120,57 @@ namespace MauiCli
 
             // CallBack
             var _dbContext = new PlaylistContext();
-            while (queue.TryDequeue(out result)) {
+            while (queue.TryDequeue(out result))
+            {
                 {
                     Console.WriteLine(MiddleTruncate(result));
                     Debug.WriteLine(result);
 
                     var _dirName = Path.GetDirectoryName(result);
                     var _fileName = Path.GetFileNameWithoutExtension(result);
+                    var tag = new Mp3(result).GetTag(Id3TagFamily.Version2X);
+
+                    //                    public int Id { get; set; }
+                    //public string PathName { get; set; }
+                    //public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
+                    //public string Title { get; set; }
+                    //public string? Comment { get; set; }
+                    //public string LineItem { get => $"{Id} - {Title} - {Comment}"; }
+                    //public string? Artist { get; set; }
+                    //public string? Album { get; set; }
+                    //public string? Genre { get; set; }
+                    //public int? Year { get; set; }
+                    //public string? Length { get; set; }
+
+                    //Title: Devil Town
+                    //Artist: Tony Lucca
+                    //Band:
+                    //Album: Friday Night Lights OTS
+                    //Year: 2007
+                    //Track: 1
+                    //Genre: (24)Soundtrack
+                    //Comment:
+                    //Lyrics: Id3.Frames.LyricsFrameList
+                    //Lyricists:
+                    //Publisher:
+                    //Conductor:
+                    //CustomTexts: Id3.Frames.CustomTextFrameList
+
                     _dbContext.Songs.Add(new Song
                     {
-                        Title = _fileName,
                         PathName = result,
-                        Comment = _dirName
+                        Title = tag.Title,
+                        Artist = tag.Artists,
+                        Band = tag.Band,
+                        Album = tag.Album,
+                        Track = tag.Track,
+                        Genre = tag.Genre,
+                        Year = tag.Year,
+                        Length = tag.Length,
                     });
+                    var tagValue = tag.Genre.Value;
+                    var tagString = tag.Genre.ToString();
+                    Console.WriteLine($"Tag: [{tagValue}] - [{tagString}]");
                 }
                 _dbContext.SaveChanges();
             }
@@ -129,7 +184,7 @@ namespace MauiCli
             Debug.WriteLine($"Exiting Callback [{done}");
             return;
         }
-             
+
 
 
         public static string MiddleTruncate(string input)
@@ -210,11 +265,11 @@ namespace MauiCli
             {
                 Console.WriteLine("Adding Songs ... ");
                 _dbContext = new PlaylistContext();
-                _dbContext.Songs.Add(new Song { Title = "Test Song 1", Comment = "Comment 1", PathName ="File1.mp3" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 2", Comment = "Comment 1", PathName = "File2.mp3" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 3", Comment = "Comment 1", PathName = "File3.mp3" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 4", Comment = "Comment 1", PathName = "File4.mp3" });
-                _dbContext.Songs.Add(new Song { Title = "Test Song 5", Comment = "Comment 1", PathName = "File5.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 1", Genre = "Genre 1", PathName = "File1.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 2", Genre = "Genre 1", PathName = "File2.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 3", Genre = "Genre 1", PathName = "File3.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 4", Genre = "Genre 1", PathName = "File4.mp3" });
+                _dbContext.Songs.Add(new Song { Title = "Test Song 5", Genre = "Genre 1", PathName = "File5.mp3" });
                 _dbContext.SaveChanges();
                 _dbContext.Dispose();
             }
@@ -226,7 +281,7 @@ namespace MauiCli
             i = 0;
             foreach (var s in songs)
             {
-                Console.WriteLine($"[{++i}] {s.Title,-30} - {s.PathName,-30} - {s.Comment,-30}");
+                Console.WriteLine($"{s.Title,-30} - {s.Artist,-30} - {s.Album,-30} - {s.Genre.ToString()}\n     {s.PathName,100}\n\n");
             }
             Console.WriteLine("...");
             Console.WriteLine("\n\n");
@@ -263,7 +318,7 @@ namespace MauiCli
                         {
                             Title = _fileName,
                             PathName = result,
-                            Comment = _dirName
+                            Genre = _dirName
                         });
                     }
                     _dbContext.SaveChanges();
@@ -296,7 +351,7 @@ namespace MauiCli
                     Debug.WriteLine(" *** _dbContext.Songs.Count() > 0 ***");
                     var _songs = _dbContext.Songs.ToList();
                     _songs = _songs.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
-                    
+
                     //Application.Current.MainPage.Dispatcher.Dispatch(() =>
                     //    TestSonglist.ItemsSource = _songs);
 
@@ -346,6 +401,38 @@ namespace MauiCli
             //=== ======================================
 
             _dbContext.Dispose();
+        }
+
+
+        static void Mp3Test()
+        {
+            var mp3 = new Mp3("""C:\Users\cjmetcalfe\Music\Newts Playlist 2010\01-Devil Town.mp3""");
+            var tags = mp3.GetAllTags();
+            var tag = tags.FirstOrDefault();
+            //foreach (var t in tags)
+            //{
+            //    Console.WriteLine($"{tag.GetType}:{tag}");
+            //    foreach (var value in tag)
+            //    {
+            //        Console.WriteLine($"  {value.GetType}:{value}");
+            //    }
+            //}
+            tag = mp3.GetTag(Id3TagFamily.Version2X);
+            Console.WriteLine($"Title: {tag.Title}");
+            Console.WriteLine($"Artist: {tag.Artists}");
+            Console.WriteLine($"Band: {tag.Band}");
+            Console.WriteLine($"Album: {tag.Album}");
+            Console.WriteLine($"Year: {tag.Year}");
+            Console.WriteLine($"Track: {tag.Track}");
+            Console.WriteLine($"Genre: {tag.Genre}");
+            Console.WriteLine($"Comment: {tag.Band}");
+            Console.WriteLine($"Lyrics: {tag.Lyrics}");
+            foreach (var l in tag.Lyrics) { Console.WriteLine($"  {l.GetType}:{l}"); }
+            Console.WriteLine($"Lyricists: {tag.Lyricists}");
+            Console.WriteLine($"Publisher: {tag.Publisher}");
+            Console.WriteLine($"Conductor: {tag.Conductor}");
+            Console.WriteLine($"CustomTexts: {tag.CustomTexts}");
+            mp3.Dispose();
         }
 
 

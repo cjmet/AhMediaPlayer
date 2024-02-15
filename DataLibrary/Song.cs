@@ -16,12 +16,13 @@ namespace DataLibrary
         public string PathName { get; set; }
         public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
         public string Title { get; set; }
-        public string? Comment { get; set; }
-        public string LineItem { get => $"{Id} - {Title} - {Comment}"; }
+        public string LineItem { get => $"{Title} - {Artist} - {Album}"; }
         public string? Artist { get; set; }
+        public string? Band { get; set; }
         public string? Album { get; set; }
-        public string? Genre { get; set; }
+        public int? Track { get; set; }
         public int? Year { get; set; }
+        public string? Genre { get; set; }
         public string? Length { get; set; }
         public List<Playlist> Playlists;
     }

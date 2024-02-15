@@ -6,7 +6,13 @@ using AngelHornetLibrary.CLI;
 using DataLibrary;
 using AngelHornetLibrary;
 using CommunityToolkit.Maui.Views;
-
+using Id3;
+using static MauiMediaPlayer.ProgramLogic.GenreDictionary;
+using MauiMediaPlayer.ProgramLogic;
+using System.ComponentModel;
+using System.Windows.Input;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Numerics;
 
 
 
@@ -22,14 +28,11 @@ namespace MauiMediaPlayer
         //List<string> result = new List<string>();
         //string searchStatus = "Searching...";
 
-
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
         {
             InitializeComponent();
             _dbContext = dbcontext;
-
-
 
             //=== ======================================
             //vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -46,12 +49,55 @@ namespace MauiMediaPlayer
                     var _dirName = Path.GetDirectoryName(r);
                     var _fileName = Path.GetFileNameWithoutExtension(r);
                     Debug.WriteLine($"*** Adding: {r}");
+                    // Tag v2
+                    var tag = new Mp3(r).GetTag(Id3TagFamily.Version2X);
+                    if (tag == null)
+                    {
+                        Debug.WriteLine($"*** Tag v2 is null: {tag} -> {r}");
+                        tag = new Mp3(r).GetTag(Id3TagFamily.Version1X);
+                    }
+                    // Tag v1
+                    if (tag == null)
+                    {
+                        Debug.WriteLine($"*** Tag v1 is null: {tag} -> {r}");
+                        tag = new Mp3(r).GetAllTags().FirstOrDefault();
+                    }
+                    // ANY Tag
+                    if (tag == null)
+                    {
+                        Debug.WriteLine($"\n***\n*** ALL TAGS ARE NULL *** !!! {tag}\n     {r}\n***\n");
+                        tag = new Mp3(r).GetTag(Id3TagFamily.Version1X);
+                        tag = new Id3Tag
+                        {
+                            Title = _fileName,
+                            Artists = new Id3.Frames.ArtistsFrame(),
+                            Band = "",
+                            Album = "",
+                            Track = 0,
+                            Genre = "",
+                            Year = 0,
+                            Length = new Id3.Frames.LengthFrame(),
+                        };
+                    }
+
+                    string _genre = "";
+                    if (tag != null)
+                        if (tag.Genre != null)
+                            _genre = GenreLookup(tag.Genre);
+
                     _adbContext.Songs.Add(new Song
                     {
-                        Title = _fileName,
                         PathName = r,
-                        Comment = _dirName
+                        Title = tag.Title,
+                        Artist = tag.Artists,
+                        Band = tag.Band,
+                        Album = tag.Album,
+                        Track = tag.Track,
+                        Genre = _genre,
+                        Year = tag.Year,
+                        Length = tag.Length,
                     });
+                    // there does not appear to be a tag.Dispose() method
                     Debug.WriteLine($"*** Added: {r}");
                 }
                 Debug.WriteLine(" *** Saving Changes: _adbContext ***");
@@ -60,7 +106,7 @@ namespace MauiMediaPlayer
 
                 if (_adbContext.Songs.Count() > 0 || doneFlag)
                 {
-                    
+
                     Debug.WriteLine(" *** _adbContext.Songs.Count() > 0 ***");
                     // cjm - StringComparer.OrdinalIgnoreCase is causing a crash here
                     // changed to query into a tmp List, then sort the tmp List, then set the ItemSource
@@ -85,7 +131,7 @@ namespace MauiMediaPlayer
                         _songs = _adbContext.Songs.ToList();
                         _songs = _songs.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
                         var _song = _songs.FirstOrDefault();
-                        
+
                         Debug.WriteLine("\n=== ======================================== ===\n");
                         Debug.WriteLine($"Attempting to set _mediaSource = {_song.PathName}");
                         Debug.WriteLine("\n=== ======================================== ===\n");
@@ -186,16 +232,16 @@ namespace MauiMediaPlayer
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            //if (count == 1)
-            //    CounterBtn.Text = $"Clicked {count} time";
-            //else
-            //    CounterBtn.Text = $"Clicked {count} times";
-            //SemanticScreenReader.Announce(CounterBtn.Text);
-        }
     }
+
+
+    //public class MediaElementCommands
+    //{
+    //    public ICommand PlayOneSong { get; private set; }
+    //    public MediaElementCommands()
+    //    {
+    //        PlayOneSong = new Command((p) => { Debug.WriteLine($"PlayOneSong: {p}"); });
+    //    }
+    //}
 
 }
