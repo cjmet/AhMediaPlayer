@@ -24,15 +24,11 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 <br>
 
 ## Current Project Questions
-1. &nbsp;Wiring up a Button Command And CommandParameter in XAML
 1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
 1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
-1. &nbsp;How to Async return a value, non-blocking, from a blockable operation.  (See Sandbox)
-   * Retry this with 4 step process:  Mainloop <- Communications CallBack -> Void Sub (Interface Left) -> (Interface Right) Async IO Function -> Blocking IO Operation
-1. &nbsp;More info on lockable objects and concurrency
-   * Maybe a generic lockable object extension class?   locked<T>? 
-
+1. &nbsp;Review how to Async return a value, non-blocking, from a blockable operation, using a 4 step process.  (See Sandbox)
+   
 <br>
 
 ## Project Plan
@@ -45,8 +41,8 @@ Create a music library Web API and simple Media Player
 - [x] Play a song
 - [x] Play a static song from local storage
 - [x] Create a Playlist class
-- [ ] Wire up a Button with Command and Command Parameters
-- [ ] Play as song from a static Playlist
+- [x] Wire up a Button with Command and Command Parameters
+- [x] Play as song from a static Playlist
 - [ ] Play more than one song from a static Playlist
 - [ ] Work on the UI Layout
 
@@ -63,6 +59,7 @@ Create a music library Web API and simple Media Player
   - [ ] Id each song by filename to eliminate dupclicates.
     - [ ] Uniquely ID each song to eliminate duplicates, including duplicate filenames
 - [ ] Add Automatic Playlists based on Meta Data
+- [ ] Generic Lockable Class.  Locked<T>.
 
 * ### Data Library
 - [x] Store in sqlite database
@@ -86,7 +83,7 @@ Create a music library Web API and simple Media Player
 - [x] Async Task
   * Created a background task to scan local and remote smb drives for media files, using callbacks to deliver results back to the main task asynchronously.
 - [x] List or Dictionary
-  * Multiple lists as well as use of the ConcurrentQueue class in the background task.
+  * Using multiple lists as well as the ConcurrentQueue class in the background task.
 - [ ] API
 - [ ] CRUD API
 - [ ] Multiple Data Tables
@@ -113,7 +110,7 @@ Create a music library Web API and simple Media Player
 * Use the latest update of Visual Studio 2022, .Net 8, and .Net MAUI
 * MAUI Debugging is very generic and unhelpful.  It's hard to know what's wrong.  Any advice here would be greatly appreciated.
 * %AppData% is a Different location in Win11/Console, Win11/Web, and Win11/Maui.
-  * Maui has a virtual filesystem redirect for %AppData%
+  * Maui has a virtual file-system redirect for %AppData%
 * Extra Wholesale Bag of Salt:
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
   * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
@@ -121,6 +118,22 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Wired up the Song List, and now can select and play a song from the list.  I am going to need to redo whole sections of this code now that I have a better understanding of everything so far.
+* When avialable, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
+* There were additional Issues with nested buttons
+* Thank you Ernesto Ramos for help with fixing the button
+  * Line 3 was missing from the examples I was using.
+  * Line 5-7 are also required
+  * I suspect there may be a better way to write this, one that doesn't have to effect the entire page.
+```
+        <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:local="clr-namespace:ButtonCommandTest"
+        x:Class="ButtonCommandTest.MainPage">
+        <ContentPage.BindingContext>
+        <local:CommandDemoViewModel />
+        </ContentPage.BindingContext>
+```
 * Re-did the entire layout, added Id3 Tags for Meta Data, and added a genre dictionary.
   * Each grid with no dimension constrains and auto-sizes equally to all others grids with no dimensions.  "Auto" expands without constraint if asked.  I ended up creating 4 "Default" Rows, 1 Row for the logo, 3 Rows for the Song List, and everything else fixed rows.
   * Added two side columns for spacing so I could force overlay for Labels for Title, Artist, and Album.  Probably could have done this with a combination of padding and margins, but this worked.
