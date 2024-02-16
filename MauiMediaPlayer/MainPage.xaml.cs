@@ -13,6 +13,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Numerics;
+using Microsoft.EntityFrameworkCore;
+using WinRT;
 
 
 
@@ -232,6 +234,47 @@ namespace MauiMediaPlayer
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         }
 
+        private void TestSonglist_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            Debug.WriteLine("TestSonglist_ItemSelected");
+            Debug.WriteLine("Sender: " + sender.ToString());
+            Debug.WriteLine("Selected: " + e.SelectedItem);
+            var _song = (Song)e.SelectedItem;
+            var _listView = (ListView)sender;
+            _listView.Focus();
+            TestSonglist.SelectedItem = _song;
+            
+            Debug.WriteLine($"Attempting to set _mediaSource = {_song.PathName}");
+            MediaSource _mediaSource;
+            if (_song.PathName != null && File.Exists(_song.PathName))
+            {
+                _mediaSource = MediaSource.FromFile(_song.PathName);
+                if (_mediaSource != null)
+                {
+                    mediaElement.ShouldAutoPlay = true;
+                    mediaTitle.Text = _song.Title;
+                    mediaArtist.Text = $"{_song.Artist} - {_song.Album}";
+                    mediaElement.Source = _mediaSource;
+                    //Task.Run(() =>
+                    //{
+                    //    Task.Delay(1000).Wait();
+                    //    mediaElement.ShouldAutoPlay = true;
+                    //    mediaElement.Play();
+                    //}); // cjm - fix this later with a proper verify if media is loaded, then play it
+                    //mediaElement.Play();
+                    //Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                    //           mediaElement.Source = _mediaSource);
+                    //var results = Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                    //                              mediaElement.Play());
+                    //Debug.WriteLine($"mediaElement.Play() = {results}");
+                    //Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                    //                       mediaTitle.Text = _song.Title);
+                    //Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                    //                       mediaArtist.Text = $"{_song.Artist} - {_song.Album}");
+
+                }
+            }
+        }
     }
 
 

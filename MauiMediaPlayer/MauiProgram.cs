@@ -1,11 +1,6 @@
 ﻿using CommunityToolkit.Maui;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore.InMemory;
-using Microsoft.EntityFrameworkCore.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using DataLibrary;
-using Microsoft.Maui;
-using Microsoft.Maui.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 

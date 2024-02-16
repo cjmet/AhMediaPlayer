@@ -5,4 +5,11 @@
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:MauiMediaPlayer.WinUI">
 
+    <maui:MauiWinUIApplication.Resources>
+        <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="SystemControlForegroundAccentBrush" />
+        <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="SystemControlForegroundAccentBrush" />
+        <SolidColorBrush x:Key="SystemControlForegroundAccentBrush"  Color="#FFE3E3E3" />
+    </maui:MauiWinUIApplication.Resources>
+
+
 </maui:MauiWinUIApplication>

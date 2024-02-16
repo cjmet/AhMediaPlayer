@@ -4,6 +4,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MauiMediaPlayer.MainPage" >
 
+
     <!-- Text Sizes:
                 Header
                 Large
@@ -84,7 +85,19 @@
                     SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" 
                     ZIndex="1"
                     />
-
+        <!--<Button 
+            Text="Change Song Test"
+            Style="{StaticResource NormalText}" 
+            Padding="0" Margin="0"
+            Grid.Row="2"
+            Grid.Column="1"
+            MaximumHeightRequest="150"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            Command="{Binding ChangeSongCommand}"
+            CommandParameter="Change Song Text!"
+            Opacity="0"
+            ZIndex="2"/>-->
 
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
@@ -95,6 +108,7 @@
         <toolkit:MediaElement x:Name="mediaElement" 
             Source="embed://gs-16b-1c-44100hz.mp3"
             ShouldShowPlaybackControls="True"
+
             Grid.Row="3"
             Grid.RowSpan="2"
             Grid.ColumnSpan="3"
@@ -141,52 +155,72 @@
             Grid.ColumnSpan="3"
             VerticalOptions="StartAndExpand"
             HorizontalOptions="StartAndExpand">
-            <ListView x:Name="TestSonglist" >
+            <ListView x:Name="TestSonglist" 
+                Grid.Row="5" 
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                ItemSelected="TestSonglist_ItemSelected"
+                VerticalScrollBarVisibility="Always"
+                Margin="13,0,0,0" 
+                >
                 <ListView.ItemTemplate>
                     <DataTemplate >
                         <ViewCell >
-                            <Frame Padding="10,0,10,2" Margin="13,0,13,0">
+                            <Frame Padding="10,0,10,2" Margin="0,0,13,0" BackgroundColor="Transparent" >
                                 <StackLayout Padding="0">
                                     <Label Text="{Binding Title}"       
-                                        Style="{StaticResource NormalText}" 
+                                        Style="{StaticResource NormalText}"
                                         LineBreakMode="TailTruncation"
                                         FontSize="Micro"
-                                        FontAttributes="Bold"/>
+                                        FontAttributes="Bold" 
+                                        ZIndex="1"/>
                                     <Grid >
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <!--   Command="MainMediaElementPagePlaySong"
-                                            CommandParameter="{Binding PathName}"       -->
-                                        <Button 
+                                        
+                                        <!--Insert Button Below-->
+                                        
+                                        <!--<Button 
+                                            Text="Change Song Test 2"
                                             Style="{StaticResource NormalText}" 
-                                            Padding="0" Margin="-25"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="2"
+                                            Padding="0" Margin="0"
                                             Grid.Row="0"
-                                            MaximumHeightRequest="1"
+                                            Grid.Column="0"
+                                            Grid.RowSpan="2"
+                                            Grid.ColumnSpan="2"
+                                            MaximumHeightRequest="150"
                                             HorizontalOptions="FillAndExpand"
                                             VerticalOptions="FillAndExpand"
-                                            Opacity=".10"
-                                            ZIndex="2"/>
+                                            Command="{Binding ChangeSongCommand}"
+                                            CommandParameter="Change Song Test 2!"
+                                            Opacity=".25"
+                                        ZIndex="2"/>-->
+                                        
+                                        <!--Insert Button Above-->
+                                        
                                         <Label Text="{Binding Artist}"  
                                             Style="{StaticResource NormalText}" 
                                             Grid.Column="0"
                                             HorizontalOptions="Start"
                                             LineBreakMode="TailTruncation"
-                                            FontSize="Caption"/>
+                                            FontSize="Caption"
+                                            ZIndex="1"/>
                                         <Label Text="{Binding Album}"   
                                             Style="{StaticResource NormalText}" 
                                             Grid.Column="1"
                                             HorizontalOptions="End"
                                             LineBreakMode="TailTruncation"                                               
-                                            FontSize="Caption"/>
+                                            FontSize="Caption"
+                                            ZIndex="1"/>
                                     </Grid>
                                     <Label Text="{Binding Genre}"   
                                         Style="{StaticResource NormalText}" 
                                         LineBreakMode="TailTruncation"                                           
-                                        FontSize="Caption"/>
+                                        FontSize="Caption"
+                                        ZIndex="1"/>
                                 </StackLayout>
                             </Frame>
                         </ViewCell>
