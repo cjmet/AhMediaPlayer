@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MauiMediaPlayer.ProgramLogic
+namespace DataLibrary
 {
     public static class GenreDictionary
     {

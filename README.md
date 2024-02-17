@@ -1,4 +1,4 @@
-![Angel Hornet Logo](https://github.com/cjmet/CodeKy_SD09/blob/main/Angel%20Hornet%20Logo.png)
+﻿![Angel Hornet Logo](https://github.com/cjmet/CodeKy_SD09/blob/main/Angel%20Hornet%20Logo.png)
 # AhMediaPlayer
 ### Code Kentucky Software Development - Class Project
 #### This project is for Educational purposes.
@@ -24,15 +24,22 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 <br>
 
 ## Current Project Questions
+1. &nbsp;How do I access the log service from my other libraries and classes?
+1. &nbsp;How Do I? Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.
 1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
 1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
 1. &nbsp;Review how to Async return a value, non-blocking, from a blockable operation, using a 4 step process.  (See Sandbox)
-   
+1. &nbsp;Review of AhGetFiles.GetFilesAsync();   
 <br>
 
 ## Project Plan
 Create a music library Web API and simple Media Player
+* ### To-Do (Other Tasks)
+- [ ] Logging Service.  Move all the Debug.Writeline into a logging service that: 
+  - [ ] Writes to Logfile.txt
+  - [ ] Writes to Debug.Writeline
+  - [ ] Writes to a Popup Window (if in debug mode)
 
 * ### Music Player
 - [x] My First MAUI App
@@ -44,19 +51,22 @@ Create a music library Web API and simple Media Player
 - [x] Wire up a Button with Command and Command Parameters
 - [x] Play as song from a static Playlist
 - [x] Play more than one song from a static Playlist
-- [ ] Work on the UI Layout
+- [x] Work on the Song UI Layout
+- [ ] Work on Playlist UI
+
 
 * ### Common Library 
-- [ ] CommonLibrary Project so that program logic can be shared, then wire up individual wrappers in a project as needed.
+- [x] CommonLibrary Project so that program logic can be shared, then wire up individual wrappers in a project as needed.
+- [ ] Logging 
 - [x] Search for MP3 files, with a Background Task.
   - [x] Initial Test Background Async Task
   - [x] Improved Background Task
   - [x] Add Callback Ability to the Background Task
   - [x] Integrate FileFind, Callback, EF Core, and Maui
   - [x] Read and use Meta Data from MP3 files
-- [ ] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
+- [x] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
 - [ ] Work on general logic around the DB and App
-  - [ ] Id each song by filename to eliminate dupclicates.
+  - [x] Id each song by filename to eliminate duplicates.
     - [ ] Uniquely ID each song to eliminate duplicates, including duplicate filenames
 - [ ] Add Automatic Playlists based on Meta Data
 - [ ] Generic Lockable Class.  Locked<T>.
@@ -114,12 +124,16 @@ Create a music library Web API and simple Media Player
 * Extra Wholesale Bag of Salt:
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
   * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
+* Disable windows app virtualization of the %appdata filesystem.  This options does not appear to be available in MAUI, only UWP.
 
 <br>
 
 ## Dev Blog
+* Started work on basic logging.
+* Rewrote the background task for the 4th time as: async IAsyncEnumerable<string> GetFilesAsync().  This version is streaming, and more closely matches standard conventions.  It should in theory be easier to use and understand.  It was perhaps the easiest iteration to write, but also took the most lines of code.
+* Started work on CommonLibrary, cleaning up code and moving common logic into the library in a more organized and readable way.
 * Fixed the playlist to continue playing ... but still lots of work to do.
-* (O.O) I had no idea this was a thing: &nbsp;&nbsp; **var _sourceSongList = TestSonglist.ItemsSource.Cast\<Song>().ToList();** &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
+* 😲 I had no idea this was a thing: &nbsp;&nbsp; **var _sourceSongList = TestSonglist.ItemsSource.Cast\<Song>().ToList();** &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
 * Wired up the Song List, and now can select and play a song from the list.  I am going to need to redo whole sections of this code now that I have a better understanding of everything so far.
 * When avialable, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
 * There were additional Issues with nested buttons

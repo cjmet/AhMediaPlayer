@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maui Cli", "CLI\Maui Cli.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "..\Sandbox\Sandbox.csproj", "{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{40619503-73BC-4B32-B1E7-D5E659F0C5BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{40619503-73BC-4B32-B1E7-D5E659F0C5BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonNet8", "CommonNet8\CommonNet8.csproj", "{EBD62B7C-A983-4EF4-AC66-C0921377BADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{40619503-73BC-4B32-B1E7-D5E659F0C5BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40619503-73BC-4B32-B1E7-D5E659F0C5BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40619503-73BC-4B32-B1E7-D5E659F0C5BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBD62B7C-A983-4EF4-AC66-C0921377BADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBD62B7C-A983-4EF4-AC66-C0921377BADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBD62B7C-A983-4EF4-AC66-C0921377BADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBD62B7C-A983-4EF4-AC66-C0921377BADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

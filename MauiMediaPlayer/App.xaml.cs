@@ -29,11 +29,12 @@ namespace MauiMediaPlayer
             window.X = (displayInfo.Width / displayInfo.Density - window.Width) / 2;
             window.Y = (displayInfo.Height / displayInfo.Density - window.Height) / 2 - Const.AppDisplayBorder/2;
 
-
+            window.MinimumWidth = Const.AppMinimumWidth; window.MinimumHeight = Const.AppMinimumHeight;
+            window.MaximumWidth = Const.AppMaximumWidth;
             Debug.WriteLine("\n=== ======================================== ===\n");
 
             Debug.WriteLine($"*** Display Info: {displayInfo.Width}x{displayInfo.Height} * {displayInfo.Density}");
-            Debug.WriteLine($"*** Window Info: {window.Width}x{window.Height} @ {window.X}x{window.Y}");
+            Debug.WriteLine($"*** Window Info: {window.Width}x{window.Height} / {window.MinimumWidth}x{window.MinimumHeight} / {window.MinimumWidth} @ {window.X}x{window.Y}");
 
             Debug.WriteLine("\n=== /Display Info =============================== ===\n");
 

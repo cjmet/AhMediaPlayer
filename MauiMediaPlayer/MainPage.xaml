@@ -17,7 +17,7 @@
                 Caption
                 -->
 
-    <Grid>
+    <Grid MinimumWidthRequest="375" MinimumHeightRequest="375">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition Height="27" />
@@ -30,21 +30,24 @@
             <RowDefinition Height="16" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60" />
             <ColumnDefinition />
-            <ColumnDefinition Width="60" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
 
         <!-- Row 0 -->
         <Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />
-        <Label Text=""
-               Grid.Row="0"
+        <Label Text="Angel Hornet Media Player"
                Style="{StaticResource NormalText}"
+               FontSize="Micro"
+               Grid.Row="0"
+               Grid.ColumnSpan="2"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
                   />
 
         <!-- Row 1 -->
-        <ContentView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+        <ContentView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <ListView x:Name="TestPlaylist"  >
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -80,25 +83,11 @@
         <!-- Row 2 -->
         <Image Source="angel_hornet_logo_cropped.png"
                     Grid.Row="2"
-                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
                     Aspect="AspectFit"
                     SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" 
                     ZIndex="1"
                     />
-        <!--<Button 
-            Text="Change Song Test"
-            Style="{StaticResource NormalText}" 
-            Padding="0" Margin="0"
-            Grid.Row="2"
-            Grid.Column="1"
-            MaximumHeightRequest="150"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-            Command="{Binding ChangeSongCommand}"
-            CommandParameter="Change Song Text!"
-            Opacity="0"
-            ZIndex="2"/>-->
-
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv -->
@@ -111,39 +100,50 @@
             MediaEnded="mediaElement_MediaEnded"
             Grid.Row="3"
             Grid.RowSpan="2"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
+            VerticalOptions="Start"
+            MinimumWidthRequest="350"          
             ZIndex="1" />
         <!-- Row 4 -->
         <Label x:Name="mediaTitle"
             Text="Song Title"
             Style="{StaticResource NormalText}"
+            Margin="60,0,60,0"
             FontSize="Micro"
             FontAttributes="Bold"
             Grid.Row="3" 
-            Grid.Column="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             HorizontalOptions="Center"
             VerticalOptions="End"
-            LineBreakMode="HeadTruncation"
+            LineBreakMode="TailTruncation"
             ZIndex="2"/>
         <!-- Row 5 -->
         <Label x:Name="mediaArtist"
-            Text="Artist Name - Album Name"
+            Text="Artist Name"
             FontSize="Caption"
+            Margin="25,0,5,0"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="End"
+            VerticalOptions="Start"
+            LineBreakMode="TailTruncation"
+            ZIndex="2"/>
+
+        <Label x:Name="mediaAlbum"
+            Text="Album Name"
+            FontSize="Caption"
+            Margin="5,0,25,0"
             Grid.Row="4"
             Grid.Column="1"
-            HorizontalOptions="Center"
+            HorizontalOptions="Start"
             VerticalOptions="Start"
-            LineBreakMode="HeadTruncation"
+            LineBreakMode="TailTruncation"
             ZIndex="2"/>
 
         <!--</Combined MediaElement with Labels>-->
         <!-- ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ -->
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
-
-
-
-
-
 
 
 
@@ -168,60 +168,54 @@
                     <DataTemplate >
                         <ViewCell >
                             <Frame Padding="10,0,10,2" Margin="0,0,13,0" BackgroundColor="Transparent" >
-                                <StackLayout Padding="0">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
                                     <Label Text="{Binding Title}"       
                                         Style="{StaticResource NormalText}"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Grid.Row="0"
                                         LineBreakMode="TailTruncation"
                                         FontSize="Micro"
                                         FontAttributes="Bold" 
+                                        HorizontalOptions="Center"
                                         ZIndex="1"/>
-                                    <Grid >
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        
-                                        <!--Insert Button Below-->
-                                        
-                                        <!--<Button 
-                                            Text="Change Song Test 2"
-                                            Style="{StaticResource NormalText}" 
-                                            Padding="0" Margin="0"
-                                            Grid.Row="0"
-                                            Grid.Column="0"
-                                            Grid.RowSpan="2"
-                                            Grid.ColumnSpan="2"
-                                            MaximumHeightRequest="150"
-                                            HorizontalOptions="FillAndExpand"
-                                            VerticalOptions="FillAndExpand"
-                                            Command="{Binding ChangeSongCommand}"
-                                            CommandParameter="Change Song Test 2!"
-                                            Opacity=".25"
-                                        ZIndex="2"/>-->
-                                        
-                                        <!--Insert Button Above-->
-                                        
-                                        <Label Text="{Binding Artist}"  
-                                            Style="{StaticResource NormalText}" 
-                                            Grid.Column="0"
-                                            HorizontalOptions="Start"
-                                            LineBreakMode="TailTruncation"
-                                            FontSize="Caption"
-                                            ZIndex="1"/>
-                                        <Label Text="{Binding Album}"   
-                                            Style="{StaticResource NormalText}" 
-                                            Grid.Column="1"
-                                            HorizontalOptions="End"
-                                            LineBreakMode="TailTruncation"                                               
-                                            FontSize="Caption"
-                                            ZIndex="1"/>
-                                    </Grid>
+                                    <Label Text="{Binding Artist}"  
+                                           Style="{StaticResource NormalText}" 
+                                           Margin="0,0,5,0"
+                                           Grid.Column="0"
+                                           Grid.Row="1"
+                                           HorizontalOptions="Center"
+                                           LineBreakMode="TailTruncation"
+                                           FontSize="Caption"
+                                           ZIndex="1"/>
+                                    <Label Text="{Binding Album}"   
+                                           Style="{StaticResource NormalText}" 
+                                           Margin="5,0,0,0"
+                                           Grid.Column="1"
+                                           Grid.Row="1"
+                                           HorizontalOptions="Center"
+                                           LineBreakMode="TailTruncation"                                               
+                                           FontSize="Caption"
+                                           ZIndex="1"/>
                                     <Label Text="{Binding Genre}"   
                                         Style="{StaticResource NormalText}" 
+                                        Grid.Column="0"  
+                                        Grid.ColumnSpan="2"
+                                        Grid.Row="2"
+                                        HorizontalOptions="Center"
                                         LineBreakMode="TailTruncation"                                           
                                         FontSize="Caption"
                                         ZIndex="1"/>
-                                </StackLayout>
+                                </Grid>
                             </Frame>
                         </ViewCell>
                     </DataTemplate>
