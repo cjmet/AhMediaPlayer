@@ -43,7 +43,7 @@ Create a music library Web API and simple Media Player
 - [x] Create a Playlist class
 - [x] Wire up a Button with Command and Command Parameters
 - [x] Play as song from a static Playlist
-- [ ] Play more than one song from a static Playlist
+- [x] Play more than one song from a static Playlist
 - [ ] Work on the UI Layout
 
 * ### Common Library 
@@ -118,6 +118,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Fixed the playlist to continue playing ... but still lots of work to do.
+* (O.O) I had no idea this was a thing: &nbsp;&nbsp; **var _sourceSongList = TestSonglist.ItemsSource.Cast\<Song>().ToList();** &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
 * Wired up the Song List, and now can select and play a song from the list.  I am going to need to redo whole sections of this code now that I have a better understanding of everything so far.
 * When avialable, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
 * There were additional Issues with nested buttons

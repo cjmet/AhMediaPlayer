@@ -108,7 +108,7 @@
         <toolkit:MediaElement x:Name="mediaElement" 
             Source="embed://gs-16b-1c-44100hz.mp3"
             ShouldShowPlaybackControls="True"
-
+            MediaEnded="mediaElement_MediaEnded"
             Grid.Row="3"
             Grid.RowSpan="2"
             Grid.ColumnSpan="3"

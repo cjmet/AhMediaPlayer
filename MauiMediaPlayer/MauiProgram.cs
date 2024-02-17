@@ -55,19 +55,19 @@ namespace MauiMediaPlayer
 
                 _dbContext.Songs.Add(new Song
                 {
-                    Title = "B - Test Song - With a Very Long Name",
+                    Title = "B - Test Song - With a Very Long Name - and Big Long Band Name",
                     Artist = "Test Artist - With a Very Long Name",
                     Album = "Test Album  - With a Very Long Name",
                     Genre = "Test Genre - With a Very Long Name - And a Whole Bunch More Gibberish",
-                    PathName = "Z 02 - Test Path"
+                    PathName = "embed://gs-16b-1c-44100hz.mp3"
                 });
                 _dbContext.Songs.Add(new Song
                 {
                     Title = "B - Test Song",
                     Artist = "Test Artist",
                     Album = "Test Album",
-                    Genre = "Test Genre - With a Very Long Name - And a Whole Bunch More Gibberish",
-                    PathName = "Z 03 - Test Path"
+                    Genre = "Test Genre",
+                    PathName = "embed://gs-16b-1c-44100hz.mp3"
                 });
 
                 _dbContext.SaveChanges();

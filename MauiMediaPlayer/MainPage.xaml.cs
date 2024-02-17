@@ -15,6 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore;
 using WinRT;
+using Microsoft.Maui.Controls.Internals;
 
 
 
@@ -27,8 +28,8 @@ namespace MauiMediaPlayer
         int count = 10;
 
         private readonly PlaylistContext _dbContext;
-        //List<string> result = new List<string>();
-        //string searchStatus = "Searching...";
+        List<Song> _mainSongList = new List<Song>();
+
 
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
@@ -135,13 +136,16 @@ namespace MauiMediaPlayer
                         var _song = _songs.FirstOrDefault();
 
                         Debug.WriteLine("\n=== ======================================== ===\n");
-                        Debug.WriteLine($"Attempting to set _mediaSource = {_song.PathName}");
+                        Debug.WriteLine($"[138] Attempting to set _mediaSource = {_song.PathName}");
                         Debug.WriteLine("\n=== ======================================== ===\n");
-                        MediaSource _mediaSource;
+                        MediaSource _mediaSource = null;
                         // cjm - this is causing a crash here
-                        if (_song.PathName != null && File.Exists(_song.PathName))
+                        if (_song.PathName != null)
                         {
-                            _mediaSource = MediaSource.FromFile(_song.PathName);
+                            _mediaSource = null;
+                            if (File.Exists(_song.PathName)) _mediaSource = MediaSource.FromFile(_song.PathName);
+                            else if (_song.PathName.StartsWith("embed://")) _mediaSource = MediaSource.FromResource(_song.PathName.Substring(8));
+                            Debug.WriteLine($"_mediaSource = {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
                             if (_mediaSource != null)
                             {
                                 mediaElement.Source = _mediaSource;
@@ -176,8 +180,9 @@ namespace MauiMediaPlayer
 
 
             TestPlaylist.ItemsSource = _dbContext.Playlists.ToList();
-            TestSonglist.ItemsSource = _dbContext.Songs.ToList();
-
+            _mainSongList = _dbContext.Songs.ToList();
+            _mainSongList = _mainSongList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+            TestSonglist.ItemsSource = _mainSongList;
 
 
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -239,16 +244,22 @@ namespace MauiMediaPlayer
             Debug.WriteLine("TestSonglist_ItemSelected");
             Debug.WriteLine("Sender: " + sender.ToString());
             Debug.WriteLine("Selected: " + e.SelectedItem);
+            Debug.WriteLine("SelectedIndex: " + e.SelectedItemIndex);
             var _song = (Song)e.SelectedItem;
+            var _index = e.SelectedItemIndex;
             var _listView = (ListView)sender;
             _listView.Focus();
             TestSonglist.SelectedItem = _song;
-            
-            Debug.WriteLine($"Attempting to set _mediaSource = {_song.PathName}");
+
+            Debug.WriteLine($"[262] Attempting to set _mediaSource = {_song.PathName}");
             MediaSource _mediaSource;
-            if (_song.PathName != null && File.Exists(_song.PathName))
+
+            if (_song.PathName != null)
             {
-                _mediaSource = MediaSource.FromFile(_song.PathName);
+                _mediaSource = null;
+                if (File.Exists(_song.PathName)) _mediaSource = MediaSource.FromFile(_song.PathName);
+                else if (_song.PathName.StartsWith("embed://")) _mediaSource = MediaSource.FromResource(_song.PathName.Substring(8));
+                Debug.WriteLine($"_mediaSource = {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
                 if (_mediaSource != null)
                 {
                     mediaElement.ShouldAutoPlay = true;
@@ -273,6 +284,50 @@ namespace MauiMediaPlayer
                     //                       mediaArtist.Text = $"{_song.Artist} - {_song.Album}");
 
                 }
+            }
+        }
+
+        private void mediaElement_MediaEnded(object sender, EventArgs e)
+        {
+            Debug.WriteLine("MediaElement_MediaEnded");
+            Debug.WriteLine("   Sender: " + sender.ToString());
+            Debug.WriteLine("   EventArgs_String: " + e.ToString);
+            Debug.WriteLine("   EventArgs_Type: " + e.GetType);
+
+            var _selectedSong = (Song)TestSonglist.SelectedItem;
+            var _sourceSongList = TestSonglist.ItemsSource.Cast<Song>().ToList();
+            //_selectedSong = _mainSongList.Where(s => s.Title == _selectedSong.Title).FirstOrDefault();
+            var _selectedSongIndex = _sourceSongList.IndexOf(_selectedSong);
+            var _newSong = _sourceSongList.ElementAtOrDefault(_selectedSongIndex + 1);
+            var _newSongIndex = _sourceSongList.IndexOf(_newSong);
+
+            Debug.WriteLine($"Changing Songs: ");
+            Debug.WriteLine($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
+            if (_newSong == null)
+            {
+                Debug.WriteLine($"     To[{_newSongIndex}]: null");
+                return;
+            }
+            Debug.WriteLine($"     To[{_newSongIndex}]: {_newSong.Title}");
+
+            if (_newSong.PathName != null)
+            {
+                MediaSource _mediaSource = null;
+                if (File.Exists(_newSong.PathName)) _mediaSource = MediaSource.FromFile(_newSong.PathName);
+                else if (_newSong.PathName.StartsWith("embed://")) _mediaSource = MediaSource.FromResource(_newSong.PathName.Substring(8));
+                if (_mediaSource != null)
+                    Task.Run(() =>
+                    {
+                        Debug.WriteLine($"[314]  TestSonglist.SelectedItem = _newSong ... ");
+                        Application.Current.MainPage.Dispatcher.Dispatch(() =>  // This *** DOES *** need to be Dispatched.
+                                 TestSonglist.SelectedItem = _newSong);                  // This triggers our select event ... so don't sent anythng else here, let the event handle it.
+                        Debug.WriteLine($"[316]  Scrolling ... ");
+                        Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                              TestSonglist.ScrollTo(_newSong, ScrollToPosition.Start, true));
+                        Debug.WriteLine($"[316]  Selection Complete");
+
+                    }
+                    );
             }
         }
     }
