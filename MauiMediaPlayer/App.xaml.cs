@@ -1,5 +1,6 @@
 ﻿using Microsoft.Maui.Controls.Platform.Compatibility;
 using System.Diagnostics;
+using static AngelHornetLibrary.AhLog;
 
 namespace MauiMediaPlayer
 {
@@ -31,12 +32,12 @@ namespace MauiMediaPlayer
 
             window.MinimumWidth = Const.AppMinimumWidth; window.MinimumHeight = Const.AppMinimumHeight;
             window.MaximumWidth = Const.AppMaximumWidth;
-            Debug.WriteLine("\n=== ======================================== ===\n");
+            LogInfo("\n=== ======================================== ===\n");
 
-            Debug.WriteLine($"*** Display Info: {displayInfo.Width}x{displayInfo.Height} * {displayInfo.Density}");
-            Debug.WriteLine($"*** Window Info: {window.Width}x{window.Height} / {window.MinimumWidth}x{window.MinimumHeight} / {window.MinimumWidth} @ {window.X}x{window.Y}");
+            LogInfo($"*** Display Info: {displayInfo.Width}x{displayInfo.Height} * {displayInfo.Density}");
+            LogInfo($"*** Window Info: {window.Width}x{window.Height} / {window.MinimumWidth}x{window.MinimumHeight} / {window.MinimumWidth} @ {window.X}x{window.Y}");
 
-            Debug.WriteLine("\n=== /Display Info =============================== ===\n");
+            LogInfo("\n=== /Display Info =============================== ===\n");
 
 
 

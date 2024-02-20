@@ -3,7 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
+using static AngelHornetLibrary.AhLog;
 
 
 namespace DataLibrary
@@ -14,7 +14,7 @@ namespace DataLibrary
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<Song> Songs { get; set; }
         public string DbPath { get; private set; }
-        public bool VerboseSQL { get; set; } = true;
+        public bool VerboseSQL { get; set; } = false;
 
         public PlaylistContext()
         {
@@ -26,12 +26,12 @@ namespace DataLibrary
 #endif
             var path = Environment.GetFolderPath(folder);
             DbPath = Path.Join(path, dbName);
-            Debug.WriteLine("\n=== ======================================== ===\n");
-            Debug.WriteLine($"*** Folder: {folder}");
-            Debug.WriteLine($"*** Path: {path}");
-            Debug.WriteLine($"*** DbPath   25: {DbPath}");
-            Debug.WriteLine($"*** DbContextId: {this.ContextId}");
-            Debug.WriteLine("\n=== /DbInfo ================================ ===\n");
+            LogInfo("\n=== ======================================== ===\n");
+            LogInfo($"*** Folder: {folder}");
+            LogInfo($"*** Path: {path}");
+            LogInfo($"*** DbPath   25: {DbPath}");
+            LogInfo($"*** DbContextId: {this.ContextId}");
+            LogInfo("\n=== /DbInfo ================================ ===\n");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -61,7 +61,7 @@ namespace DataLibrary
         {
             if (VerboseSQL)
             {
-                Debug.WriteLine(logMessage);
+                LogInfo(logMessage);
             }
         }
 

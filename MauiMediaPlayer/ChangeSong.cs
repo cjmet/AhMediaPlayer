@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using MauiMediaPlayer;
+using static AngelHornetLibrary.AhLog;
 
 namespace MauiMediaPlayer
 {
@@ -25,7 +26,7 @@ namespace MauiMediaPlayer
 
         private void ChangeSongMethod(string s)
         {
-            Debug.WriteLine(s);
+            LogInfo(s);
         }
     }
     

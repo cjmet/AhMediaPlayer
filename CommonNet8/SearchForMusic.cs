@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Id3;
 using static DataLibrary.GenreDictionary;
 using AngelHornetLibrary;
+using static AngelHornetLibrary.AhLog;
 
 namespace CommonNet8
 {
@@ -15,11 +16,11 @@ namespace CommonNet8
             var folder = Environment.SpecialFolder.UserProfile;
             var path = Environment.GetFolderPath(folder);
             var MusicPath = Path.Join(path, "Music");
-            Debug.WriteLine($"MusicPath: {MusicPath}");
+            LogInfo($"MusicPath: {MusicPath}");
 
             await foreach (string filename in new AhGetFiles().GetFilesAsync(MusicPath, "*.mp3"))
             {
-                Debug.WriteLine($"   Adding: {filename}");
+                LogInfo($"Adding[23]: {filename}");
                 AddFilenameToSongDb(filename);
             }
             return;
@@ -29,32 +30,32 @@ namespace CommonNet8
         {
             var _adbContext = new PlaylistContext();
             {
-                Debug.WriteLine($"*** Adding: {filename}");
+                LogInfo($"*** Checking: {filename}");
                 var _dirName = Path.GetDirectoryName(filename);
                 var _fileName = Path.GetFileNameWithoutExtension(filename);
                 if (_adbContext.Songs.Any(s => s.PathName == filename))
                 {
-                    Debug.WriteLine($"*** Already Exists: {filename}");
+                    LogInfo($"*** Already Exists: {filename}");
                     return;
                 }
-                Debug.WriteLine($"*** Adding: {filename}");
+                LogInfo($"*** Adding[41]: {filename}");
                 // Tag v2
                 var tag = new Mp3(filename).GetTag(Id3TagFamily.Version2X);
                 if (tag == null)
                 {
-                    Debug.WriteLine($"*** Tag v2 is null: {tag} -> {filename}");
+                    LogInfo($"*** Tag v2 is null: {tag} -> {filename}");
                     tag = new Mp3(filename).GetTag(Id3TagFamily.Version1X);
                 }
                 // Tag v1
                 if (tag == null)
                 {
-                    Debug.WriteLine($"*** Tag v1 is null: {tag} -> {filename}");
+                    LogInfo($"*** Tag v1 is null: {tag} -> {filename}");
                     tag = new Mp3(filename).GetAllTags().FirstOrDefault();
                 }
                 // ANY Tag
                 if (tag == null)
                 {
-                    Debug.WriteLine($"\n***\n*** ALL TAGS ARE NULL *** !!! {tag}\n     {filename}\n***\n");
+                    LogInfo($"\n***\n*** ALL TAGS ARE NULL *** !!! {tag}\n     {filename}\n***\n");
                     tag = new Mp3(filename).GetTag(Id3TagFamily.Version1X);
                     tag = new Id3Tag
                     {
@@ -87,11 +88,11 @@ namespace CommonNet8
                     Length = tag.Length,
                 });
                 // there does not appear to be a tag.Dispose() method
-                Debug.WriteLine($"*** Added: {filename}");
+                LogInfo($"*** Added: {filename}");
             }
-            Debug.WriteLine(" *** Saving Changes: _adbContext ***");
+            LogInfo(" *** Saving Changes: _adbContext ***");
             _adbContext.SaveChanges();
-            Debug.WriteLine(" *** Changes Saved ***");
+            LogInfo(" *** Changes Saved ***");
         }
 
 

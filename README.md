@@ -89,15 +89,16 @@ Create a music library Web API and simple Media Player
 
 <br>
 
-## Project Requirements
+## Project Requirements (Pick 3 or more)
 - [x] Async Task
   * Created a background task to scan local and remote smb drives for media files, using callbacks to deliver results back to the main task asynchronously.
 - [x] List or Dictionary
-  * Using multiple lists as well as the ConcurrentQueue class in the background task.
+  * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [ ] API
 - [ ] CRUD API
 - [ ] Multiple Data Tables
-- [ ] Logging of Errors and Debug Info.
+- [x] Logging of Errors and Debug Info.
+  * AhLog() class and Serilog
 - [ ] Unit Testing
 - [ ] SOLID Principles
 - [ ] SQL Queries
@@ -129,6 +130,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Added default Logging.  AhLog() class using Serilog.
 * Started work on basic logging.
 * Rewrote the background task for the 4th time as: async IAsyncEnumerable<string> GetFilesAsync().  This version is streaming, and more closely matches standard conventions.  It should in theory be easier to use and understand.  It was perhaps the easiest iteration to write, but also took the most lines of code.
 * Started work on CommonLibrary, cleaning up code and moving common logic into the library in a more organized and readable way.

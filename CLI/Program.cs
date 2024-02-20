@@ -17,7 +17,7 @@ namespace MauiCli
         static void Main(string[] args) // Main 
         {
 
-            // AhLog: Start, Stop, Log, LogDebug, LogError, LogInformation, LogTrace, LogWarning, LogCritical
+            // AhLog: Start, Stop, Log, LogDebug, LogInfo, LogInformation, LogTrace, LogWarning, LogCritical
             Log("Hello, Serilog! Log!");
 
             Log("Testing Log Levels ...");
@@ -25,7 +25,7 @@ namespace MauiCli
             LogDebug("Hello, Serilog! Debug!");
             LogInformation("Hello, Serilog! Information!");
             LogWarning("Hello, Serilog! Warning!");
-            LogError("Hello, Serilog! Error!");
+            LogInfo("Hello, Serilog! Error!");
             LogCritical("Hello, Serilog! Critical!");
             Log("Log Testing Complete.\n");
 
@@ -58,7 +58,7 @@ namespace MauiCli
             Console.WriteLine($"FindFilesQueueFunc: {path}");
             await foreach (string filename in new AhGetFiles().GetFilesAsync(path, "*.mp3"))
             {
-                Console.WriteLine($"Adding: {filename}");
+                Console.WriteLine($"Adding[61]: {filename}");
                 AddFilenameToSongDb(filename);
             }
             return;

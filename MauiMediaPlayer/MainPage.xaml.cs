@@ -2,7 +2,7 @@
 using DataLibrary;
 using System.Diagnostics;
 using static CommonNet8.SearchForMusic;
-
+using static AngelHornetLibrary.AhLog;
 
 
 namespace MauiMediaPlayer
@@ -24,7 +24,7 @@ namespace MauiMediaPlayer
             Task.Run(async () =>
             {
                 await task;
-                Debug.WriteLine("SearchUserProfileMusic() Complete.");
+                LogInfo("SearchUserProfileMusic() Complete.");
 
                 var _playlists = _dbContext.Playlists.ToList();
                 Application.Current.MainPage.Dispatcher.Dispatch(() =>
@@ -35,7 +35,7 @@ namespace MauiMediaPlayer
                 Application.Current.MainPage.Dispatcher.Dispatch(() =>
                                TestSonglist.ItemsSource = _songList);
 
-                Debug.WriteLine("SongsDb Dispatch Complete.");
+                LogInfo("SongsDb Dispatch Complete.");
             });
 
             {
@@ -65,9 +65,9 @@ namespace MauiMediaPlayer
             var _newSongIndex = _sourceSongList.IndexOf(_newSong);
             var _title = _newSong != null ? _newSong.Title : "null";
 
-            Debug.WriteLine($"Changing Songs: ");
-            Debug.WriteLine($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
-            Debug.WriteLine($"     To[{_newSongIndex}]: {_title}");
+            LogInfo($"Changing Songs: ");
+            LogInfo($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
+            LogInfo($"     To[{_newSongIndex}]: {_title}");
 
             if (_newSong != null)
             {
@@ -90,7 +90,7 @@ namespace MauiMediaPlayer
                 MediaSource _mediaSource = null;
                 if (File.Exists(song.PathName)) _mediaSource = MediaSource.FromFile(song.PathName);
                 else if (song.PathName.StartsWith("embed://")) _mediaSource = MediaSource.FromResource(song.PathName.Substring(8));
-                Debug.WriteLine($"PlaySong: _mediaSource = {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
+                LogInfo($"PlaySong: _mediaSource = {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
                 if (_mediaSource != null)
                 {
                     Application.Current.MainPage.Dispatcher.Dispatch(() =>
