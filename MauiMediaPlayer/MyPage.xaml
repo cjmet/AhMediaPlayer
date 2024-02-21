@@ -22,7 +22,7 @@
                FontSize="Large"
                HorizontalOptions="Center"
                VerticalOptions="CenterAndExpand" />-->
-        <ListView x:Name="Debuglist" >
+        <ListView x:Name="DataWindow" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

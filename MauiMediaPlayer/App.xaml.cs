@@ -11,6 +11,7 @@ namespace MauiMediaPlayer
             InitializeComponent();
 
             MainPage = new AppShell();
+
         }
 
         

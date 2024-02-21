@@ -3,6 +3,7 @@ using DataLibrary;
 using System.Diagnostics;
 using static CommonNet8.SearchForMusic;
 using static AngelHornetLibrary.AhLog;
+using Microsoft.Maui.Handlers;
 
 
 namespace MauiMediaPlayer
@@ -10,49 +11,35 @@ namespace MauiMediaPlayer
     public partial class MainPage : ContentPage
     {
 
-        int count = 10;
-
         private readonly PlaylistContext _dbContext;
+
+
 
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
         {
+            // Change: Application.Current.MainPage.Dispatcher.Dispatch
+            // to: this.Dispatcher.Dispatch
+
             InitializeComponent();
             _dbContext = dbcontext;
 
-            // cjm - This work here but is almost certainly NOT the place it needs to go.
-            // Second Window
-            // https://devblogs.microsoft.com/dotnet/announcing-dotnet-maui-preview-11/
-            //var secondWindow = new Window
-            //{
-            //    Page = new MySecondPage
-            //    {
-            //        // ...
-            //    }
-            //};
-            //Application.Current.OpenWindow(secondWindow);
-            var secondWindow = new Window(new MyPage());    
-            secondWindow.Width = 1080;
-            secondWindow.Height = 640;
-            secondWindow.X = 25;
-            secondWindow.Y = 25;
-            secondWindow.Title = "AhLog Window";
-            Application.Current.OpenWindow(secondWindow);
-            // /Second Window
+            var _ = SecondWindow(Application.Current, TestSonglist); 
 
             var task = SearchUserProfileMusic();
             Task.Run(async () =>
             {
+                
                 await task;
                 LogInfo("SearchUserProfileMusic() Complete.");
 
                 var _playlists = _dbContext.Playlists.ToList();
-                Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                this.Dispatcher.Dispatch(() =>
                                TestPlaylist.ItemsSource = _playlists);
 
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
-                Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                this.Dispatcher.Dispatch(() =>
                                TestSonglist.ItemsSource = _songList);
 
                 LogInfo("SongsDb Dispatch Complete.");
@@ -64,6 +51,7 @@ namespace MauiMediaPlayer
                 _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
                 TestSonglist.ItemsSource = _songList;
             }
+            
         }
 
         private void TestSonglist_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -92,7 +80,7 @@ namespace MauiMediaPlayer
             if (_newSong != null)
             {
                 // PlaySong(_newSong); is not needed here. // The selection action dispatched below triggers the selected event which in turn triggers the PlaySong() method.
-                Application.Current.MainPage.Dispatcher.Dispatch(() =>              // We definitely need to use dispatcher here.
+                this.Dispatcher.Dispatch(() =>              // We definitely need to use dispatcher here.
                 {
                     TestSonglist.SelectedItem = _newSong;
                     TestSonglist.ScrollTo(_newSong, ScrollToPosition.Start, true);
@@ -113,7 +101,7 @@ namespace MauiMediaPlayer
                 LogInfo($"PlaySong: _mediaSource = {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
                 if (_mediaSource != null)
                 {
-                    Application.Current.MainPage.Dispatcher.Dispatch(() =>
+                    this.Dispatcher.Dispatch(() =>
                     {
                         mediaElement.ShouldAutoPlay = true;
                         mediaTitle.Text = song.Title;
@@ -124,5 +112,42 @@ namespace MauiMediaPlayer
                 }
             }
         }
+
+
+
+        private async Task SecondWindow(Application? app, ListView list)
+        {
+            // cjm - This works here but is almost certainly NOT the place it needs to go.
+            // Second Window
+            // https://devblogs.microsoft.com/dotnet/announcing-dotnet-maui-preview-11/
+            //var secondWindow = new Window
+            //{
+            //    Page = new MySecondPage
+            //    {
+            //        // ...
+            //    }
+            //};
+            //Application.Current.OpenWindow(secondWindow);
+            // /Second Window
+
+
+
+            // Let the main window open first.
+            while (list.Height < 1) await Task.Delay(25);
+
+            // and then let it populate, there should be at least one song?
+            while (list.ItemsSource == null || list.ItemsSource.Cast<Song>().ToList().Count < 1) await Task.Delay(25);
+
+            var secondWindow = new Window(new MyPage());
+            secondWindow.Width = 1080;
+            secondWindow.Height = 640;
+            secondWindow.X = 25;
+            secondWindow.Y = 25;
+            secondWindow.Title = "AhLog Window";
+            app.OpenWindow(secondWindow);
+        }
+
+
+
     }
 }

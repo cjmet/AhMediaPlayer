@@ -133,6 +133,40 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Added FileLoop and (simple) file change detection.  This would perhaps be better with a FileSystemWatcher, but it's already 100 lines long and complicated enough.  And I'm probably going to throw it away and completely rewrite it anyway.  I just wanted to finish this path to learn everything I could from it.
+* Don't write to the logfile inside the loop that reads your log file. 😉
+* Using ListView and StreamReader inside the Second Window
+  * `while (DataWindow.Height < 1) await Task.Delay(25);` To make sure the window is open before trying to access it.
+  * MUST use `ObserverableCollection`, and MUST use `await Dispatcher.DispatchAsync`, (or at least use {Dispatch(); await Task.Delay(1)}, when running on a different thread.
+  * `ObservableCollection` is a collection that provides notifications when items get added, removed, or when the whole list is refreshed.  This makes updates automatic.
+  * **`await Application.Current.Dispatcher.DispatchAsync()`**   Is definitely the method you want, particularly when running async on a different thread.
+    * Alternatively you 'can' {Dispatch(); await Task.Delay(1);} in order to allow the system to process the Dispatch before continuing.  However, this is slower, a little buggy, and is not recommended.
+  * MUST use `FileShare.ReadWrite` to allow the file to be read while it is open by the other process. ReadWrite is a bit counterintuitive, as I'm only asking for read access, but it is necessary.  
+  * Permissions by level, in order?: `Read, Write, ReadWrite, Delete, Append, AllAccess`.  Increase permission level until you get the access you need.
+* Opening the Second Window
+  * I still don't know the 'correct' place to put this code. But It needs to be somewhere that you can reference `Application.Current`.
+  * https://devblogs.microsoft.com/dotnet/announcing-dotnet-maui-preview-11/
+    ``` 
+    var secondWindow = new Window
+    {
+        Page = new MySecondPage
+        {
+            // ...
+        }
+    };
+    Application.Current.OpenWindow(secondWindow);
+    ```    
+  * This seems to work to make sure the windows are rendered before trying to access them.
+    ```
+    // Let the main window open first.
+    while (list.Height < 1) await Task.Delay(25);
+    // and then let it populate, there should be at least one song?
+    while (list.ItemsSource == null || list.ItemsSource.Cast<Song>().ToList().Count < 1) await Task.Delay(25);
+    ```
+  * ...
+* Change: `Application.Current.MainPage.Dispatcher.Dispatch` to `this.Dispatcher.Dispatch`
+* Spent all day fixing code I'm probably never going to use, just because it was an eventful learning experience.
+* That was a total Disaster. Need to fix the data types. Need to figure out where to move the 2nd window code. Need to be able to verify that data is onscreen. More things than I can even think to write down
 * Worked on the second Maui Window to display AhLog() data.
 * Resources are required to have Lowercase Filenames:
   * `Get-childItem "." | Rename-Item -NewName {$_.Basename.tostring().tolower() + $_.extension}`
