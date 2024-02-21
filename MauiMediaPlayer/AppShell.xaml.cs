@@ -5,7 +5,7 @@
         public AppShell()
         {
             InitializeComponent();
-            
+
             var secondWindow = new Window(new MyPage());
             secondWindow.Width = 1080;
             secondWindow.Height = 640;

@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using DataLibrary;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using static AngelHornetLibrary.AhLog;
 
 

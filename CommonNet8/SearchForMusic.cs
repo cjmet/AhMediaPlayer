@@ -1,10 +1,8 @@
-﻿using System.Collections.Concurrent;
+﻿using AngelHornetLibrary;
 using DataLibrary;
-using System.Diagnostics;
 using Id3;
-using static DataLibrary.GenreDictionary;
-using AngelHornetLibrary;
 using static AngelHornetLibrary.AhLog;
+using static DataLibrary.GenreDictionary;
 
 namespace CommonNet8
 {

@@ -1,6 +1,4 @@
-﻿using AngelHornetLibrary.CLI;
-
-namespace CLI
+﻿namespace CLI
 {
     class Test_Background_Class
     {

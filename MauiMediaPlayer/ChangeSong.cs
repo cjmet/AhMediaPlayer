@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+
+/* Unmerged change from project 'MauiMediaPlayer (net8.0-windows10.0.19041.0)'
+Before:
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+After:
 using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using MauiMediaPlayer;
+using System.Linq;
+*/
+using System.Windows.Input;
 using static AngelHornetLibrary.AhLog;
 
 namespace MauiMediaPlayer
@@ -29,5 +29,5 @@ namespace MauiMediaPlayer
             LogInfo(s);
         }
     }
-    
+
 }

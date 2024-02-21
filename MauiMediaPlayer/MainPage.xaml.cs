@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Maui.Views;
 using DataLibrary;
-using System.Diagnostics;
-using static CommonNet8.SearchForMusic;
 using static AngelHornetLibrary.AhLog;
-using Microsoft.Maui.Handlers;
+using static CommonNet8.SearchForMusic;
+
+
 
 
 namespace MauiMediaPlayer
@@ -24,12 +24,12 @@ namespace MauiMediaPlayer
             InitializeComponent();
             _dbContext = dbcontext;
 
-            var _ = SecondWindow(Application.Current, TestSonglist); 
+            var _ = SecondWindow(Application.Current, TestSonglist);
 
             var task = SearchUserProfileMusic();
             Task.Run(async () =>
             {
-                
+
                 await task;
                 LogInfo("SearchUserProfileMusic() Complete.");
 
@@ -51,7 +51,7 @@ namespace MauiMediaPlayer
                 _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
                 TestSonglist.ItemsSource = _songList;
             }
-            
+
         }
 
         private void TestSonglist_ItemSelected(object sender, SelectedItemChangedEventArgs e)

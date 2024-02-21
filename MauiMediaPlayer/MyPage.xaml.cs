@@ -1,20 +1,10 @@
-﻿using CommunityToolkit.Maui.Views;
-using DataLibrary;
-using System.Diagnostics;
-using static CommonNet8.SearchForMusic;
+﻿using AngelHornetLibrary;
 using static AngelHornetLibrary.AhLog;
-using Windows.Media.Playlists;
-using Windows.Media.MediaProperties;
-using Windows.Media.Core;
-using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using AngelHornetLibrary;
-using Microsoft.Maui.Layouts;
 using System.Collections.ObjectModel;
-using WinRT;
-using Microsoft.UI.Dispatching;
-using Windows.UI.Core;
+using System.Diagnostics;
+
+
+
 
 
 
@@ -54,10 +44,10 @@ namespace MauiMediaPlayer
             LogInfo("Start of Initial Dispatch Testing");
             var data = "Debugging Window Starting ...";
             pageOfData.Add(data);
-            this.Dispatcher.Dispatch(() =>  DataWindow.ItemsSource = pageOfData);
+            this.Dispatcher.Dispatch(() => DataWindow.ItemsSource = pageOfData);
             pageOfData.Add("Test Data Line 2");
             //Task.Run(() => { pageOfData.Add("Test Data Line 3"); });        // Safe only because it's on the same thread?  Even then I'm not entirely sure.
-            Task.Run(async () => { await this.Dispatcher.DispatchAsync(() => pageOfData.Add("Test Data Line 4"));   });   // MUST use the DispatchAsync
+            Task.Run(async () => { await this.Dispatcher.DispatchAsync(() => pageOfData.Add("Test Data Line 4")); });   // MUST use the DispatchAsync
             LogInfo("End of Initial Dispatch Testing");
 
             LogInfo("Breakpoint [67]");
@@ -108,7 +98,7 @@ namespace MauiMediaPlayer
                         await Task.Delay(1000);
                         onDiskSize = (int)new FileInfo(fileName).Length;
                         if (onDiskSize > fileSize) Debug.WriteLine($"FileStream File Size Changed: {onDiskSize} > {fileSize}");
-                    } while ( onDiskSize <= fileSize);
+                    } while (onDiskSize <= fileSize);
                 } while (true);
             });
             //

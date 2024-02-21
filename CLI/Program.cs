@@ -2,10 +2,8 @@
 using AngelHornetLibrary;
 using AngelHornetLibrary.CLI;
 using DataLibrary;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using static CommonNet8.SearchForMusic;
 using static AngelHornetLibrary.AhLog;
+using static CommonNet8.SearchForMusic;
 
 
 
@@ -13,7 +11,7 @@ namespace MauiCli
 {
     internal class Program
     {
-        
+
         static void Main(string[] args) // Main 
         {
 
