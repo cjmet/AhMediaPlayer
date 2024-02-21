@@ -34,8 +34,8 @@ namespace MauiMediaPlayer
             var secondWindow = new Window(new MyPage());    
             secondWindow.Width = 1080;
             secondWindow.Height = 640;
-            secondWindow.X = 100;
-            secondWindow.Y = 100;
+            secondWindow.X = 25;
+            secondWindow.Y = 25;
             secondWindow.Title = "AhLog Window";
             Application.Current.OpenWindow(secondWindow);
             // /Second Window

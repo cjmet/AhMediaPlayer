@@ -141,7 +141,7 @@ Create a music library Web API and simple Media Player
 * Rewrote the background task for the 4th time as: async IAsyncEnumerable<string> GetFilesAsync().  This version is streaming, and more closely matches standard conventions.  It should in theory be easier to use and understand.  It was perhaps the easiest iteration to write, but also took the most lines of code.
 * Started work on CommonLibrary, cleaning up code and moving common logic into the library in a more organized and readable way.
 * Fixed the playlist to continue playing ... but still lots of work to do.
-* 😲 I had no idea this was a thing: &nbsp;&nbsp; **var _sourceSongList = TestSonglist.ItemsSource.Cast\<Song>().ToList();** &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
+* 😲 I had no idea this was a thing: &nbsp;&nbsp; `var _sourceSongList = TestSonglist.ItemsSource.Cast\<Song>().ToList();` &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
 * Wired up the Song List, and now can select and play a song from the list.  I am going to need to redo whole sections of this code now that I have a better understanding of everything so far.
 * When avialable, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
 * There were additional Issues with nested buttons
