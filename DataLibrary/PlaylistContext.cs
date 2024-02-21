@@ -3,6 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks.Dataflow;
 using static AngelHornetLibrary.AhLog;
 
 
@@ -26,12 +27,8 @@ namespace DataLibrary
 #endif
             var path = Environment.GetFolderPath(folder);
             DbPath = Path.Join(path, dbName);
-            LogInfo("\n=== ======================================== ===\n");
-            LogInfo($"*** Folder: {folder}");
-            LogInfo($"*** Path: {path}");
-            LogInfo($"*** DbPath   25: {DbPath}");
-            LogInfo($"*** DbContextId: {this.ContextId}");
-            LogInfo("\n=== /DbInfo ================================ ===\n");
+            LogInfo($"***  DbPath: {DbPath}");
+            LogInfo($"     Context: {this.ContextId}");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

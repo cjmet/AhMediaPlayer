@@ -90,9 +90,9 @@ namespace CommonNet8
                 // there does not appear to be a tag.Dispose() method
                 LogInfo($"*** Added: {filename}");
             }
-            LogInfo(" *** Saving Changes: _adbContext ***");
+            LogInfo("*** Saving Changes: _adbContext ***");
             _adbContext.SaveChanges();
-            LogInfo(" *** Changes Saved ***");
+            LogInfo("*** Changes Saved ***");
         }
 
 

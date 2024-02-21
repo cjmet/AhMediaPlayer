@@ -24,8 +24,11 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 <br>
 
 ## Current Project Questions
-1. &nbsp;How do I access the log service from my other libraries and classes?
-1. &nbsp;How Do I? Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.
+1. &nbsp;How do I? &ensp; - &ensp; Access the log service from my other libraries and classes?
+   1. I put logging into AhLog() Library, Using DI, then access it through either AhLog or DI as needed.
+   1. I want it usable for CLI, Libraries, APP, and DI.
+   1. Is this a reasonable way to do this?
+1. &nbsp;How Do I? &ensp; - &ensp; Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.  Dispatcher Maybe?  Syntax?
 1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
 1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
@@ -36,9 +39,9 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do (Other Tasks)
-- [ ] Logging Service.  Move all the Debug.Writeline into a logging service that: 
-  - [ ] Writes to Logfile.txt
-  - [ ] Writes to Debug.Writeline
+- [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
+  - [x] Writes to Logfile.txt
+  - [x] Writes to Debug.Writeline
   - [ ] Writes to a Popup Window (if in debug mode)
 
 * ### Music Player
@@ -125,11 +128,14 @@ Create a music library Web API and simple Media Player
 * Extra Wholesale Bag of Salt:
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
   * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
-* Disable windows app virtualization of the %appdata filesystem.  This options does not appear to be available in MAUI, only UWP.
+* Disable windows app virtualization of the %appdata filesystem.  This options does not appear to be available in MAUI, only older UWP.
 
 <br>
 
 ## Dev Blog
+* Worked on the second Maui Window to display AhLog() data.
+* Resources are required to have Lowercase Filenames:
+  * `Get-childItem "." | Rename-Item -NewName {$_.Basename.tostring().tolower() + $_.extension}`
 * Added default Logging.  AhLog() class using Serilog.
 * Started work on basic logging.
 * Rewrote the background task for the 4th time as: async IAsyncEnumerable<string> GetFilesAsync().  This version is streaming, and more closely matches standard conventions.  It should in theory be easier to use and understand.  It was perhaps the easiest iteration to write, but also took the most lines of code.

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using DataLibrary;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using static AngelHornetLibrary.AhLog;
@@ -14,9 +15,8 @@ namespace MauiMediaPlayer
 
         public static MauiApp CreateMauiApp()
         {
-            LogInfo("\n=== ======================================== ===\n");
             LogInfo($"*** AppInfo.PackageName: {AppInfo.PackageName}");
-            LogInfo("\n=== /AppInfo =============================== ===\n");
+            LogInfo("=== /AppInfo =============================== ===");
 
             var builder = MauiApp.CreateBuilder();
             builder
@@ -44,7 +44,7 @@ namespace MauiMediaPlayer
             // Add Stuff Here Later // - cjm 
             if (true)
             {
-                LogInfo("\n=== ======================================== ===\n");
+                LogInfo("=== ======================================== ===");
                 LogInfo("*** WARNING: This is a debug build.  The database will be deleted and recreated.  Change this later. (MauiProgram.cs)");
                 var _dbContext = new PlaylistContext();
                 _dbContext.Database.EnsureDeleted();
@@ -73,11 +73,11 @@ namespace MauiMediaPlayer
 
                 _dbContext.SaveChanges();
                 _dbContext.Dispose();
-                LogInfo("\n=== /Database Rebuild ====================== ===\n");
+                LogInfo("=== /Database Rebuild ====================== ===");
             }
-
 
             return result;
         }
     }
+
 }

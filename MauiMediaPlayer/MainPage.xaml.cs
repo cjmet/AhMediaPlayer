@@ -20,6 +20,26 @@ namespace MauiMediaPlayer
             InitializeComponent();
             _dbContext = dbcontext;
 
+            // cjm - This work here but is almost certainly NOT the place it needs to go.
+            // Second Window
+            // https://devblogs.microsoft.com/dotnet/announcing-dotnet-maui-preview-11/
+            //var secondWindow = new Window
+            //{
+            //    Page = new MySecondPage
+            //    {
+            //        // ...
+            //    }
+            //};
+            //Application.Current.OpenWindow(secondWindow);
+            var secondWindow = new Window(new MyPage());    
+            secondWindow.Width = 1080;
+            secondWindow.Height = 640;
+            secondWindow.X = 100;
+            secondWindow.Y = 100;
+            secondWindow.Title = "AhLog Window";
+            Application.Current.OpenWindow(secondWindow);
+            // /Second Window
+
             var task = SearchUserProfileMusic();
             Task.Run(async () =>
             {
