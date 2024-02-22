@@ -69,6 +69,7 @@ namespace MauiMediaPlayer
             var _selectedSong = (Song)TestSonglist.SelectedItem;
             var _sourceSongList = TestSonglist.ItemsSource.Cast<Song>().ToList();
             var _selectedSongIndex = _sourceSongList.IndexOf(_selectedSong);
+            if (_selectedSongIndex < 0) _selectedSong = new Song { Title = "null" };
             var _newSong = _sourceSongList.ElementAtOrDefault(_selectedSongIndex + 1);
             var _newSongIndex = _sourceSongList.IndexOf(_newSong);
             var _title = _newSong != null ? _newSong.Title : "null";

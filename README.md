@@ -25,7 +25,11 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 
 ## Current Project Questions
 1. &nbsp;How do I? &ensp; - &ensp; Check that a window element is open and finished rendering before trying to access it?  
-   1. I'm currently checking it's Height, and assuming once it HAS a size, it's (mostly) Rendered?
+   1. I'm currently checking it's Height as an easy check
+`while (await this.Dispatcher.DispatchAsync(() => webView.Height) < 1) await Task.Delay(1000);`
+   1. Then I'm checking is* when a more difficult check is needed.
+        `var isAlive = await this.Dispatcher.DispatchAsync(() => webView.IsEnabled && webView.IsVisible && webView.IsLoaded);
+        if (!isAlive) { Debug.WriteLine($"WebView is Dead!"); return; throw new Exception(); }`
 1. &nbsp;How do I? &ensp; - &ensp; Access the log service from my other libraries and classes?
    1. I put logging into AhLog() Library, Using DI, then access it through either AhLog or DI as needed.
    1. I want it usable for CLI, Libraries, APP, and DI.
@@ -34,25 +38,19 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
 1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
+   * On a related Note.  Always keep at least one 'other' target enabled, IE: 'Android'.  I disabled the other targets to make it simpler while learning and building ... and as a side-effect it enabled 'Windows.\*', including Windows.Storage.  But now I can't re-enable android targets without a major refactor.  Oops.
 1. &nbsp;Review how to Async return a value, non-blocking, from a blockable operation, using a 4 step process.  (See Sandbox)
-1. &nbsp;Review of AhGetFiles.GetFilesAsync();   
+1. &nbsp;Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
 <br>
 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do (Other Tasks)
-- [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
-  - [x] Writes to Logfile.txt
-  - [x] Writes to Debug.Writeline
-  - [x] Writes to a Popup Window (if in debug mode)
-  - [ ] Improved Logging Window
-  - [ ] AhReadLinesAsync(Filename, FileSeekPosition, Permissions)
-
+- [ ] ...
 
 * ### Music Player
 - [x] My First MAUI App
 - [x] Initial EF Core Setup and Test
-- [ ] /MauiProgramLogic/MauiProgramLogic.cs
 - [x] Play a song
 - [x] Play a static song from local storage
 - [x] Create a Playlist class
@@ -60,12 +58,19 @@ Create a music library Web API and simple Media Player
 - [x] Play as song from a static Playlist
 - [x] Play more than one song from a static Playlist
 - [x] Work on the Song UI Layout
+- [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
+  - [x] Writes to a Popup Window (if in debug mode)
+  - [x] Improved Logging Window
+  - [x] `public async IAsyncEnumerable<string> PollLinesAsync(path, pollInterval, CancellationToken?)`
+- [ ] /MauiProgramLogic/MauiProgramLogic.cs
 - [ ] Work on Playlist UI
 
 
 * ### Common Library 
 - [x] CommonLibrary Project so that program logic can be shared, then wire up individual wrappers in a project as needed.
-- [ ] Logging 
+- [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
+  - [x] Writes to Logfile.txt
+  - [x] Writes to Debug.Writeline
 - [x] Search for MP3 files, with a Background Task.
   - [x] Initial Test Background Async Task
   - [x] Improved Background Task
@@ -99,7 +104,7 @@ Create a music library Web API and simple Media Player
 
 ## Project Requirements (Pick 3 or more)
 - [x] Async Task
-  * Created a background task to scan local and remote smb drives for media files, using callbacks to deliver results back to the main task asynchronously.
+  * Created an asnyc background task to scan local and remote smb drives for media files, using callbacks to deliver updates asynchronously.
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [ ] API
@@ -141,6 +146,20 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* There are many inconsistencies in the various methods.  Even within the same method various behaviours can vary.  One version of webview autoloads while the other does not, etc.
+* 🤬 Rewrote the Log Viewer for the third time.  
+  * The original idea was in theory very simple:
+    ```
+    WebView webView = new WebView();
+    webView.Source = AhLog._logFilePath;
+    this.Content = webView;
+    _ = Task.Run(async () => { while (true) { 
+        await Task.Delay(1000);
+        await this.Dispatcher.DispatchAsync(() => webView.Reload());
+    } } );
+    ```
+  * The Reality ended up far different. 
+    * The first version took a day or two, a hundred lines and tons of debugging.  The second version took about a day with more debugging.  This third version only took an hour or two, and it's by far the best iteration.  On the positive side of things, I did learn many many things along the way.
 * Added FileLoop and (simple) file change detection.  This would perhaps be better with a FileSystemWatcher, but it's already 100 lines long and complicated enough.  And I'm probably going to throw it away and completely rewrite it anyway.  I just wanted to finish this path to learn everything I could from it.
 * Don't write to the logfile inside the loop that reads your log file. 😉
 * Using ListView and StreamReader inside the Second Window
