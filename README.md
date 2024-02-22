@@ -24,6 +24,8 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 <br>
 
 ## Current Project Questions
+1. &nbsp;How do I? &ensp; - &ensp; Check that a window element is open and finished rendering before trying to access it?  
+   1. I'm currently checking it's Height, and assuming once it HAS a size, it's (mostly) Rendered?
 1. &nbsp;How do I? &ensp; - &ensp; Access the log service from my other libraries and classes?
    1. I put logging into AhLog() Library, Using DI, then access it through either AhLog or DI as needed.
    1. I want it usable for CLI, Libraries, APP, and DI.
@@ -42,7 +44,10 @@ Create a music library Web API and simple Media Player
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
   - [x] Writes to Logfile.txt
   - [x] Writes to Debug.Writeline
-  - [ ] Writes to a Popup Window (if in debug mode)
+  - [x] Writes to a Popup Window (if in debug mode)
+  - [ ] Improved Logging Window
+  - [ ] AhReadLinesAsync(Filename, FileSeekPosition, Permissions)
+
 
 * ### Music Player
 - [x] My First MAUI App
@@ -121,6 +126,9 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
+* If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
+  * I disabled all the other targets for simplicity while learning, but that also allowed the project to introduce and use incompatible libraries.
+  * At some point in the future I'll need to do a major refactor to fix this and enable android.
 * Use the latest update of Visual Studio 2022, .Net 8, and .Net MAUI
 * MAUI Debugging is very generic and unhelpful.  It's hard to know what's wrong.  Any advice here would be greatly appreciated.
 * %AppData% is a Different location in Win11/Console, Win11/Web, and Win11/Maui.
