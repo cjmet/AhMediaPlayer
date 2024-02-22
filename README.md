@@ -1,10 +1,10 @@
 ﻿![Angel Hornet Logo](https://github.com/cjmet/CodeKy_SD09/blob/main/Angel%20Hornet%20Logo.png)
-# AhMediaPlayer
+# Angel Hornet Media Player
 ### Code Kentucky Software Development - Class Project
 #### This project is for Educational purposes.
 The goal is to create a simple Media Player, with Media Library and WebAPI using .Net MAUI.  
 
-CLI (and later API and Web) application using Entity Framework Core.  The application will have a simple menu system and will allow the user to add, update?, and delete products and orders.  This is a learning experience.
+CLI (and later API and Web) application using Entity Framework Core.  The application will have a simple system to Play MP3s, ... and maybe Add, Update, and Delete Songs and Playlists.  This is a learning experience.
 
 
 ### See Also: 
@@ -24,7 +24,9 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 <br>
 
 ## Current Project Questions
-1. &nbsp;How do I? &ensp; - &ensp; Check that a window element is open and finished rendering before trying to access it?  
+1. &nbsp;How do I? &ensp; - &ensp; Allow a song to have more than one playlist
+1. &nbsp;What is the correct place to put the second window's initialization code?
+1. How do I? &ensp; - &ensp; Check that a window element is open and finished rendering before trying to access it?  
    1. I'm currently checking it's Height as an easy check
 `while (await this.Dispatcher.DispatchAsync(() => webView.Height) < 1) await Task.Delay(1000);`
    1. Then I'm checking is* when a more difficult check is needed.
@@ -80,9 +82,10 @@ Create a music library Web API and simple Media Player
 - [x] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
 - [ ] Work on general logic around the DB and App
   - [x] Id each song by filename to eliminate duplicates.
-    - [ ] Uniquely ID each song to eliminate duplicates, including duplicate filenames
+    - [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
 - [ ] Add Automatic Playlists based on Meta Data
 - [ ] Generic Lockable Class.  Locked<T>.
+
 
 * ### Data Library
 - [x] Store in sqlite database
@@ -92,6 +95,7 @@ Create a music library Web API and simple Media Player
 - [ ] DataLibary -> Models, Interfaces, and (Services or Contexts)
 - [ ] Implement the Interfaces and Repository Pattern.
 - [ ] Add Search and Filter functionality
+
 
 * ### Music Library Web API
 - [ ] Chances are most of this work will be done in the Common and Data Library Projects
@@ -190,7 +194,6 @@ Create a music library Web API and simple Media Player
     // and then let it populate, there should be at least one song?
     while (list.ItemsSource == null || list.ItemsSource.Cast<Song>().ToList().Count < 1) await Task.Delay(25);
     ```
-  * ...
 * Change: `Application.Current.MainPage.Dispatcher.Dispatch` to `this.Dispatcher.Dispatch`
 * Spent all day fixing code I'm probably never going to use, just because it was an eventful learning experience.
 * That was a total Disaster. Need to fix the data types. Need to figure out where to move the 2nd window code. Need to be able to verify that data is onscreen. More things than I can even think to write down
@@ -202,23 +205,23 @@ Create a music library Web API and simple Media Player
 * Rewrote the background task for the 4th time as: async IAsyncEnumerable<string> GetFilesAsync().  This version is streaming, and more closely matches standard conventions.  It should in theory be easier to use and understand.  It was perhaps the easiest iteration to write, but also took the most lines of code.
 * Started work on CommonLibrary, cleaning up code and moving common logic into the library in a more organized and readable way.
 * Fixed the playlist to continue playing ... but still lots of work to do.
-* 😲 I had no idea this was a thing: &nbsp;&nbsp; `var _sourceSongList = TestSonglist.ItemsSource.Cast\<Song>().ToList();` &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
+* 😲 I had no idea this was a thing: &nbsp;&nbsp; `var _sourceSongList = TestSonglist.ItemsSource.Cast<Song>().ToList();` &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
 * Wired up the Song List, and now can select and play a song from the list.  I am going to need to redo whole sections of this code now that I have a better understanding of everything so far.
-* When avialable, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
+* When available, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
 * There were additional Issues with nested buttons
 * Thank you Ernesto Ramos for help with fixing the button
   * Line 3 was missing from the examples I was using.
   * Line 5-7 are also required
   * I suspect there may be a better way to write this, one that doesn't have to effect the entire page.
-```
-        <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        xmlns:local="clr-namespace:ButtonCommandTest"
-        x:Class="ButtonCommandTest.MainPage">
-        <ContentPage.BindingContext>
-        <local:CommandDemoViewModel />
-        </ContentPage.BindingContext>
-```
+    ```
+    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ButtonCommandTest"
+    x:Class="ButtonCommandTest.MainPage">
+    <ContentPage.BindingContext>
+    <local:CommandDemoViewModel />
+    </ContentPage.BindingContext>
+    ```
 * Re-did the entire layout, added Id3 Tags for Meta Data, and added a genre dictionary.
   * Each grid with no dimension constrains and auto-sizes equally to all others grids with no dimensions.  "Auto" expands without constraint if asked.  I ended up creating 4 "Default" Rows, 1 Row for the logo, 3 Rows for the Song List, and everything else fixed rows.
   * Added two side columns for spacing so I could force overlay for Labels for Title, Artist, and Album.  Probably could have done this with a combination of padding and margins, but this worked.

@@ -43,11 +43,11 @@ namespace DataLibrary
                  );
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Playlist>().HasKey(p => p.Id);
-        //    //modelBuilder.Entity<Song>().HasKey(s => s.Id);
-        //}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<Playlist>().HasMany(p => p.Songs).WithMany(s => s.Playlists);
+            modelBuilder.Entity<Song>().HasMany(s => s.Playlists).WithMany(p => p.Songs);
+        }
 
 
 
