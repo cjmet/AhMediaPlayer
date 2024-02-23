@@ -19,7 +19,7 @@ namespace DataLibrary
 
         public PlaylistContext()
         {
-            // The Win11 and Maui ApplicationData folders are different. Use .Desktop instead.  // cjm - change this later to use the correct folder.
+            // The Win11 and Maui ApplicationData folders are different. Use .Desktop instead.  
 #if DEBUG
             var folder = Environment.SpecialFolder.DesktopDirectory;
 #else
@@ -29,8 +29,8 @@ namespace DataLibrary
             DbPath = Path.Join(path, dbName);
             if (!_quiet || VerboseSQL)
             {
-                LogInfo($"***  DbPath: {DbPath}");
-                LogInfo($"     Context: {this.ContextId}");
+                LogDebug($"***  DbPath: {DbPath}");
+                LogDebug($"     Context: {this.ContextId}");
                 _quiet = true;
             }
         }
@@ -38,8 +38,7 @@ namespace DataLibrary
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                //.UseSqlite($"Data Source=c:\\tmp\\test.db") // cjm - hard coded path works, but the DbPath does not when running as an app.
-                .UseSqlite($"Data Source={DbPath}") // cjm
+                .UseSqlite($"Data Source={DbPath}") 
                 .EnableSensitiveDataLogging()
                 .LogTo(ConsoleLog,
                 new[] { DbLoggerCategory.Database.Command.Name },
@@ -62,7 +61,7 @@ namespace DataLibrary
         {
             if (VerboseSQL)
             {
-                LogInfo(logMessage);
+                LogDebug(logMessage);
             }
         }
 

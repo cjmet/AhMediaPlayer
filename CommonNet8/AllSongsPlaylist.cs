@@ -13,13 +13,13 @@ namespace CommonNet8
     {
         public static async Task UpdateAllSongsPlaylist()
         {
-            LogInfo("Updating All Songs Playlist ...");
+            LogMsg("Updating All Songs Playlist");
             var dbContext = new PlaylistContext();
 
             var _playlist = await dbContext.Playlists.Where(p => p.Name == " All Songs").Include(p => p.Songs).FirstOrDefaultAsync();
             if (_playlist == null)
             {
-                LogInfo("Creating All Songs Playlist ...");
+                LogDebug("Creating All Songs Playlist");
                 _playlist = new Playlist
                 {
                     Name = " All Songs",
@@ -30,12 +30,12 @@ namespace CommonNet8
             }
             
 
-            LogInfo("Adding Songs to All Songs Playlist ...");
+            LogDebug("Adding Songs to All Songs Playlist");
             await foreach (var song in dbContext.Songs)
             {
                 if (song == null || song.PathName == null)
                 {
-                    LogError("*** ERROR: Song or Pathname is NULL ***");
+                    LogError("ERROR[038] Song or Pathname is NULL ***");
                     continue;
                 }
                 if (_playlist.Songs.Where(s => s.PathName == song.PathName).FirstOrDefault() == null)
@@ -43,7 +43,7 @@ namespace CommonNet8
                     _playlist.Songs.Add(song);
                 }
             }
-            LogInfo("Saving All Songs Playlist ...");
+            LogDebug("Saving All Songs Playlist");
             dbContext.SaveChanges();
         }
     }

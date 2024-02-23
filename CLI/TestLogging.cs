@@ -1,4 +1,5 @@
-﻿using static AngelHornetLibrary.AhLog;
+﻿using AngelHornetLibrary;
+using static AngelHornetLibrary.AhLog;
 
 namespace MauiCli
 {
@@ -11,16 +12,13 @@ namespace MauiCli
         public static void TestLogs()
         {
             // AhLog: Start, Stop, Log, LogDebug, LogInfo, LogInformation, LogTrace, LogWarning, LogCritical
-            Log("Hello, Serilog! Log!");
-
-            Log("Testing Log Levels ...");
             LogTrace("Hello, Serilog! Trace!");
             LogDebug("Hello, Serilog! Debug!");
             LogInformation("Hello, Serilog! Information!");
             LogWarning("Hello, Serilog! Warning!");
-            LogInfo("Hello, Serilog! Error!");
+            LogError("Hello, Serilog! Error!");
             LogCritical("Hello, Serilog! Critical!");
-            Log("Log Testing Complete.\n");
+            _LoggingLevel.MinimumLevel = Serilog.Events.LogEventLevel.Information;
         }
     }
 }

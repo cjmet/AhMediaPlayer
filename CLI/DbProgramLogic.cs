@@ -87,8 +87,8 @@ namespace MauiCli
                 };
                 foreach (Song song in songs)
                     if (FlipCoin(3)) playlist.Songs.Add(song);
-                LogInfo($"Playlist: {playlist.Name} - {playlist.Description}");
-                LogInfo($"  Songs: {playlist.Songs.Count}");
+                LogDebug($"Playlist: {playlist.Name} - {playlist.Description}");
+                LogDebug($"  Songs: {playlist.Songs.Count}");
                 _dbContext.Playlists.Add(playlist);
                 _dbContext.SaveChanges();
             }

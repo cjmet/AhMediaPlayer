@@ -23,6 +23,15 @@ namespace MauiMediaPlayer
 
             InitializeComponent();
 
+
+#if DEBUG
+#else
+            Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(1),
+                () => Application.Current.CloseWindow(this.Window));
+#endif
+
+
+
             // Concept:  This was the Plan
             //WebView webView = new WebView();
             //webView.Source = AhLog._logFilePath;
@@ -65,6 +74,7 @@ namespace MauiMediaPlayer
                     var pollLinesAsync = new AhFileIO().PollLinesAsync(logFile);
                     await foreach (var line in pollLinesAsync)
                     {
+                        MainPage.messageQueue.Enqueue(line);
                         this.Dispatcher.Dispatch(async () =>
                         {
                             logText += line + "\n";

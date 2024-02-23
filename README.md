@@ -24,19 +24,20 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 <br>
 
 ## Current Project Questions
-1. &nbsp;How do I? &ensp; - &ensp; Allow a song to have more than one playlist
 1. &nbsp;What is the correct place to put the second window's initialization code?
-1. How do I? &ensp; - &ensp; Check that a window element is open and finished rendering before trying to access it?  
+1. &ensp;What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
    1. I'm currently checking it's Height as an easy check
 `while (await this.Dispatcher.DispatchAsync(() => webView.Height) < 1) await Task.Delay(1000);`
    1. Then I'm checking is* when a more difficult check is needed.
         `var isAlive = await this.Dispatcher.DispatchAsync(() => webView.IsEnabled && webView.IsVisible && webView.IsLoaded);
         if (!isAlive) { Debug.WriteLine($"WebView is Dead!"); return; throw new Exception(); }`
-1. &nbsp;How do I? &ensp; - &ensp; Access the log service from my other libraries and classes?
+1. &ensp;What is the correct way to Access the log service from my other libraries and classes?
    1. I put logging into AhLog() Library, Using DI, then access it through either AhLog or DI as needed.
    1. I want it usable for CLI, Libraries, APP, and DI.
    1. Is this a reasonable way to do this?
 1. &nbsp;How Do I? &ensp; - &ensp; Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.  Dispatcher Maybe?  Syntax?
+   1. Pass the target element to the method as a parameter?
+---
 1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
 1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
@@ -168,6 +169,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Updated the messageBox and started sending log messages to it.  Then some general code cleanup
+* Change the default log level to debug.  Use the info level more carefully.  
 * Worked on Playlists, Playlist switching, and many various small things.
 * There are many inconsistencies in the various methods.  Even within the same method various behaviours can vary.  One version of webview autoloads while the other does not, etc.
 * 🤬 Rewrote the Log Viewer for the third time.  

@@ -228,14 +228,15 @@
 
         <!-- Row 7 -->
         <Frame Grid.Row="8" Grid.ColumnSpan="3" CornerRadius="0" />
-        <Label x:Name="messageText" Padding="15,0"
+        <Label x:Name="messageBox" Padding="15,0"
                 Grid.Row="8" 
                 Grid.ColumnSpan="3"
                 Text="Messages ..." 
                 Style="{StaticResource NormalText}"
                 FontSize="Caption"
                 LineBreakMode="MiddleTruncation"
-                HorizontalOptions="StartAndExpand"
+                HorizontalOptions="Start"
+                VerticalOptions="Start"
                 HeightRequest="20"
                 MinimumHeightRequest="20"
                 MaximumHeightRequest="20"/>

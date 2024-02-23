@@ -23,7 +23,7 @@ namespace MauiCli
         public static int RollDie(int sides = 6)
         {
             int die = (int)new Random().Next(1, sides + 1);
-            LogInfo($"Die: {die}");
+            LogDebug($"Die: {die}");
             return die;
         }
         
@@ -32,7 +32,7 @@ namespace MauiCli
         public static bool FlipCoin(int sides = 2)
         {
             int coin = (int)new Random().Next(0, sides);
-            LogInfo($"Coin: {coin}");
+            LogDebug($"Coin: {coin}");
             if (coin == 0) return true;
             else return false;
         }

@@ -115,8 +115,4 @@
 	  <PRIResource Remove="DataLibrary\**" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="ProgramLogic\" />
-	</ItemGroup>
-
 </Project>

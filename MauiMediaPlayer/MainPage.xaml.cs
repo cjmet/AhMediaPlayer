@@ -4,6 +4,8 @@ using System.Windows.Input;
 using static AngelHornetLibrary.AhLog;
 using static CommonNet8.SearchForMusic;
 using static CommonNet8.AllSongsPlaylist;
+using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
+using System.Collections.Concurrent;
 
 
 
@@ -14,9 +16,7 @@ namespace MauiMediaPlayer
     {
 
         private readonly PlaylistContext _dbContext;
-        public string _message = "Angel Hornet Media Player";
-
-
+        public static ConcurrentQueue<string> messageQueue { get; set; } = new ConcurrentQueue<string>();
 
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
@@ -27,28 +27,29 @@ namespace MauiMediaPlayer
             InitializeComponent();
             _dbContext = dbcontext;
 
-            var _ = SecondWindow(Application.Current, TestSonglist);
+            _ = DeliverMessageQueue(messageQueue,messageBox);  
+            _ = SecondWindow(Application.Current, TestSonglist);
 
             // Load Databases
             {
-                LogInfo("Loading Saved Database");
+                LogDebug("Loading Saved Database");
                 var _playlists = _dbContext.Playlists.ToList();
                 _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 TestPlaylist.ItemsSource = _playlists;
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
                 TestSonglist.ItemsSource = _songList;
-                LogInfo($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
-                LogInfo("=== /Database Loading Complete =============================== ===");
+                LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
+                LogDebug("=== /Database Loading Complete =============================== ===");
             }
 
             // Search for More Music
             Task.Run(async () =>
             {
-                await SearchUserProfileMusic(); 
+                await SearchUserProfileMusic();
                 await UpdateAllSongsPlaylist();
 
-                LogInfo("Database Dispatch Start.");
+                LogDebug("Database Dispatch Start.");
                 var _playlists = _dbContext.Playlists.ToList();
                 _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 this.Dispatcher.Dispatch(() =>
@@ -59,7 +60,7 @@ namespace MauiMediaPlayer
                 this.Dispatcher.Dispatch(() =>
                                TestSonglist.ItemsSource = _songList);
                 await Task.Delay(1);
-                LogInfo("=== /Database Dispatch Complete =============================== ===");
+                LogDebug("=== /Database Dispatch Complete =============================== ===");
             });
 
         }
@@ -74,10 +75,10 @@ namespace MauiMediaPlayer
 
             if (_playList != null)
             {
-                LogInfo($"Playlist Selected: {_playList.Id}   {_playList.Name}   {_playList.Description}");
+                LogMsg($"Playlist Selected: {_playList.Id}   {_playList.Name}   {_playList.Description}");
                 ChangePlaylist(_playList);
             }
-            else LogWarning("Warning: Playlist Selected is null");
+            else LogWarning("WARN[080] Playlist is null");
         }
 
 
@@ -101,9 +102,9 @@ namespace MauiMediaPlayer
             var _newSongIndex = _sourceSongList.IndexOf(_newSong);
             var _title = _newSong != null ? _newSong.Title : "null";
 
-            LogInfo($"Changing Songs: ");
-            LogInfo($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
-            LogInfo($"     To[{_newSongIndex}]: {_title}");
+            LogMsg($"ChangeSong:{_selectedSongIndex}->{_newSongIndex}: {_title}");
+            LogDebug($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
+            LogDebug($"     To[{_newSongIndex}]: {_title}");
 
             if (_newSong != null)
             {
@@ -120,17 +121,17 @@ namespace MauiMediaPlayer
 
         private void ChangePlaylist(Playlist playlist)
         {
-            if (playlist != null) LogInfo($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
-            else LogWarning("Warning: ChangePlaylist: playlist is null");
+            if (playlist != null) LogMsg($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
+            else LogWarning("WARN[124] playlist is null");
 
-            var _songList = _dbContext.Songs.Where(s => s.Playlists.Contains(playlist) ).ToList();
+            var _songList = _dbContext.Songs.Where(s => s.Playlists.Contains(playlist)).ToList();
             _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
             this.Dispatcher.Dispatch(() =>
             {
                 TestSonglist.ItemsSource = _songList;
                 TestSonglist.SelectedItem = _songList.FirstOrDefault();
             });
-            
+
         }
 
 
@@ -143,7 +144,9 @@ namespace MauiMediaPlayer
                 MediaSource _mediaSource = null;
                 if (File.Exists(song.PathName)) _mediaSource = MediaSource.FromFile(song.PathName);
                 else if (song.PathName.StartsWith("embed://")) _mediaSource = MediaSource.FromResource(song.PathName.Substring(8));
-                LogInfo($"PlaySong: _mediaSource = {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
+                if (song != null && song.Title != null) LogMsg($"PlaySong: {song.Title}");
+                else LogWarning("WARN[147] Song is null");
+                LogDebug($"PlaySong:{(_mediaSource == null ? "null" : _mediaSource.ToString())}");
                 if (_mediaSource != null)
                 {
                     this.Dispatcher.Dispatch(() =>

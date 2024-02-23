@@ -45,10 +45,10 @@ namespace MauiMediaPlayer
             window.MinimumWidth = Const.AppMinimumWidth; window.MinimumHeight = Const.AppMinimumHeight;
             window.MaximumWidth = Const.AppMaximumWidth;
 
-            LogInfo($"*** Display Info: {displayInfo.Width}x{displayInfo.Height} * {displayInfo.Density}");
-            LogInfo($"*** Window Default:{window.Width}x{window.Height}   Min:{window.MinimumWidth}x{window.MinimumHeight}   Max:{window.MaximumWidth}w   Loc:{window.X}x{window.Y}");
+            LogDebug($"*** Display Info: {displayInfo.Width}x{displayInfo.Height} * {displayInfo.Density}");
+            LogDebug($"*** Window Default:{window.Width}x{window.Height}   Min:{window.MinimumWidth}x{window.MinimumHeight}   Max:{window.MaximumWidth}w   Loc:{window.X}x{window.Y}");
 
-            LogInfo("=== /Display Info =============================== ===");
+            LogDebug("=== /Display Info =============================== ===");
 
 
 
