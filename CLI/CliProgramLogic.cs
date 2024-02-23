@@ -17,13 +17,27 @@ namespace MauiCli
             return;
         }
 
-        public static bool FlipCoin()
+
+
+        public static int RollD20() => RollDie(20);
+        public static int RollDie(int sides = 6)
         {
-            int coin = (int)new Random().Next(0, 2);
+            int die = (int)new Random().Next(1, sides + 1);
+            LogInfo($"Die: {die}");
+            return die;
+        }
+        
+
+
+        public static bool FlipCoin(int sides = 2)
+        {
+            int coin = (int)new Random().Next(0, sides);
             LogInfo($"Coin: {coin}");
-            if (coin == 1) return true;
+            if (coin == 0) return true;
             else return false;
         }
+
+
 
         public static string MiddleTruncate(string input)
         {
@@ -32,10 +46,15 @@ namespace MauiCli
             return input.Substring(0, length / 2 - 3) + " ... " + input.Substring(input.Length - length / 2 + 3);
         }
 
+
+
         public static void PlaylistWriteLine(string column1, string column2, string column3, string column4)
         {
             var width = 21;
             Console.WriteLine($"{column1.PadRight(width).Substring(0, width)}   {column2.PadRight(width).Substring(0, width)}   {column3.PadRight(width).Substring(0, width)}   {column4.PadRight(width).Substring(0, width - 2)}");
         }
+
+
+
     }
 }

@@ -15,6 +15,7 @@ namespace DataLibrary
         public DbSet<Song> Songs { get; set; }
         public string DbPath { get; private set; }
         public bool VerboseSQL { get; set; } = false;
+        private static bool _quiet = false;
 
         public PlaylistContext()
         {
@@ -26,8 +27,12 @@ namespace DataLibrary
 #endif
             var path = Environment.GetFolderPath(folder);
             DbPath = Path.Join(path, dbName);
-            LogInfo($"***  DbPath: {DbPath}");
-            LogInfo($"     Context: {this.ContextId}");
+            if (!_quiet || VerboseSQL)
+            {
+                LogInfo($"***  DbPath: {DbPath}");
+                LogInfo($"     Context: {this.ContextId}");
+                _quiet = true;
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

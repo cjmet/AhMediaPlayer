@@ -14,13 +14,14 @@ namespace CommonNet8
             var folder = Environment.SpecialFolder.UserProfile;
             var path = Environment.GetFolderPath(folder);
             var MusicPath = Path.Join(path, "Music");
-            LogInfo($"MusicPath: {MusicPath}");
+            LogInfo($"SearchUserProfileMusic: {MusicPath}");
 
             await foreach (string filename in new AhGetFiles().GetFilesAsync(MusicPath, "*.mp3"))
             {
                 LogInfo($"Adding[23]: {filename}");
                 AddFilenameToSongDb(filename);
             }
+            LogInfo("SearchUserProfileMusic Complete.");
             return;
         }
 

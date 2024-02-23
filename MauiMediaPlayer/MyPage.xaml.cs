@@ -1,12 +1,6 @@
 ﻿using AngelHornetLibrary;
 using static AngelHornetLibrary.AhLog;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Net;
-using Microsoft.Maui.Controls.Platform;
-using System.Reflection.Metadata;
-using Windows.UI.Text;
-using System.ComponentModel;
 
 
 namespace MauiMediaPlayer
@@ -63,9 +57,9 @@ namespace MauiMediaPlayer
                 _ = Task.Run(async () =>
                 {
                     while (await this.Dispatcher.DispatchAsync(() => label.Height) < 1) await Task.Delay(1000);
-                    await Task.Delay(1);  // ~1 GUI cycle
+                    await Task.Delay(25);
                     this.Dispatcher.Dispatch(async () => await scrollView.ScrollToAsync(label, ScrollToPosition.End, false));
-                    await Task.Delay(1); // ~1 GUI cycle
+                    await Task.Delay(25);
 
                     int i = 0;
                     var pollLinesAsync = new AhFileIO().PollLinesAsync(logFile);
@@ -75,8 +69,14 @@ namespace MauiMediaPlayer
                         {
                             logText += line + "\n";
                             label.Text = logText;
-                            await Task.Delay(1);    // This gives multi-line updates ~1 GUI cycle to update so the scroll moves to the end of the last line.  Otherwise it only moves to the first line of the update.
+                            await Task.Delay(1);    // This gives multi-line updates ~1 GUI cycle to update
                             await scrollView.ScrollToAsync(label, ScrollToPosition.End, false);
+                            // For that odd time when the scroll doesn't make it to the end.
+                            if (scrollView.ScrollY < scrollView.ContentSize.Height - Window.Height - Const.AppDisplayBorder - 1)
+                            {
+                                LogWarning($"ScrollY: {(int)scrollView.ScrollY} vs {(int)scrollView.ContentSize.Height - Window.Height - Const.AppDisplayBorder - 1}");
+                                await Task.Delay(25); await scrollView.ScrollToAsync(label, ScrollToPosition.End, false);
+                            }
                         });
                     }
                 });

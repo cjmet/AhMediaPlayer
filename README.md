@@ -57,15 +57,23 @@ Create a music library Web API and simple Media Player
 - [x] Play a static song from local storage
 - [x] Create a Playlist class
 - [x] Wire up a Button with Command and Command Parameters
-- [x] Play as song from a static Playlist
+- [x] Play as song from a static Playlist (Read)
 - [x] Play more than one song from a static Playlist
-- [x] Work on the Song UI Layout
+- [x] Song Selection and Playing UI Layout
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
   - [x] Writes to a Popup Window (if in debug mode)
   - [x] Improved Logging Window
   - [x] `public async IAsyncEnumerable<string> PollLinesAsync(path, pollInterval, CancellationToken?)`
 - [ ] /MauiProgramLogic/MauiProgramLogic.cs
-- [ ] Work on Playlist UI
+- [ ] Integration of Playlists, Songs, Search and GUI
+  - [x] Playlist Selection GUI
+  - [x] Initial Integration of Playlists and Songs
+  - [ ] Adding Songs to Playlists GUI (Update)
+  - [ ] Removing Songs from Playlists GUI (Update)
+  - [ ] Adding Playlists GUI (Create)
+  - [ ] Deleting Playlists GUI (Delete)
+  - [ ] Search and Filter functionality GUI
+  - [ ] Add Automatic Playlists based on Meta Data GUI
 
 
 * ### Common Library 
@@ -73,7 +81,7 @@ Create a music library Web API and simple Media Player
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
   - [x] Writes to Logfile.txt
   - [x] Writes to Debug.Writeline
-- [x] Search for MP3 files, with a Background Task.
+- [x] Search for MP3 files, with a Background Task. (Create)
   - [x] Initial Test Background Async Task
   - [x] Improved Background Task
   - [x] Add Callback Ability to the Background Task
@@ -83,8 +91,13 @@ Create a music library Web API and simple Media Player
 - [ ] Work on general logic around the DB and App
   - [x] Id each song by filename to eliminate duplicates.
     - [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
-- [ ] Add Automatic Playlists based on Meta Data
-- [ ] Generic Lockable Class.  Locked<T>.
+- [x] Create Random Playlists for Testing
+- [ ] CRUD  (No this isn't the best way to implement this. Ideally it will go down into a repository.)
+    - [x] Create
+    - [x] Read
+    - [ ] Update
+    - [ ] Delete
+- [ ] Generic Lockable Class: `Locked <T>`
 
 
 * ### Data Library
@@ -92,9 +105,14 @@ Create a music library Web API and simple Media Player
 - [x] Integrate with Music Player
 - [x] Add the rest of the data structures back in, and to the Data Library.
 - [x] Move data files back out into a DataLibrary for easier management. 
+- [x] Initial Integration of Playlists and Songs
+- [x] Searching and Adding Songs to Db
+- [ ] Adding Songs to Playlists
+- [ ] Removing Songs from Playlists
+- [ ] Adding Playlists
+- [ ] Deleting Playlists
 - [ ] DataLibary -> Models, Interfaces, and (Services or Contexts)
 - [ ] Implement the Interfaces and Repository Pattern.
-- [ ] Add Search and Filter functionality
 
 
 * ### Music Library Web API
@@ -108,7 +126,7 @@ Create a music library Web API and simple Media Player
 
 ## Project Requirements (Pick 3 or more)
 - [x] Async Task
-  * Created an asnyc background task to scan local and remote smb drives for media files, using callbacks to deliver updates asynchronously.
+  * Created an async background task to scan local and remote smb drives for media files, using callbacks to deliver updates asynchronously.
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [ ] API
@@ -120,7 +138,7 @@ Create a music library Web API and simple Media Player
 - [ ] SOLID Principles
 - [ ] SQL Queries
 - [ ] Regex
-- [ ] Generic Class, Locked\<T>?
+- [ ] Generic Class
 
 <br>
 
@@ -150,6 +168,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Worked on Playlists, Playlist switching, and many various small things.
 * There are many inconsistencies in the various methods.  Even within the same method various behaviours can vary.  One version of webview autoloads while the other does not, etc.
 * 🤬 Rewrote the Log Viewer for the third time.  
   * The original idea was in theory very simple:

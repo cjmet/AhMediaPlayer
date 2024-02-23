@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using static AngelHornetLibrary.AhLog;
 using static CommonNet8.SearchForMusic;
+using static CommonNet8.AllSongsPlaylist;
+using static MauiCli.DbProgramLogic;
 
 
 
@@ -27,21 +29,14 @@ namespace MauiCli
             mainMenu.MenuMaxWidth = 80;
             mainMenu.MenuItemWidth = 40;
             mainMenu.Message = "\nMain Menu";
-            mainMenu.AddItem(new List<string> { "Find MP3 Files" }, () =>
-            {
-                _ = SearchUserProfileMusic();
-            });
 
-            mainMenu.AddItem(new List<string> { "Read Playlists" }, () => { DbProgramLogic.DbReadPlaylists(); });
+            mainMenu.AddItem("Find MP3 Files", () => { _ = SearchUserProfileMusic();  });
+            mainMenu.AddItem("Read Playlists", () => { DbReadPlaylists().Wait(); });
+            mainMenu.AddItem("Update All Songs Playlist", () => { _ = UpdateAllSongsPlaylist(); });
+            mainMenu.AddItem("Random Playlists", () => { DbRandomizePlaylists(); });
 
-            mainMenu.AddItem(new List<string> { "Random Playlists" }, () => { DbProgramLogic.DbRandomizePlaylists(); });
-
-            mainMenu.NewLine();
-
-            mainMenu.AddItem(new List<string> { "Complete Reset Test" }, () => { DbProgramLogic.CompleteResetTest().Wait(); });
-
-            mainMenu.AddItem(new List<string> { "Db Reset" }, () => { DbProgramLogic.DbContextTest(true); });
-
+            mainMenu.AddItem("Complete Reset Test", () => { CompleteResetTest().Wait(); });
+            mainMenu.AddItem("Db Reset", () => { DbContextTest(true); });
             mainMenu.AddItem(new List<string> { "Quit", "Exit" }, () => { mainMenu.Exit(); });
             mainMenu.AddDefault(() => { });
 

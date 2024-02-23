@@ -48,7 +48,8 @@
 
         <!-- Row 1 -->
         <ContentView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-            <ListView x:Name="TestPlaylist"  >
+            <ListView x:Name="TestPlaylist"  
+                      ItemSelected="TestPlaylist_ItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -74,7 +75,9 @@
                                 </Grid>
                             </Frame>
                         </ViewCell>
-                        <!--<TextCell Text="{Binding LineItem}"  Detail="{Binding Description}" TextColor="Black"/>-->
+                        <!--<TextCell Text="{Binding LineItem}"  
+                                  Detail="{Binding Description}" 
+                                  TextColor="Black"/>-->
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

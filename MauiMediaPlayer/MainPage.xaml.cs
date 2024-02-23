@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Maui.Views;
 using DataLibrary;
+using System.Windows.Input;
 using static AngelHornetLibrary.AhLog;
 using static CommonNet8.SearchForMusic;
+using static CommonNet8.AllSongsPlaylist;
 
 
 
@@ -12,6 +14,7 @@ namespace MauiMediaPlayer
     {
 
         private readonly PlaylistContext _dbContext;
+        public string _message = "Angel Hornet Media Player";
 
 
 
@@ -26,14 +29,28 @@ namespace MauiMediaPlayer
 
             var _ = SecondWindow(Application.Current, TestSonglist);
 
-            var task = SearchUserProfileMusic();
+            // Load Databases
+            {
+                LogInfo("Loading Saved Database");
+                var _playlists = _dbContext.Playlists.ToList();
+                _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+                TestPlaylist.ItemsSource = _playlists;
+                var _songList = _dbContext.Songs.ToList();
+                _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+                TestSonglist.ItemsSource = _songList;
+                LogInfo($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
+                LogInfo("=== /Database Loading Complete =============================== ===");
+            }
+
+            // Search for More Music
             Task.Run(async () =>
             {
+                await SearchUserProfileMusic(); 
+                await UpdateAllSongsPlaylist();
 
-                await task;
-                LogInfo("SearchUserProfileMusic() Complete.");
-
+                LogInfo("Database Dispatch Start.");
                 var _playlists = _dbContext.Playlists.ToList();
+                _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 this.Dispatcher.Dispatch(() =>
                                TestPlaylist.ItemsSource = _playlists);
 
@@ -41,18 +58,28 @@ namespace MauiMediaPlayer
                 _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
                 this.Dispatcher.Dispatch(() =>
                                TestSonglist.ItemsSource = _songList);
-
-                LogInfo("SongsDb Dispatch Complete.");
+                await Task.Delay(1);
+                LogInfo("=== /Database Dispatch Complete =============================== ===");
             });
 
-            {
-                TestPlaylist.ItemsSource = _dbContext.Playlists.ToList();
-                var _songList = _dbContext.Songs.ToList();
-                _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
-                TestSonglist.ItemsSource = _songList;
-            }
-
         }
+
+
+        private void TestPlaylist_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            var _playList = (Playlist)e.SelectedItem;
+            var _index = e.SelectedItemIndex;
+            var _listView = (ListView)sender;
+            _listView.Focus();
+
+            if (_playList != null)
+            {
+                LogInfo($"Playlist Selected: {_playList.Id}   {_playList.Name}   {_playList.Description}");
+                ChangePlaylist(_playList);
+            }
+            else LogWarning("Warning: Playlist Selected is null");
+        }
+
 
         private void TestSonglist_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
@@ -91,10 +118,27 @@ namespace MauiMediaPlayer
 
 
 
+        private void ChangePlaylist(Playlist playlist)
+        {
+            if (playlist != null) LogInfo($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
+            else LogWarning("Warning: ChangePlaylist: playlist is null");
+
+            var _songList = _dbContext.Songs.Where(s => s.Playlists.Contains(playlist) ).ToList();
+            _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+            this.Dispatcher.Dispatch(() =>
+            {
+                TestSonglist.ItemsSource = _songList;
+                TestSonglist.SelectedItem = _songList.FirstOrDefault();
+            });
+            
+        }
+
+
+
         private void PlaySong(Song song)
         {
 
-            if (song.PathName != null)
+            if (song != null && song.PathName != null)
             {
                 MediaSource _mediaSource = null;
                 if (File.Exists(song.PathName)) _mediaSource = MediaSource.FromFile(song.PathName);
@@ -147,7 +191,6 @@ namespace MauiMediaPlayer
             secondWindow.Title = "AhLog Window";
             app.OpenWindow(secondWindow);
         }
-
 
 
     }

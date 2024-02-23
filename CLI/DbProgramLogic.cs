@@ -1,7 +1,10 @@
-﻿using DataLibrary;
+﻿using CommonNet8;
+using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using static AngelHornetLibrary.AhLog;
 using static MauiCli.CliProgramLogic;
+using static CommonNet8.AllSongsPlaylist;
+using static CommonNet8.SearchForMusic;
 
 namespace MauiCli
 {
@@ -11,10 +14,16 @@ namespace MauiCli
 
         public static async Task CompleteResetTest()
         {
+            Console.WriteLine("Resetting Db");
             DbContextTest(true);
-            await CommonNet8.SearchForMusic.SearchUserProfileMusic();
+            Console.WriteLine("Searching for Music");
+            await SearchUserProfileMusic();
+            Console.WriteLine("Updating All Songs Playlist");
+            await UpdateAllSongsPlaylist();
+            Console.WriteLine("Randomizing Playlists");
             DbRandomizePlaylists();
-            DbReadPlaylists();
+            Console.WriteLine("Reading Playlists");
+            DbReadPlaylists().Wait();
         }
 
 
@@ -77,7 +86,7 @@ namespace MauiCli
                     Songs = new List<Song>()
                 };
                 foreach (Song song in songs)
-                    if (FlipCoin()) playlist.Songs.Add(song);
+                    if (FlipCoin(3)) playlist.Songs.Add(song);
                 LogInfo($"Playlist: {playlist.Name} - {playlist.Description}");
                 LogInfo($"  Songs: {playlist.Songs.Count}");
                 _dbContext.Playlists.Add(playlist);
@@ -86,22 +95,14 @@ namespace MauiCli
             _dbContext.Dispose();
         }
 
-        public static void DbReadPlaylists()
+        public static async Task DbReadPlaylists()
         {
-            Console.WriteLine("Reading Playlists ... ");
+            UpdateAllSongsPlaylist().Wait();
+
             var _dbContext = new PlaylistContext();
             var playlists = _dbContext.Playlists.Include(p => p.Songs).ToList();
             var songs = _dbContext.Songs.ToList();
             _dbContext.Dispose();
-
-            Playlist allSongs = new Playlist()
-            {
-                Name = "All Songs",
-                Description = "All Songs",
-                Songs = songs
-            };
-            playlists.Insert(0, allSongs);
-
 
             foreach (Playlist playlist in playlists)
             {
@@ -115,6 +116,7 @@ namespace MauiCli
                 {
                     PlaylistWriteLine(song.Title, song.Artist, song.Album, song.Genre);
                 }
+                Console.WriteLine($"{playlist.Songs.Count} Songs.");
                 Console.WriteLine();
             }
         }
