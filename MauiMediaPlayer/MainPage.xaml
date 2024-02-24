@@ -93,7 +93,8 @@
 
         <!-- Row 2 -->
         <Frame Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderColor="Transparent" Opacity="1"  />
-        <Image Source="angel_hornet_logo_cropped.png"
+        <Image x:Name="AngelHornetLogo"  
+               Source="angel_hornet_logo_cropped.png"
                     Grid.Row="2"
                     Grid.ColumnSpan="2"
                     HorizontalOptions="CenterAndExpand"

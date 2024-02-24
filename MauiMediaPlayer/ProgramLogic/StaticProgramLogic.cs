@@ -11,41 +11,50 @@ namespace MauiMediaPlayer.ProgramLogic
         public static async Task DeliverMessageQueue(ConcurrentQueue<string> messageQueue, Label spinBox, Label messageBox)
         {
             int spinner = 0;
-            bool _lastmessage = false;
+            int _lastmessage = 0;
             string tag;
             string msg;
 
             while (true)
             {
                 messageQueue.TryDequeue(out string message);
-                var spin = " .".Substring(spinner++ % 2, 1);
                 if (message == null)
                 {
-                    if (_lastmessage)
+                    if (_lastmessage > 0)
                     {
-                        await Task.Delay(1500);
-                        _lastmessage = false;
+                        await Task.Delay(_lastmessage);
+                        _lastmessage = 0;
+                        continue;
                     }
-                    msg = "Angel Hornet Media Player";
-                    await sendMessage(spin, msg, spinBox, messageBox); 
-                    await Task.Delay(1000); 
-                    continue;
+                    else
+                    {
+                        msg = "Angel Hornet Media Player";
+                        var spin = " .".Substring(spinner++ % 2, 1);
+                        await sendMessage(spin, msg, spinBox, messageBox);
+                        await Task.Delay(1000);
+                        continue;
+                    }
                 }
+                
                 tag = message.Substring(32, 3);
                 msg = message.Substring(37);
-                if (tag == "VRB" || tag == "DBG") 
+
+                // If possible do NOT queue VRB messages
+                if (tag == "VRB") { continue; }
+                else if (tag == "DBG") 
                 {
-                    await sendMessage(spin, msg, spinBox, messageBox);
-                    await Task.Delay(1);    // - cjm - 17000 songs even at this speed could be a relatively long time.  May need to remove it entirely.
-                    _lastmessage = false;
+                    
+                    await sendMessage("*", msg, spinBox, messageBox);
+                    await Task.Delay(1);    
+                    _lastmessage = 1000;
                     continue;
                 }
                 else
                 {
-                    await sendMessage(spin, msg, spinBox, messageBox);
+                    await sendMessage("*", msg, spinBox, messageBox);
                     if (tag == "INF") await Task.Delay(1500);
                     else await Task.Delay(9000);
-                    _lastmessage = true;
+                    _lastmessage = 1500;
                     continue;
                 }
             }

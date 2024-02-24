@@ -24,6 +24,8 @@ namespace MauiMediaPlayer
 
             InitializeComponent();
 
+            LogInfo("Loading Log Viewer");
+
             if (!Debugger.IsAttached)
             {
                 Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(1),
@@ -71,10 +73,12 @@ namespace MauiMediaPlayer
                     await Task.Delay(25);
 
                     int i = 0;
+                    string tag;
                     var pollLinesAsync = new AhFileIO().PollLinesAsync(logFile);
                     await foreach (var line in pollLinesAsync)
                     {
-                        MainPage.messageQueue.Enqueue(line);
+                        tag = line.Substring(32, 3);
+                        if (tag != "VRB")  MainPage.messageQueue.Enqueue(line);
                         this.Dispatcher.Dispatch(async () =>
                         {
                             logText += line + "\n";
@@ -86,7 +90,7 @@ namespace MauiMediaPlayer
                 }); // /Task 
             }
             // </Log Viewer>
-
+            LogInfo("Log Viewer Loaded");
         }
     }
 }

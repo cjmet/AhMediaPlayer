@@ -4,6 +4,7 @@ using static AngelHornetLibrary.AhLog;
 using static CommonNet8.SearchForMusic;
 using static CommonNet8.AllSongsPlaylist;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
+using CommonNet8;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ namespace MauiMediaPlayer
             }
 
             _ = DeliverMessageQueue(messageQueue, spinBox, messageBox);
-            _ = SecondWindow(Application.Current, TestSonglist);
+            _ = SecondWindow(Application.Current, AngelHornetLogo);
 
             // Load Databases
             {
@@ -55,7 +56,9 @@ namespace MauiMediaPlayer
             // Search for More Music
             Task.Run(async () =>
             {
-                await SearchUserProfileMusic();
+                var _progress = new ReportProgressToQueue(messageQueue);
+                
+                await SearchUserProfileMusic(_progress);
                 await UpdateAllSongsPlaylist();
 
                 LogDebug("Database Dispatch Start.");
@@ -174,8 +177,9 @@ namespace MauiMediaPlayer
 
 
 
-        private async Task SecondWindow(Application? app, ListView list)
+        private async Task SecondWindow(Application? app, Image logo)
         {
+            LogDebug("Mainpage Creating SecondWindow");
             // cjm - This works here but is almost certainly NOT the place it needs to go.
             // Second Window
             // https://devblogs.microsoft.com/dotnet/announcing-dotnet-maui-preview-11/
@@ -192,10 +196,8 @@ namespace MauiMediaPlayer
 
 
             // Let the main window open first.
-            while (list.Height < 1) await Task.Delay(25);
-
-            // and then let it populate, there should be at least one song?
-            while (list.ItemsSource == null || list.ItemsSource.Cast<Song>().ToList().Count < 1) await Task.Delay(25);
+            while (logo.Height < 1) await Task.Delay(25);
+            await Task.Delay(1000);
 
             var secondWindow = new Window(new MyPage());
 
@@ -210,6 +212,7 @@ namespace MauiMediaPlayer
             secondWindow.Y = 25;
             secondWindow.Title = "AhLog Window";
             app.OpenWindow(secondWindow);
+            LogDebug("MainPage SecondWindow Creation Complete");
         }
 
         private async void SearchBar_SearchButtonPressed(object sender, EventArgs e)

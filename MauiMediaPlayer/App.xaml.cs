@@ -29,7 +29,7 @@ namespace MauiMediaPlayer
         protected override Window CreateWindow(IActivationState activationState)
         {
             var window = base.CreateWindow(activationState);
-            // if(OperatingSystem.IsWindows())  // cjm - might need this if it causes issues on other platforms
+            // if(OperatingSystem.IsWindows())  // cj - might need this if it causes issues on other platforms
             // Change the window Size
             var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
             window.Width = Const.AppWidth; window.Height = Const.AppHeight;
