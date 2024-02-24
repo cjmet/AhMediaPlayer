@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime;
 
 namespace DataLibrary
 {
@@ -9,7 +10,7 @@ namespace DataLibrary
         public string PathName { get; set; }
         public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
         public string Title { get; set; }
-        public string LineItem { get => $"{Title} - {Artist} - {Album}"; }
+        public string LineItem { get => $"{Title} {Artist} {Band} {Album} {Genre}"; }
         public string? Artist { get; set; }
         public string? Band { get; set; }
         public string? Album { get; set; }

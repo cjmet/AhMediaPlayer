@@ -8,6 +8,5 @@
         public const int AppMinimumWidth = 385;
         public const int AppMinimumHeight = 415;
         public const int AppMaximumWidth = 755;
-
     }
 }

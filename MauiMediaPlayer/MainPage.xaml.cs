@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Maui.Views;
 using DataLibrary;
-using System.Windows.Input;
 using static AngelHornetLibrary.AhLog;
 using static CommonNet8.SearchForMusic;
 using static CommonNet8.AllSongsPlaylist;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+
 
 
 
@@ -27,7 +29,14 @@ namespace MauiMediaPlayer
             InitializeComponent();
             _dbContext = dbcontext;
 
-            _ = DeliverMessageQueue(messageQueue,messageBox);  
+            if (Debugger.IsAttached)
+            {
+                var debugSpacer = new Label { Text = "Debug Toolbar Spacer ", HeightRequest = 48, HorizontalOptions = LayoutOptions.Center };
+                MainGrid.Children.Add(debugSpacer);
+                Grid.SetColumnSpan(debugSpacer, 2);
+            }
+
+            _ = DeliverMessageQueue(messageQueue, spinBox, messageBox);
             _ = SecondWindow(Application.Current, TestSonglist);
 
             // Load Databases
@@ -61,6 +70,8 @@ namespace MauiMediaPlayer
                                TestSonglist.ItemsSource = _songList);
                 await Task.Delay(1);
                 LogDebug("=== /Database Dispatch Complete =============================== ===");
+                await Task.Delay(5000);
+                LogMsg("Startup Complete");
             });
 
         }
@@ -187,14 +198,47 @@ namespace MauiMediaPlayer
             while (list.ItemsSource == null || list.ItemsSource.Cast<Song>().ToList().Count < 1) await Task.Delay(25);
 
             var secondWindow = new Window(new MyPage());
-            secondWindow.Width = 1080;
-            secondWindow.Height = 640;
+
+            var _maximumWidth = (int)(DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density - Const.AppWidth - Const.AppDisplayBorder) / 2;
+            secondWindow.Width = int.Max(Const.AppMinimumWidth, _maximumWidth);
+            
+
+            var _maximumHeight = (int)(DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density - Const.AppDisplayBorder);
+            secondWindow.Height = int.Min(Const.AppHeight, _maximumHeight);
+
             secondWindow.X = 25;
             secondWindow.Y = 25;
             secondWindow.Title = "AhLog Window";
             app.OpenWindow(secondWindow);
         }
 
+        private async void SearchBar_SearchButtonPressed(object sender, EventArgs e)
+        {
+            var _searchBar = (SearchBar)sender;
+            var _searchText = _searchBar.Text.ToLower();
+            var _songList = new List<Song>();
 
+            LogMsg($"Searching: '{_searchText}'");
+            var _dbContext = new PlaylistContext();
+            // {Title} {Artist} {Band} {Album} {Genre}
+            _songList = await _dbContext.Songs.Where(s =>
+                s.Title.ToLower().Contains(_searchText) ||
+                s.Artist.ToLower().Contains(_searchText) ||
+                s.Band.ToLower().Contains(_searchText) ||
+                s.Album.ToLower().Contains(_searchText) ||
+                s.Genre.ToLower().Contains(_searchText))
+                .ToListAsync();
+
+            if (_songList == null) _songList = new List<Song>();
+            _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+            _dbContext.Dispose();
+
+            LogMsg($"Found {_songList.Count} songs.");
+            if (_songList.Count > 0)
+                Application.Current.Dispatcher.Dispatch(() =>
+                {
+                    TestSonglist.ItemsSource = _songList;
+                });
+        }
     }
 }

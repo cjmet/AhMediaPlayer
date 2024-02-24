@@ -1,6 +1,7 @@
 ﻿using AngelHornetLibrary;
 using static AngelHornetLibrary.AhLog;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 
 namespace MauiMediaPlayer
@@ -23,12 +24,11 @@ namespace MauiMediaPlayer
 
             InitializeComponent();
 
-
-#if DEBUG
-#else
-            Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(1),
-                () => Application.Current.CloseWindow(this.Window));
-#endif
+            if (!Debugger.IsAttached)
+            {
+                Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(1),
+                    () => Application.Current.CloseWindow(this.Window));
+            }
 
 
 
@@ -81,17 +81,12 @@ namespace MauiMediaPlayer
                             label.Text = logText;
                             await Task.Delay(1);    // This gives multi-line updates ~1 GUI cycle to update
                             await scrollView.ScrollToAsync(label, ScrollToPosition.End, false);
-                            // For that odd time when the scroll doesn't make it to the end.
-                            if (scrollView.ScrollY < scrollView.ContentSize.Height - Window.Height - Const.AppDisplayBorder - 1)
-                            {
-                                LogWarning($"ScrollY: {(int)scrollView.ScrollY} vs {(int)scrollView.ContentSize.Height - Window.Height - Const.AppDisplayBorder - 1}");
-                                await Task.Delay(25); await scrollView.ScrollToAsync(label, ScrollToPosition.End, false);
-                            }
                         });
                     }
-                });
+                }); // /Task 
             }
             // </Log Viewer>
+
         }
     }
 }

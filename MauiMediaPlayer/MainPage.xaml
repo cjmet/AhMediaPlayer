@@ -17,9 +17,9 @@
                 Caption
                 -->
 
-    <Grid MinimumWidthRequest="375" MinimumHeightRequest="375">
+    <Grid x:Name="MainGrid" MinimumWidthRequest="375" MinimumHeightRequest="375">
         <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="27" />
             <RowDefinition  />
             <RowDefinition Height="60" />
@@ -36,18 +36,8 @@
 
 
         <!-- Row 0 -->
-        <Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />
-        <Label Text="Angel Hornet Media Player"
-               Style="{StaticResource NormalText}"
-               FontSize="Micro"
-               Grid.Row="0"
-               Grid.ColumnSpan="2"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-                  />
-
-        <!-- Row 1 -->
-        <ContentView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <!--<Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />-->
+        <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalOptions="End"  MaximumHeightRequest="27" ZIndex="2">
             <ListView x:Name="TestPlaylist"  
                       ItemSelected="TestPlaylist_ItemSelected">
                 <ListView.ItemTemplate>
@@ -83,13 +73,33 @@
             </ListView>
         </ContentView>
 
+        <!-- Row 1 -->
+        <!--// {Title} {Artist} {Band} {Album} {Genre}-->
+        <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" HorizontalOptions="Center" ZIndex="0" Padding="-10" >
+            <SearchBar
+                MinimumWidthRequest="350"
+                HorizontalOptions="Center"
+                VerticalOptions="StartAndExpand"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center"
+                IsTextPredictionEnabled="True"
+                FontAutoScalingEnabled="True"
+                FontSize="Default"
+                Placeholder="Search for a song, artist, band, album, or genre"
+                SearchButtonPressed="SearchBar_SearchButtonPressed"
+                ZIndex="1"/>
+        </Frame>
+
+
         <!-- Row 2 -->
+        <Frame Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderColor="Transparent" Opacity="1"  />
         <Image Source="angel_hornet_logo_cropped.png"
                     Grid.Row="2"
                     Grid.ColumnSpan="2"
+                    HorizontalOptions="CenterAndExpand"
                     Aspect="AspectFit"
                     SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" 
-                    ZIndex="1"
+                    ZIndex="2"
                     />
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
@@ -228,6 +238,19 @@
 
         <!-- Row 7 -->
         <Frame Grid.Row="8" Grid.ColumnSpan="3" CornerRadius="0" />
+        <Label x:Name="spinBox" Padding="5,0"
+                Grid.Row="8" 
+                Grid.ColumnSpan="3"
+                Text="."
+                Rotation="180"
+                Style="{StaticResource NormalText}"
+                FontSize="Caption"
+                LineBreakMode="MiddleTruncation"
+                HorizontalOptions="Start"
+                VerticalOptions="Start"
+                HeightRequest="20"
+                MinimumHeightRequest="20"
+                MaximumHeightRequest="20"/>
         <Label x:Name="messageBox" Padding="15,0"
                 Grid.Row="8" 
                 Grid.ColumnSpan="3"
@@ -235,8 +258,8 @@
                 Style="{StaticResource NormalText}"
                 FontSize="Caption"
                 LineBreakMode="MiddleTruncation"
-                HorizontalOptions="Start"
-                VerticalOptions="Start"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
                 HeightRequest="20"
                 MinimumHeightRequest="20"
                 MaximumHeightRequest="20"/>

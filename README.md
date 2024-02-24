@@ -15,7 +15,7 @@ CLI (and later API and Web) application using Entity Framework Core.  The applic
 <br>
 
 ### Code Kentucky
-Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The course is designed to teach the fundamentals of software development and to prepare students for a career in the field.  The course is taught by experienced professionals in the field.
+Code Kentucky is a software development boot camp in Louisville, Kentucky.  The course is designed to teach the fundamentals of software development and to prepare students for a career in the field.  The course is taught by experienced professionals in the field.
 
 * https://codekentucky.org/
 * https://codelouisville.org/
@@ -27,9 +27,9 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 1. &nbsp;What is the correct place to put the second window's initialization code?
 1. &ensp;What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
    1. I'm currently checking it's Height as an easy check
-`while (await this.Dispatcher.DispatchAsync(() => webView.Height) < 1) await Task.Delay(1000);`
+`while (await this.Dispatcher.DispatchAsync(() => WebView.Height) < 1) await Task.Delay(1000);`
    1. Then I'm checking is* when a more difficult check is needed.
-        `var isAlive = await this.Dispatcher.DispatchAsync(() => webView.IsEnabled && webView.IsVisible && webView.IsLoaded);
+        `var isAlive = await this.Dispatcher.DispatchAsync(() => WebView.IsEnabled && WebView.IsVisible && WebView.IsLoaded);
         if (!isAlive) { Debug.WriteLine($"WebView is Dead!"); return; throw new Exception(); }`
 1. &ensp;What is the correct way to Access the log service from my other libraries and classes?
    1. I put logging into AhLog() Library, Using DI, then access it through either AhLog or DI as needed.
@@ -38,18 +38,18 @@ Code Kentucky is a software development bootcamp in Louisville, Kentucky.  The c
 1. &nbsp;How Do I? &ensp; - &ensp; Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.  Dispatcher Maybe?  Syntax?
    1. Pass the target element to the method as a parameter?
 ---
-1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plugin or something?
+1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plug-in or something?
 1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
    * On a related Note.  Always keep at least one 'other' target enabled, IE: 'Android'.  I disabled the other targets to make it simpler while learning and building ... and as a side-effect it enabled 'Windows.\*', including Windows.Storage.  But now I can't re-enable android targets without a major refactor.  Oops.
-1. &nbsp;Review how to Async return a value, non-blocking, from a blockable operation, using a 4 step process.  (See Sandbox)
+1. &nbsp;Review how to Async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
 1. &nbsp;Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
 <br>
 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do (Other Tasks)
-- [ ] ...
+- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
 
 * ### Music Player
 - [x] My First MAUI App
@@ -62,7 +62,7 @@ Create a music library Web API and simple Media Player
 - [x] Play more than one song from a static Playlist
 - [x] Song Selection and Playing UI Layout
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
-  - [x] Writes to a Popup Window (if in debug mode)
+  - [x] Writes to a Pop-Up Window (if in debug mode)
   - [x] Improved Logging Window
   - [x] `public async IAsyncEnumerable<string> PollLinesAsync(path, pollInterval, CancellationToken?)`
 - [ ] /MauiProgramLogic/MauiProgramLogic.cs
@@ -102,7 +102,7 @@ Create a music library Web API and simple Media Player
 
 
 * ### Data Library
-- [x] Store in sqlite database
+- [x] Store in SQLite database
 - [x] Integrate with Music Player
 - [x] Add the rest of the data structures back in, and to the Data Library.
 - [x] Move data files back out into a DataLibrary for easier management. 
@@ -121,13 +121,13 @@ Create a music library Web API and simple Media Player
 - [ ] Implement the Interfaces and Repository Pattern.
 - [ ] Add an API Project to the solution
 - [ ] Develop basic API to match basic functionality of Music Library
-- [ ] Using the Repository Pattern and scaffolding will effetively do this for us.
+- [ ] Using the Repository Pattern and scaffolding will effectively do this for us.
 
 <br>
 
 ## Project Requirements (Pick 3 or more)
 - [x] Async Task
-  * Created an async background task to scan local and remote smb drives for media files, using callbacks to deliver updates asynchronously.
+  * Created an async background task to scan local and remote SMB drives for media files, using callbacks to deliver updates asynchronously.
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [ ] API
@@ -164,30 +164,35 @@ Create a music library Web API and simple Media Player
 * Extra Wholesale Bag of Salt:
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
   * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
-* Disable windows app virtualization of the %appdata filesystem.  This options does not appear to be available in MAUI, only older UWP.
+* Disable windows app virtualization of the %AppData file-system.  This options does not appear to be available in MAUI, only older UWP.
 
 <br>
 
 ## Dev Blog
+* Alpha Search Bar. We'll improve this more later, and integrate it with the playlists.
+* LineItem is a Lambda Expression, and it isn't supported in EF Core Either.
+* >"The LINQ expression 'DbSet<Song>()
+    .Where(s => s.LineItem.ToLower().Contains(___searchText_0))' could not be translated. Additional information: Translation of member 'LineItem' on entity type 'Song' failed. This commonly occurs when the specified member is unmapped. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=210103"*
+* >"In Entity Framework Core, the Contains method used in LINQ queries does not support the StringComparison enumeration. However, you can use the ToUpper or ToLower methods to perform a case-insensitive comparison. "
 * Updated the messageBox and started sending log messages to it.  Then some general code cleanup
 * Change the default log level to debug.  Use the info level more carefully.  
 * Worked on Playlists, Playlist switching, and many various small things.
-* There are many inconsistencies in the various methods.  Even within the same method various behaviours can vary.  One version of webview autoloads while the other does not, etc.
+* There are many inconsistencies in the various methods.  Even within the same method various behaviors can vary.  One version of WebView auto-loads while the other does not, etc.
 * 🤬 Rewrote the Log Viewer for the third time.  
   * The original idea was in theory very simple:
     ```
-    WebView webView = new WebView();
-    webView.Source = AhLog._logFilePath;
-    this.Content = webView;
+    WebView WebView = new WebView();
+    WebView.Source = AhLog._logFilePath;
+    this.Content = WebView;
     _ = Task.Run(async () => { while (true) { 
         await Task.Delay(1000);
-        await this.Dispatcher.DispatchAsync(() => webView.Reload());
+        await this.Dispatcher.DispatchAsync(() => WebView.Reload());
     } } );
     ```
   * The Reality ended up far different. 
-    * The first version took a day or two, a hundred lines and tons of debugging.  The second version took about a day with more debugging.  This third version only took an hour or two, and it's by far the best iteration.  On the positive side of things, I did learn many many things along the way.
+    * The first version took a day or two, a hundred lines and tons of debugging.  The second version took about a day with more debugging.  This third version only took an hour or two, and it's by far the best iteration.  On the positive side of things, I did learn many things along the way.
 * Added FileLoop and (simple) file change detection.  This would perhaps be better with a FileSystemWatcher, but it's already 100 lines long and complicated enough.  And I'm probably going to throw it away and completely rewrite it anyway.  I just wanted to finish this path to learn everything I could from it.
-* Don't write to the logfile inside the loop that reads your log file. 😉
+* Don't write to the log-file inside the loop that reads your log file. 😉
 * Using ListView and StreamReader inside the Second Window
   * `while (DataWindow.Height < 1) await Task.Delay(25);` To make sure the window is open before trying to access it.
   * MUST use `ObserverableCollection`, and MUST use `await Dispatcher.DispatchAsync`, (or at least use {Dispatch(); await Task.Delay(1)}, when running on a different thread.
@@ -218,7 +223,7 @@ Create a music library Web API and simple Media Player
     ```
 * Change: `Application.Current.MainPage.Dispatcher.Dispatch` to `this.Dispatcher.Dispatch`
 * Spent all day fixing code I'm probably never going to use, just because it was an eventful learning experience.
-* That was a total Disaster. Need to fix the data types. Need to figure out where to move the 2nd window code. Need to be able to verify that data is onscreen. More things than I can even think to write down
+* That was a total Disaster. Need to fix the data types. Need to figure out where to move the 2nd window code. Need to be able to verify that data is on-screen. More things than I can even think to write down
 * Worked on the second Maui Window to display AhLog() data.
 * Resources are required to have Lowercase Filenames:
   * `Get-childItem "." | Rename-Item -NewName {$_.Basename.tostring().tolower() + $_.extension}`
@@ -226,7 +231,7 @@ Create a music library Web API and simple Media Player
 * Started work on basic logging.
 * Rewrote the background task for the 4th time as: async IAsyncEnumerable<string> GetFilesAsync().  This version is streaming, and more closely matches standard conventions.  It should in theory be easier to use and understand.  It was perhaps the easiest iteration to write, but also took the most lines of code.
 * Started work on CommonLibrary, cleaning up code and moving common logic into the library in a more organized and readable way.
-* Fixed the playlist to continue playing ... but still lots of work to do.
+* Fixed the Playlist to continue playing ... but still lots of work to do.
 * 😲 I had no idea this was a thing: &nbsp;&nbsp; `var _sourceSongList = TestSonglist.ItemsSource.Cast<Song>().ToList();` &nbsp;&nbsp; This was exactly what I needed, and I found it almost entirely by accident reading almost completely unrelated code.
 * Wired up the Song List, and now can select and play a song from the list.  I am going to need to redo whole sections of this code now that I have a better understanding of everything so far.
 * When available, there's a very tiny '+' button when writing an event handler.  USE IT!  Each one is just enough different to typo something, and waste time otherwise.
@@ -255,11 +260,11 @@ Create a music library Web API and simple Media Player
   * Constants.cs
 * Changed the Title in Appshell.xaml
 * Did more integration with FileFind, Callback, EF Core, and Maui.
-  * I'm not at all certain where various peices of code should go.  It's all very messy right now while I'm still learning to crawl around slowly 
+  * I'm not at all certain where various pieces of code should go.  It's all very messy right now while I'm still learning to crawl around slowly 
 * **%AppData% is Different in Win11/Console, Win11/Web, and Win11/Maui**
   * This means the database files were being stored in different locations.
-  * Win11 is: "C:\Users\Username\AppData\Local\test_playlists.db"
-  * MAUI  is: "C:\Users\Username\AppData\Local\Packages\ ... mauimediaplayer ... \LocalCache\Local\test_playlists.db"
+  * Win11 is: "C:\Users\Username\AppData\Local\test_Playlists.db"
+  * MAUI  is: "C:\Users\Username\AppData\Local\Packages\ ... MauiMediaPlayer ... \LocalCache\Local\test_Playlists.db"
 * Rewrote FindFiles for the third time, to use a callback from the background task to the main task.
 * Improved the Background Task in preparation for using an action task to integrate it with EF Core
 * Made progress on window size and location, as well as learning the initial basics of xaml layout.
