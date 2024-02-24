@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using DataLibrary;
+using Microsoft.EntityFrameworkCore.InMemory.Design.Internal;
+
 
 namespace MauiMediaPlayer.ProgramLogic
 {
@@ -11,59 +13,80 @@ namespace MauiMediaPlayer.ProgramLogic
         public static async Task DeliverMessageQueue(ConcurrentQueue<string> messageQueue, Label spinBox, Label messageBox)
         {
             int spinner = 0;
-            int _lastmessage = 0;
-            string tag;
-            string msg;
+            string queuedMsg = "";
+            int queuedMsgLevel = -1;
+            string msg = "";
+            string tag = "";
+            int msgLevel = -1;
+
+            Dictionary<string, int> msgLevelDict = new Dictionary<string, int>
+            {
+                { "VRB", 1000 },
+                { "DBG", 1250 },
+                { "INF", 1500 },
+                { "WRN", 3000 },
+                { "ERR", 10000 },
+                { "FTL", 30000 }
+            };
+
+            // Sub-Task
+            new Task(async () => {
+                while (true)
+                {
+                    if (queuedMsgLevel >= 0 && queuedMsg != "")
+                    {
+                        // 'x'=60, 'M'= 38, Pixels=390 - 20 = 370;  Avg=6.2, Wide=9.7
+                        //var grid = messageBox.Parent as Grid;
+                        //var page = grid.Parent as Page;
+                        //Debug.WriteLine($"Page:{page.Width}   Grid:{grid.Width}   Msg:{messageBox.Width}");
+                        var width = (int)(messageBox.Width / 6.5);
+                        queuedMsg = AngelHornetLibrary.AhStrings.MiddleTruncate(queuedMsg, width);
+                        var spin = " .".Substring(spinner++ % 2, 1);
+                        sendMessages(queuedMsg, messageBox, spin, spinBox);
+                        var displayDuration = queuedMsgLevel;
+                        queuedMsg = "";
+                        queuedMsgLevel = -1;
+                        await Task.Delay(displayDuration);
+                    }
+                    else
+                    {
+                        queuedMsg = "Angel Hornet Media Player";
+                        queuedMsgLevel = 1000;
+                    }
+                    await Task.Delay(250);
+                }
+            }, TaskCreationOptions.LongRunning).Start();
+            // /Sub-Task
 
             while (true)
             {
                 messageQueue.TryDequeue(out string message);
-                if (message == null)
+                if (message != null)
                 {
-                    if (_lastmessage > 0)
+                    if (message.Length > 37)
                     {
-                        await Task.Delay(_lastmessage);
-                        _lastmessage = 0;
-                        continue;
+                        tag = message.Substring(32, 3);
+                        msg = message.Substring(37);
+                        msgLevelDict.TryGetValue(tag, out msgLevel);
+                        if (msgLevel >= queuedMsgLevel)
+                        {
+                            queuedMsg = msg;
+                            queuedMsgLevel = msgLevel;
+                        }
                     }
-                    else
-                    {
-                        msg = "Angel Hornet Media Player";
-                        var spin = " .".Substring(spinner++ % 2, 1);
-                        await sendMessage(spin, msg, spinBox, messageBox);
-                        await Task.Delay(1000);
-                        continue;
-                    }
-                }
-                
-                tag = message.Substring(32, 3);
-                msg = message.Substring(37);
-
-                // If possible do NOT queue VRB messages
-                if (tag == "VRB") { continue; }
-                else if (tag == "DBG") 
-                {
-                    
-                    await sendMessage("*", msg, spinBox, messageBox);
-                    await Task.Delay(1);    
-                    _lastmessage = 1000;
-                    continue;
                 }
                 else
                 {
-                    await sendMessage("*", msg, spinBox, messageBox);
-                    if (tag == "INF") await Task.Delay(1500);
-                    else await Task.Delay(9000);
-                    _lastmessage = 1500;
-                    continue;
+                    await Task.Delay(1000);
                 }
             }
         }
-        public static async Task sendMessage(string spin, string message, Label spinBox, Label messageBox)
+
+        public static async Task sendMessages(string message, Label messageBox, string? spin = null, Label? spinBox = null)
         {
             if (message != null && messageBox != null)
                 await messageBox.Dispatcher.DispatchAsync(() => {
-                    spinBox.Text = spin;
+                    if (spin != null && spinBox != null) spinBox.Text = spin;
                     messageBox.Text = message;
                     });
         }

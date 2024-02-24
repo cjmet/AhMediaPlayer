@@ -20,10 +20,7 @@ namespace CommonNet8
         }
         public void Report(string value)
         {
-            Debug.WriteLine(value);
-            value = "2024-02-24 03:56:08.868 -05:00 [DBG] " + value;
-            if (_LoggingLevel.MinimumLevel > LogEventLevel.Debug)
-                _queue.Enqueue(value);
+            LogMsg(value);
         }
     }
 
@@ -37,8 +34,7 @@ namespace CommonNet8
             var path = Environment.GetFolderPath(folder);
             var MusicPath = Path.Join(path, "Music");
             LogMsg($"Searching UserProfile/Music");
-            MusicPath = "\\\\mirielle\\music";
-            //MusicPath = "";
+            //MusicPath = "\\\\mirielle\\music";
             LogMsg($"{MusicPath}");
             List<string> _filesCache = new List<string>();
             var _dbContext = new PlaylistContext();

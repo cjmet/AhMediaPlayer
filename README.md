@@ -169,6 +169,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Cleaned up the message loop some.  More bug fixes.
 * Scanned 17,000 MP3s over 10/100Mb SMB into the Db in 25 Minutes.  Cached Updates after the first scan took a bit less than 1 minute.  I'll test again after I get a 1gb switch installed.
 * Lots and Lots and Tons and Tons of debugging while reading the big music library. A great many files have corrupted tags or properties that caused various parts of the program to crash
 * Alpha Search Bar. We'll improve this more later, and integrate it with the playlists.

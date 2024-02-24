@@ -106,7 +106,7 @@
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv -->
         <!--<Combined MediaElement with Labels>-->
-        
+
         <!-- Row 3 -->
         <toolkit:MediaElement x:Name="mediaElement" 
             Source="embed://gs-16b-1c-44100hz.mp3"
@@ -253,17 +253,17 @@
                 MinimumHeightRequest="20"
                 MaximumHeightRequest="20"/>
         <Label x:Name="messageBox" Padding="15,0"
+                Text="Messages ..." 
+                LineBreakMode="NoWrap" 
                 Grid.Row="8" 
                 Grid.ColumnSpan="3"
-                Text="Messages ..." 
                 Style="{StaticResource NormalText}"
                 FontSize="Caption"
-                LineBreakMode="MiddleTruncation"
-                HorizontalOptions="Center"
+                HorizontalOptions="Fill"
                 VerticalOptions="Center"
                 HeightRequest="20"
                 MinimumHeightRequest="20"
-                MaximumHeightRequest="20"/>
+MaximumHeightRequest="20"/>
     </Grid>
 
 

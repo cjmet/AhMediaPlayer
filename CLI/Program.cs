@@ -4,14 +4,10 @@
 
 using AngelHornetLibrary;
 using AngelHornetLibrary.CLI;
-using DataLibrary;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Net.NetworkInformation;
-using static AngelHornetLibrary.AhLog;
 using static CommonNet8.SearchForMusic;
 using static CommonNet8.AllSongsPlaylist;
 using static MauiCli.DbProgramLogic;
+using CommonNet8;
 
 
 
@@ -24,13 +20,14 @@ namespace MauiCli
         static void Main(string[] args) 
         {
             TestLogs();
+            var progress = new ReportProgressToQueue(new System.Collections.Concurrent.ConcurrentQueue<string>());
 
             CliMenu mainMenu = new CliMenu();
             mainMenu.MenuMaxWidth = 80;
             mainMenu.MenuItemWidth = 40;
             mainMenu.Message = "\nMain Menu";
 
-            mainMenu.AddItem("Find MP3 Files", () => { _ = SearchUserProfileMusic();  });
+            mainMenu.AddItem("Find MP3 Files", () => { _ = SearchUserProfileMusic(progress);  });
             mainMenu.AddItem("Read Playlists", () => { DbReadPlaylists().Wait(); });
             mainMenu.AddItem("Update All Songs Playlist", () => { _ = UpdateAllSongsPlaylist(); });
             mainMenu.AddItem("Random Playlists", () => { DbRandomizePlaylists(); });

@@ -17,7 +17,8 @@ namespace MauiCli
             Console.WriteLine("Resetting Db");
             DbContextTest(true);
             Console.WriteLine("Searching for Music");
-            await SearchUserProfileMusic();
+            var progress = new ReportProgressToQueue(new System.Collections.Concurrent.ConcurrentQueue<string>());
+            await SearchUserProfileMusic(progress);
             Console.WriteLine("Updating All Songs Playlist");
             await UpdateAllSongsPlaylist();
             Console.WriteLine("Randomizing Playlists");
