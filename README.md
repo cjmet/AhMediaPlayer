@@ -178,6 +178,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* First Pass at Interfaces and Repository Pattern Adoption
+* DbContext.ExecuteUpdateAsync() and DbContext.ExecuteDeleteAsync()
 * Added Song.AlphaTitle to sort by.  Regex to remove non-alphanumeric characters, and then to remove leading "The " and "A " from the title, etc, ... 
 * Cleaned up the message loop some.  More bug fixes.
 * Scanned 17,000 MP3s over 10/100Mb SMB into the Db in 25 Minutes.  Cached Updates after the first scan took a bit less than 1 minute.  I'll test again after I get a 1gb switch installed.

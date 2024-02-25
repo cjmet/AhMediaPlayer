@@ -34,7 +34,7 @@ namespace CommonNet8
             var path = Environment.GetFolderPath(folder);
             var MusicPath = Path.Join(path, "Music");
             LogMsg($"Searching UserProfile/Music");
-            //MusicPath = "\\\\mirielle\\music";
+            MusicPath = "M:\\";
             LogMsg($"{MusicPath}");
             List<string> _filesCache = new List<string>();
             var _dbContext = new PlaylistContext();
@@ -121,14 +121,10 @@ namespace CommonNet8
                 LogTrace($"*** Fix Corrupted Tags");
                 if (tag.Title.ToString() == null || tag.Title.ToString() == "") tag.Title = _fileName;
 
-                // Fix Alphabetical Titles
-                string? _alphaTitle = CleanUpSongTitle(tag.Title);
-
                 LogTrace("MP3 Trace Data");
                 LogTrace($"Pa:[{filename}]");
                 LogTrace($"Fi:[{_fileName}]");
                 LogTrace($"Ti:[{tag.Title}]");
-                LogTrace($"At:[{_alphaTitle}");
                 LogTrace($"Ar:[{tag.Artists}]");
                 LogTrace($"Ba:[{tag.Band}]");
                 LogTrace($"Al:[{tag.Album}]");
@@ -137,19 +133,18 @@ namespace CommonNet8
                 LogTrace($"Yr:[{tag.Year}]");
                 LogTrace($"Ln:[{tag.Length}]");
 
-                _adbContext.Songs.Add(new Song
-                {
-                    PathName = filename,
-                    Title = tag.Title,
-                    Artist = tag.Artists,
-                    AlphaTitle = _alphaTitle,
-                    Band = tag.Band,
-                    Album = tag.Album,
-                    Track = tag.Track,
-                    Genre = _genre,
-                    Year = tag.Year,
-                    Length = tag.Length,
-                });
+                Song _newSong = new Song();
+                _newSong.PathName = filename;
+                _newSong.Title = tag.Title;
+                _newSong.Artist = tag.Artists;
+                _newSong.Band = tag.Band;
+                _newSong.Album = tag.Album;
+                _newSong.Track = tag.Track;
+                _newSong.Genre = _genre;
+                _newSong.Year = tag.Year;
+                _newSong.Length = tag.Length;
+
+                _adbContext.Songs.Add(_newSong);
                 // there does not appear to be a tag.Dispose() method
                 LogTrace($"*** Added: {filename}");
             }
@@ -157,24 +152,6 @@ namespace CommonNet8
             _adbContext.SaveChanges();
             LogTrace("*** Changes Saved ***");
         }
-
-
-
-        public static string CleanUpSongTitle(string title)
-        {
-            // Clean up anything that isn't alphanumeric or a space
-            title = Regex.Replace(title, @"[^\w ]", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            // Remove double spaces
-            title = Regex.Replace(title, @"\s+", " ", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            // Remove leading spaces and numbers
-            title = Regex.Replace(title, @"^[^a-z]*", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            // Remove leading "The" and space
-            title = Regex.Replace(title, @"^The\s+", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            // Remove leading "A" and space
-            title = Regex.Replace(title, @"^A\s+", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            return title;
-        }
-
 
 
     }
