@@ -2,11 +2,11 @@
 using DataLibrary;
 using Id3;
 using Microsoft.EntityFrameworkCore;
-using Serilog.Events;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using static AngelHornetLibrary.AhLog;
 using static DataLibrary.GenreDictionary;
+using System.Text.RegularExpressions;
 
 namespace CommonNet8
 {
@@ -121,10 +121,14 @@ namespace CommonNet8
                 LogTrace($"*** Fix Corrupted Tags");
                 if (tag.Title.ToString() == null || tag.Title.ToString() == "") tag.Title = _fileName;
 
+                // Fix Alphabetical Titles
+                string? _alphaTitle = CleanUpSongTitle(tag.Title);
+
                 LogTrace("MP3 Trace Data");
                 LogTrace($"Pa:[{filename}]");
                 LogTrace($"Fi:[{_fileName}]");
                 LogTrace($"Ti:[{tag.Title}]");
+                LogTrace($"At:[{_alphaTitle}");
                 LogTrace($"Ar:[{tag.Artists}]");
                 LogTrace($"Ba:[{tag.Band}]");
                 LogTrace($"Al:[{tag.Album}]");
@@ -138,6 +142,7 @@ namespace CommonNet8
                     PathName = filename,
                     Title = tag.Title,
                     Artist = tag.Artists,
+                    AlphaTitle = _alphaTitle,
                     Band = tag.Band,
                     Album = tag.Album,
                     Track = tag.Track,
@@ -152,6 +157,24 @@ namespace CommonNet8
             _adbContext.SaveChanges();
             LogTrace("*** Changes Saved ***");
         }
+
+
+
+        public static string CleanUpSongTitle(string title)
+        {
+            // Clean up anything that isn't alphanumeric or a space
+            title = Regex.Replace(title, @"[^\w ]", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            // Remove double spaces
+            title = Regex.Replace(title, @"\s+", " ", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            // Remove leading spaces and numbers
+            title = Regex.Replace(title, @"^[^a-z]*", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            // Remove leading "The" and space
+            title = Regex.Replace(title, @"^The\s+", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            // Remove leading "A" and space
+            title = Regex.Replace(title, @"^A\s+", "", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return title;
+        }
+
 
 
     }

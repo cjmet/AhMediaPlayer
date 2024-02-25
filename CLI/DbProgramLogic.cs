@@ -113,7 +113,7 @@ namespace MauiCli
                 Console.WriteLine();
                 PlaylistWriteLine("Song Title", "Artist", "Album", "Genre");
                 PlaylistWriteLine("----------", "------", "-----", "-----");
-                foreach (Song song in playlist.Songs.OrderBy(s => s.Title))
+                foreach (Song song in playlist.Songs.OrderBy(s => s.AlphaTitle))
                 {
                     PlaylistWriteLine(song.Title, song.Artist, song.Album, song.Genre);
                 }

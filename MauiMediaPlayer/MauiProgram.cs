@@ -14,7 +14,7 @@ namespace MauiMediaPlayer
         public static MauiApp CreateMauiApp()
         {
 #if DEBUG            
-            LogDebug($"{AppInfo.PackageName}");       // cjm
+            LogDebug($"{AppInfo.PackageName}");       // cj
 #else
             LogMsg($"{AppInfo.PackageName}");
 #endif
@@ -43,12 +43,14 @@ namespace MauiMediaPlayer
             try
             {
                 var _dbContext = new PlaylistContext();
-                if (false)
+                // *** DEBUG ***
+                if (false)                //cj
+                // *** DEBUG ***    
                 {
                     LogWarning("WARNING: This is a debug build.  The database will be deleted and recreated.  Change this later. (MauiProgram.cs)");
                     _dbContext.Database.EnsureDeleted();
                     LogDebug("Database Deleted");
-                    }
+                }
                 _dbContext.Database.EnsureCreated();
                 LogDebug("Database Created");
                 _dbContext.Dispose();

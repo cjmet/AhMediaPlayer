@@ -10,6 +10,7 @@ namespace DataLibrary
         public string PathName { get; set; }
         public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
         public string Title { get; set; }
+        public string? AlphaTitle { get; set; }    // Cleaned up AlphaNumeric Only, Alphabetical Title for Sorting
         public string LineItem { get => $"{Title} {Artist} {Band} {Album} {Genre}"; }
         public string? Artist { get; set; }
         public string? Band { get; set; }

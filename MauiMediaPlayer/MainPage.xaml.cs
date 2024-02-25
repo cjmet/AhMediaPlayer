@@ -47,7 +47,7 @@ namespace MauiMediaPlayer
                 _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 TestPlaylist.ItemsSource = _playlists;
                 var _songList = _dbContext.Songs.ToList();
-                _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+                _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 TestSonglist.ItemsSource = _songList;
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
                 LogDebug("=== /Database Loading Complete =============================== ===");
@@ -68,7 +68,7 @@ namespace MauiMediaPlayer
                                TestPlaylist.ItemsSource = _playlists);
 
                 var _songList = _dbContext.Songs.ToList();
-                _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+                _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 this.Dispatcher.Dispatch(() =>
                                TestSonglist.ItemsSource = _songList);
                 await Task.Delay(1);
@@ -139,7 +139,7 @@ namespace MauiMediaPlayer
             else LogWarning("WARN[124] playlist is null");
 
             var _songList = _dbContext.Songs.Where(s => s.Playlists.Contains(playlist)).ToList();
-            _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+            _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
             this.Dispatcher.Dispatch(() =>
             {
                 TestSonglist.ItemsSource = _songList;
@@ -233,7 +233,7 @@ namespace MauiMediaPlayer
                 .ToListAsync();
 
             if (_songList == null) _songList = new List<Song>();
-            _songList = _songList.OrderBy(s => s.Title, StringComparer.OrdinalIgnoreCase).ToList();
+            _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
             _dbContext.Dispose();
 
             LogMsg($"Found {_songList.Count} songs.");

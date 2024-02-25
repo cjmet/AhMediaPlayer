@@ -48,8 +48,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 ## Project Plan
 Create a music library Web API and simple Media Player
-* ### To-Do (Other Tasks)
-- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
+* ### To-Do List
+- [ ] ... 
 
 * ### Music Player
 - [x] My First MAUI App
@@ -75,6 +75,7 @@ Create a music library Web API and simple Media Player
   - [ ] Deleting Playlists GUI (Delete)
   - [ ] Search and Filter functionality GUI
   - [ ] Add Automatic Playlists based on Meta Data GUI
+- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
 
 
 * ### Common Library 
@@ -131,15 +132,23 @@ Create a music library Web API and simple Media Player
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [ ] API
+  * Not yet implemented
 - [ ] CRUD API
-- [ ] Multiple Data Tables
+  * Not yet implemented
+- [x] Multiple Data Tables
+  * modelBuilder.Entity<Song>().HasMany(s => s.Playlists).WithMany(p => p.Songs);
 - [x] Logging of Errors and Debug Info.
   * AhLog() class and Serilog
+- [x] Regex
+  * Regex to clean up and convert Title to AlphaTitle to sort by
 - [ ] Unit Testing
-- [ ] SOLID Principles
-- [ ] SQL Queries
-- [ ] Regex
-- [ ] Generic Class
+  * Not yet implemented
+- [ ] ~~SOLID Principles~~
+  * I'll do a better job of this in the future, and as I have time to refactor and clean things up.  I was too entirly clueless and stumbling around in the dark to properly implement a good SOLID plan.
+- [ ] ~~SQL Queries~~
+  * Unlikely to be used in this project.
+- [ ] ~~Generic Class~~
+  * Unlikely to be used in this project.
 
 <br>
 
@@ -169,6 +178,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Added Song.AlphaTitle to sort by.  Regex to remove non-alphanumeric characters, and then to remove leading "The " and "A " from the title, etc, ... 
 * Cleaned up the message loop some.  More bug fixes.
 * Scanned 17,000 MP3s over 10/100Mb SMB into the Db in 25 Minutes.  Cached Updates after the first scan took a bit less than 1 minute.  I'll test again after I get a 1gb switch installed.
 * Lots and Lots and Tons and Tons of debugging while reading the big music library. A great many files have corrupted tags or properties that caused various parts of the program to crash
