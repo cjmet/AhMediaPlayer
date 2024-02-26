@@ -34,7 +34,7 @@ namespace CommonNet8
             var path = Environment.GetFolderPath(folder);
             var MusicPath = Path.Join(path, "Music");
             LogMsg($"Searching UserProfile/Music");
-            MusicPath = "M:\\";
+            //MusicPath = "M:\\";   // cjm 
             LogMsg($"{MusicPath}");
             List<string> _filesCache = new List<string>();
             var _dbContext = new PlaylistContext();

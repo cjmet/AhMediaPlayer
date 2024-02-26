@@ -23,33 +23,46 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 <br>
 
+## Instructions
+* Requires: Visual Studio 2022, C#12, .Net 8, .Net MAUI
+* Use: Solution Configuration: Debug
+  * This will put the DB on your desktop so that the CLI, API, and MAUI all use the same DB.  Otherwise, chaos ensues ... due to windows app virtualization of the %AppData file-system.
+* You'll Also need: 
+  * https://github.com/cjmet/AngelHornetLibrary
+* ...
+
+<br>
+
 ## Current Project Questions
-1. &nbsp;What is the correct place to put the second window's initialization code?
-1. &ensp;What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
+1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
+1. &nbsp; Program Logic? of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository? ... I Feel like this should be in the repository so that incoming API calls can't Fubar a database?  Deleting from Allsongs would also be different, in that it will just be added back next time it scans.... shouldn't we mark it deleted and hide it instead?  Or is this getting too much into the program logic arena?  And should go into a shared program logic?  But then how do you add that to an API, such that the raw API doesn't fubar working Db Systems and other shared applications?
+---
+1. &nbsp; What is the correct place to put the second window's initialization code?
+1. &ensp; What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
    1. I'm currently checking it's Height as an easy check
 `while (await this.Dispatcher.DispatchAsync(() => WebView.Height) < 1) await Task.Delay(1000);`
    1. Then I'm checking is* when a more difficult check is needed.
         `var isAlive = await this.Dispatcher.DispatchAsync(() => WebView.IsEnabled && WebView.IsVisible && WebView.IsLoaded);
         if (!isAlive) { Debug.WriteLine($"WebView is Dead!"); return; throw new Exception(); }`
-1. &ensp;What is the correct way to Access the log service from my other libraries and classes?
+1. &ensp; What is the correct way to Access the log service from my other libraries and classes?
    1. I put logging into AhLog() Library, Using DI, then access it through either AhLog or DI as needed.
    1. I want it usable for CLI, Libraries, APP, and DI.
    1. Is this a reasonable way to do this?
-1. &nbsp;How Do I? &ensp; - &ensp; Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.  Dispatcher Maybe?  Syntax?
+1. &nbsp; How Do I? &ensp; - &ensp; Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.  Dispatcher Maybe?  Syntax?
    1. Pass the target element to the method as a parameter?
 ---
-1. &nbsp;Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plug-in or something?
-1. &nbsp;Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
+1. &nbsp; Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plug-in or something?
+1. &nbsp; Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
    * On a related Note.  Always keep at least one 'other' target enabled, IE: 'Android'.  I disabled the other targets to make it simpler while learning and building ... and as a side-effect it enabled 'Windows.\*', including Windows.Storage.  But now I can't re-enable android targets without a major refactor.  Oops.
-1. &nbsp;Review how to Async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
-1. &nbsp;Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
+1. &nbsp; Review how to Async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
+1. &nbsp; Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
 <br>
 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
-- [ ] ... 
+- [ ] More API work
 
 * ### Music Player
 - [x] My First MAUI App
@@ -76,6 +89,7 @@ Create a music library Web API and simple Media Player
   - [ ] Search and Filter functionality GUI
   - [ ] Add Automatic Playlists based on Meta Data GUI
 - [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
+- [ ] Handling of completely unplayable fubar mp3 files that aren't even mp3 files?  Right now they just don't play, and stop the playlist until you continue to the next song.
 
 
 * ### Common Library 
@@ -118,11 +132,15 @@ Create a music library Web API and simple Media Player
 
 
 * ### Music Library Web API
-- [ ] Chances are most of this work will be done in the Common and Data Library Projects
-- [ ] Implement the Interfaces and Repository Pattern.
-- [ ] Add an API Project to the solution
+- [x] Implement the Interfaces and Repository Pattern.
+- [x] Add an API Project to the solution
 - [ ] Develop basic API to match basic functionality of Music Library
-- [ ] Using the Repository Pattern and scaffolding will effectively do this for us.
+  - [x] Basic Playlist API
+  - [ ] Basic Song API
+  - [ ] Playlist Validation
+  - [ ] Song Validation
+  - [ ] Orphaned Songs from Playlist API
+  - [ ] Program Logic of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository?
 
 <br>
 
@@ -152,16 +170,6 @@ Create a music library Web API and simple Media Player
 
 <br>
 
-## Instructions
-* Requires: Visual Studio 2022, C#12, .Net 8, .Net MAUI
-* Use: Solution Configuration: Debug
-  * This will put the DB on your desktop so that the CLI, API, and MAUI all use the same DB.  Otherwise, chaos ensues.
-* You'll Also need: 
-  * https://github.com/cjmet/AngelHornetLibrary
-* ...
-
-<br>
-
 ## Known Issues
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
   * I disabled all the other targets for simplicity while learning, but that also allowed the project to introduce and use incompatible libraries.
@@ -178,11 +186,25 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Implemented the First Pass Playlist API, need to work on the Songlist API next.
+* Holy Mackerel 🐟, the following syntax was a complicated, cross-eyed, triple-nested puzzle.
+```
+        group.MapGet("/{id}", async Task<Results<Ok<Playlist>, NotFound>> (int id, IPlaylistRepository repository) =>
+        {
+            var playlist = await repository.GetPlaylistByIdAsync(id);
+            return playlist != null
+                ? TypedResults.Ok(playlist)
+                : TypedResults.NotFound();
+        })
+        .WithName("GetPlaylistById")
+        .WithOpenApi();
+```
 * First Pass at Interfaces and Repository Pattern Adoption
 * DbContext.ExecuteUpdateAsync() and DbContext.ExecuteDeleteAsync()
+* Another half-day debugging using the big MP3 library.  At this point I'm (half-heartedly) convinced that 9 out of 10 MP3s have at least one field of malformed or corrupt data.
 * Added Song.AlphaTitle to sort by.  Regex to remove non-alphanumeric characters, and then to remove leading "The " and "A " from the title, etc, ... 
 * Cleaned up the message loop some.  More bug fixes.
-* Scanned 17,000 MP3s over 10/100Mb SMB into the Db in 25 Minutes.  Cached Updates after the first scan took a bit less than 1 minute.  I'll test again after I get a 1gb switch installed.
+* Scanned 17,000 MP3s over 10/100Mb SMB into the Db in 25 Minutes.  Cached Updates after the first scan took a bit over 1 minute. 
 * Lots and Lots and Tons and Tons of debugging while reading the big music library. A great many files have corrupted tags or properties that caused various parts of the program to crash
 * Alpha Search Bar. We'll improve this more later, and integrate it with the playlists.
 * LineItem is a Lambda Expression, and it isn't supported in EF Core Either.
