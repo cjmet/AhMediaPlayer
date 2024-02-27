@@ -126,13 +126,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\AngelHornetLibrary\AngelHornetLibrary.csproj" />
-	  <ProjectReference Include="..\CommonNet8\CommonNet8.csproj" />
-	  <ProjectReference Include="..\DataLibrary\DataLibrary.csproj" />
+	  <PRIResource Remove="DataLibrary\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PRIResource Remove="DataLibrary\**" />
+	  <ProjectReference Include="..\..\AngelHornetLibrary\AngelHornetLibrary.csproj" />
+	  <ProjectReference Include="..\CommonNet8\CommonNet8.csproj" />
+	  <ProjectReference Include="..\DataLibrary\DataLibrary.csproj" />
 	</ItemGroup>
 
 </Project>

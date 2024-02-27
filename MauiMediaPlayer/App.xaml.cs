@@ -1,4 +1,5 @@
 ﻿using static AngelHornetLibrary.AhLog;
+using CommonNet8;
 
 namespace MauiMediaPlayer
 {
@@ -10,19 +11,6 @@ namespace MauiMediaPlayer
 
             MainPage = new AppShell();
 
-
-            /* Unmerged change from project 'MauiMediaPlayer (net8.0-windows10.0.19041.0)'
-            Before:
-                    }
-
-
-                    protected override Window CreateWindow(IActivationState activationState)
-            After:
-                    }
-
-
-                    protected override Window CreateWindow(IActivationState activationState)
-            */
         }
 
 
@@ -38,8 +26,12 @@ namespace MauiMediaPlayer
             int maxDisplayHeight = (int)(displayInfo.Height / displayInfo.Density - Const.AppDisplayBorder); // * displayInfo.Density;
             if (window.Height > maxDisplayHeight) window.Height = maxDisplayHeight;
 
-            // BONUS -> Center the window
-            window.X = (displayInfo.Width / displayInfo.Density - window.Width) / 2;
+            // BONUS -> Center-ish the window
+            var minXLoc = 1280 - Const.AppWidth - Const.AppDisplayBorder / 2;
+            var minDisplayXLoc = (int)(displayInfo.Width / displayInfo.Density - Const.AppWidth - Const.AppDisplayBorder / 2);
+            window.X = int.Min(minXLoc,minDisplayXLoc);
+            if (window.X < 1152 - Const.AppWidth - Const.AppDisplayBorder / 2)
+                window.X = 1152 - Const.AppWidth - Const.AppDisplayBorder / 2;
             window.Y = (displayInfo.Height / displayInfo.Density - window.Height) / 2 - Const.AppDisplayBorder / 2;
 
             window.MinimumWidth = Const.AppMinimumWidth; window.MinimumHeight = Const.AppMinimumHeight;

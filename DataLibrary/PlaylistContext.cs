@@ -20,12 +20,10 @@ namespace DataLibrary
         public PlaylistContext()
         {
             // The Win11 and Maui ApplicationData folders are different. Use .Desktop instead.  
-#if DEBUG
-            var folder = Environment.SpecialFolder.DesktopDirectory;
-#else
-            var folder = Environment.SpecialFolder.ApplicationData;
-#endif
-            var path = Environment.GetFolderPath(folder);
+            var path = AppData.AppDataPath;
+
+            Directory.CreateDirectory(path);
+            File.SetAttributes(path, FileAttributes.Hidden);
             DbPath = Path.Join(path, dbName);
             if (!_quiet || VerboseSQL)
             {

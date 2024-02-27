@@ -4,6 +4,7 @@ using DataLibrary;
 using static AngelHornetLibrary.AhLog;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using CommonNet8;
 
 
 
@@ -13,11 +14,10 @@ namespace MauiMediaPlayer
     {
         public static MauiApp CreateMauiApp()
         {
-#if DEBUG            
-            LogDebug($"{AppInfo.PackageName}");       // cj
-#else
+
+            AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel);
             LogMsg($"{AppInfo.PackageName}");
-#endif
+
 
             var builder = MauiApp.CreateBuilder();
             builder
@@ -54,7 +54,6 @@ namespace MauiMediaPlayer
                 _dbContext.Database.EnsureCreated();
                 LogDebug("Database Created");
                 _dbContext.Dispose();
-                LogDebug("Database Disposed");
             }
             catch (Exception ex)
             {

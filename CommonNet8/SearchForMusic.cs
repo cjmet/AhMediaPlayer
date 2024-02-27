@@ -3,10 +3,10 @@ using DataLibrary;
 using Id3;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using static AngelHornetLibrary.AhLog;
 using static DataLibrary.GenreDictionary;
-using System.Text.RegularExpressions;
+
+
 
 namespace CommonNet8
 {
@@ -30,17 +30,20 @@ namespace CommonNet8
 
         public static async Task SearchUserProfileMusic(IProgress<string> progress)
         {
+            LogMsg($"Searching for Music");
             var folder = Environment.SpecialFolder.UserProfile;
             var path = Environment.GetFolderPath(folder);
-            var MusicPath = Path.Join(path, "Music");
-            LogMsg($"Searching UserProfile/Music");
-            //MusicPath = "M:\\";   // cjm 
-            LogMsg($"{MusicPath}");
+            List<string> MusicPaths = new List<string>();
+            MusicPaths.Add(Path.Join(path, "Music"));
+            if (Const.SearchMireille && Directory.Exists("M:\\music")) MusicPaths.Add("M:\\music");   // cj
+            else if (Const.SearchMireille && Directory.Exists("M:\\")) MusicPaths.Add("M:\\");   // cj
+            foreach (var _path in MusicPaths) LogMsg($"   Path: {_path}");
+
             List<string> _filesCache = new List<string>();
             var _dbContext = new PlaylistContext();
             _filesCache = await _dbContext.Songs.Select(s => s.PathName).ToListAsync();
 
-            await foreach (string filename in new AhGetFiles().GetFilesAsync(MusicPath, "*.mp3", iprogress: progress))
+            await foreach (string filename in new AhGetFiles().GetFilesAsync(MusicPaths, "*.mp3", iprogress: progress))
             {
                 if (_filesCache.Contains(filename))
                 {

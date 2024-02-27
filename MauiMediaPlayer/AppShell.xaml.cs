@@ -6,7 +6,7 @@
         {
             InitializeComponent();
 
-            //var secondWindow = new Window(new MyPage()); // cjm
+            //var secondWindow = new Window(new MyPage()); // cj
             //secondWindow.Width = 1080;
             //secondWindow.Height = 640;
             //secondWindow.X = 25;

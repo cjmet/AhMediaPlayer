@@ -2,7 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:local="clr-namespace:MauiMediaPlayer"   
              x:Class="MauiMediaPlayer.MainPage" >
+    <ContentPage.Resources>
+        <local:HeadTruncateConverter  x:Key="headTruncateConverter"/>
+    </ContentPage.Resources>
 
 
     <!-- Text Sizes:
@@ -182,12 +186,13 @@
                     <DataTemplate >
                         <ViewCell >
                             <Frame Padding="10,0,10,2" Margin="0,0,13,0" BackgroundColor="Transparent" >
-                                <Grid >
+                                <Grid x:Name="SongGrid"  >
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
@@ -226,8 +231,23 @@
                                         Grid.ColumnSpan="2"
                                         Grid.Row="2"
                                         HorizontalOptions="Center"
+                                        VerticalOptions="Start"
                                         LineBreakMode="TailTruncation"                                           
                                         FontSize="Caption"
+                                        ZIndex="1"/>
+                                    <Label x:Name="FilePathDebug"
+                                        Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}"   
+                                        Style="{StaticResource NormalText}" 
+                                        LineBreakMode="NoWrap"   
+                                        Padding="0"
+                                        Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
+                                        Grid.Column="0"  
+                                        Grid.ColumnSpan="2"
+                                        Grid.Row="3"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"                                     
+                                        FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
+                                        TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
                                         ZIndex="1"/>
                                 </Grid>
                             </Frame>

@@ -78,7 +78,7 @@ namespace MauiMediaPlayer
                     await foreach (var line in pollLinesAsync)
                     {
                         tag = line.Substring(32, 3);
-                        if (tag != "VRB")  MainPage.messageQueue.Enqueue(line);
+                        if (tag != "VRB")  MainPage._messageQueue.Enqueue(line);
                         this.Dispatcher.Dispatch(async () =>
                         {
                             logText += line + "\n";

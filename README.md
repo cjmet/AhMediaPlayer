@@ -34,8 +34,9 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Current Project Questions
+1. &nbsp; API Authentication and Validation
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
-1. &nbsp; Program Logic? of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository? ... I Feel like this should be in the repository so that incoming API calls can't Fubar a database?  Deleting from Allsongs would also be different, in that it will just be added back next time it scans.... shouldn't we mark it deleted and hide it instead?  Or is this getting too much into the program logic arena?  And should go into a shared program logic?  But then how do you add that to an API, such that the raw API doesn't fubar working Db Systems and other shared applications?
+1. &nbsp; Program Logic? of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository? ... I Feel like this should be in the repository so that incoming API calls can't Fubar a database?  Deleting from All Songs would also be different, in that it will just be added back next time it scans.... shouldn't we mark it deleted and hide it instead?  Or is this getting too much into the program logic arena?  And should go into a shared program logic?  But then how do you add that to an API, such that the raw API doesn't fubar working Db Systems and other shared applications?
 ---
 1. &nbsp; What is the correct place to put the second window's initialization code?
 1. &ensp; What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
@@ -55,14 +56,24 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 1. &nbsp; Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
    * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
    * On a related Note.  Always keep at least one 'other' target enabled, IE: 'Android'.  I disabled the other targets to make it simpler while learning and building ... and as a side-effect it enabled 'Windows.\*', including Windows.Storage.  But now I can't re-enable android targets without a major refactor.  Oops.
-1. &nbsp; Review how to Async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
+1. &nbsp; Review how to async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
 1. &nbsp; Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
 <br>
 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
+- [ ] Load the song cache and song play workers only once in main init ... use 'null' to signal restart of queue ... and possibly even combine the two into a single worker.
 - [ ] More API work
+- [ ] Next Song on failure event, and check other events.
+- [ ] Song Caching, and automatically restart the cache task on each select.  Currently doesn't like NAS -> SMB -> VPN -> SMB -> Client relaying in real-time.
+- [ ] Song Cache Cleaning ... otherwise we'll run out of space.
+- [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
+- [ ] Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
+- [ ] Upgrade 10/100 switch on the Music NAS to 1Gb switch
+- [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
+- [ ] Resized Event
+- [ ] QueenBee Controller to monitor and direct all the worker tasks.
 
 * ### Music Player
 - [x] My First MAUI App
@@ -82,6 +93,7 @@ Create a music library Web API and simple Media Player
 - [ ] Integration of Playlists, Songs, Search and GUI
   - [x] Playlist Selection GUI
   - [x] Initial Integration of Playlists and Songs
+  - [ ] Random and Loop Buttons
   - [ ] Adding Songs to Playlists GUI (Update)
   - [ ] Removing Songs from Playlists GUI (Update)
   - [ ] Adding Playlists GUI (Create)
@@ -162,7 +174,7 @@ Create a music library Web API and simple Media Player
 - [ ] Unit Testing
   * Not yet implemented
 - [ ] ~~SOLID Principles~~
-  * I'll do a better job of this in the future, and as I have time to refactor and clean things up.  I was too entirly clueless and stumbling around in the dark to properly implement a good SOLID plan.
+  * I'll do a better job of this in the future, and as I have time to refactor and clean things up.  I was too entirely clueless and stumbling around in the dark to properly implement a good SOLID plan.
 - [ ] ~~SQL Queries~~
   * Unlikely to be used in this project.
 - [ ] ~~Generic Class~~
@@ -171,6 +183,10 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
+* Trying to work on a Cache and Queue for slow connections.  It's only partially working.  The primary problem right now is synchronizing and controlling tasks.  Probably need to implement some locking.
+* Added pathname to the Playlist when in debug mode.
+  * Heinous Hackery with Bind Converters ensued to get around the headtruncate bug in Maui Windows Nested Labels.
+  * I'd love some help on solving this problem more appropriately.
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
   * I disabled all the other targets for simplicity while learning, but that also allowed the project to introduce and use incompatible libraries.
   * At some point in the future I'll need to do a major refactor to fix this and enable android.
@@ -186,7 +202,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
-* Implemented the First Pass Playlist API, need to work on the Songlist API next.
+* Implemented the First Pass Playlist API, need to work on the Song List API next.
 * Holy Mackerel 🐟, the following syntax was a complicated, cross-eyed, triple-nested puzzle.
 ```
         group.MapGet("/{id}", async Task<Results<Ok<Playlist>, NotFound>> (int id, IPlaylistRepository repository) =>
