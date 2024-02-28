@@ -21,7 +21,10 @@
                 Caption
                 -->
 
-    <Grid x:Name="MainGrid" MinimumWidthRequest="375" MinimumHeightRequest="375">
+    <Grid x:Name="MainGrid"
+          BackgroundColor="#FFEEEEEE"
+          MinimumWidthRequest="375" 
+          MinimumHeightRequest="375">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="27" />
@@ -116,6 +119,7 @@
             Source="embed://gs-16b-1c-44100hz.mp3"
             ShouldShowPlaybackControls="True"
             MediaEnded="mediaElement_MediaEnded"
+            MediaFailed="mediaElement_MediaEnded"
             Grid.Row="3"
             Grid.RowSpan="2"
             Grid.ColumnSpan="2"
@@ -158,6 +162,82 @@
             VerticalOptions="Start"
             LineBreakMode="TailTruncation"
             ZIndex="2"/>
+
+
+
+        <Button x:Name="RepeatList"
+            Text="🔁"
+            Scale=".5"
+            ScaleX="1.25"
+        
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="LightBlue"
+            FontSize="32"
+            Margin="90,0,20,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+        <Button x:Name="PreviousTrack"
+            Text="⏮️"
+            Scale=".5"
+            ScaleX="1.25"
+
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="90,0,20,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+        
+
+        <Button x:Name="NextTrack"
+            Text="⏭️"
+            Scale=".5"
+            ScaleX="1.25"
+
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="20,0,90,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="1"
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+        <Button x:Name="Shuffle"
+            Text="🔀"
+            Scale=".5"
+            ScaleX="1.25"
+            Clicked="Shuffle_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="20,0,90,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="1"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            ZIndex="3"/>
 
         <!--</Combined MediaElement with Labels>-->
         <!-- ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ -->

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using static AngelHornetLibrary.AhLog;
-
+using AhConfig;
 
 namespace DataLibrary
 {

@@ -90,7 +90,7 @@ namespace MauiMediaPlayer
                 }); // /Task 
             }
             // </Log Viewer>
-            LogInfo("Log Viewer Loaded");
+            LogDebug("Log Viewer Loaded");
         }
     }
 }

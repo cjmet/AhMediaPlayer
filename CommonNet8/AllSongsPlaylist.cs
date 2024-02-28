@@ -44,7 +44,8 @@ namespace CommonNet8
                 }
             }
             LogDebug("Saving All Songs Playlist");
-            dbContext.SaveChanges();
+            var _results = dbContext.SaveChanges();
+            LogDebug($"{_results} updates added");
         }
     }
 }

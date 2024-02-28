@@ -9,6 +9,7 @@ namespace DataLibrary
         [Key]
         public int Id { get; set; }
         public string PathName { get; set; } = "";
+        public long FileSize { get; set; }
 
         public string Title
         {

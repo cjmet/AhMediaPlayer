@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using static AngelHornetLibrary.AhLog;
 using static DataLibrary.GenreDictionary;
+using AhConfig;
 
 
 
@@ -14,13 +15,14 @@ namespace CommonNet8
     public class ReportProgressToQueue : IProgress<string>
     {
         public ConcurrentQueue<string> _queue = new ConcurrentQueue<string>();
+        static int spinner = 0;
         public ReportProgressToQueue(ConcurrentQueue<string> targetQueue)
         {
             _queue = targetQueue;
         }
         public void Report(string value)
         {
-            LogMsg(value);
+            if (spinner++ % 6 == 0) LogDebug($"Srch: {value}");
         }
     }
 
@@ -124,8 +126,12 @@ namespace CommonNet8
                 LogTrace($"*** Fix Corrupted Tags");
                 if (tag.Title.ToString() == null || tag.Title.ToString() == "") tag.Title = _fileName;
 
+                LogTrace("Fix FileSize for Wan and FileInfo Lag Issues");
+                long _fileSize = new FileInfo(filename).Length;
+
                 LogTrace("MP3 Trace Data");
                 LogTrace($"Pa:[{filename}]");
+                LogTrace($"Fs:[{_fileSize}]");
                 LogTrace($"Fi:[{_fileName}]");
                 LogTrace($"Ti:[{tag.Title}]");
                 LogTrace($"Ar:[{tag.Artists}]");
@@ -138,6 +144,7 @@ namespace CommonNet8
 
                 Song _newSong = new Song();
                 _newSong.PathName = filename;
+                _newSong.FileSize = _fileSize;
                 _newSong.Title = tag.Title;
                 _newSong.Artist = tag.Artists;
                 _newSong.Band = tag.Band;

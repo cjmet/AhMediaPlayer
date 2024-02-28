@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using DataLibrary;
 using Microsoft.EntityFrameworkCore.InMemory.Design.Internal;
+using AhConfig;
 
 
 namespace MauiMediaPlayer.ProgramLogic
@@ -18,15 +19,16 @@ namespace MauiMediaPlayer.ProgramLogic
             string msg = "";
             string tag = "";
             int msgLevel = -1;
+            int lastSongCount = 0;
 
             Dictionary<string, int> msgLevelDict = new Dictionary<string, int>
             {
-                { "VRB", 1000 },
-                { "DBG", 1250 },
-                { "INF", 1500 },
-                { "WRN", 3000 },
-                { "ERR", 10000 },
-                { "FTL", 30000 }
+                { "VRB", Const.VRB },
+                { "DBG", Const.DBG },
+                { "INF", Const.INF },
+                { "WRN", Const.WRN },
+                { "ERR", Const.ERR },
+                { "FTL", Const.FTL }
             };
 
             // Sub-Task
@@ -52,8 +54,18 @@ namespace MauiMediaPlayer.ProgramLogic
                     }
                     else
                     {
-                        queuedMsg = "Angel Hornet Media Player";
-                        queuedMsgLevel = 1000;
+                        var _songCount = new PlaylistContext().Songs.Count();   // cjm ... kill this when we get a chance to refactor
+                        if (_songCount != lastSongCount)
+                        {
+                            lastSongCount = _songCount;
+                            queuedMsg = $"{_songCount} Songs Found";
+                            queuedMsgLevel = 1000;
+                        }
+                        else
+                        {
+                            queuedMsg = "Angel Hornet Media Player";
+                            queuedMsgLevel = 1000;
+                        }
                     }
                     await Task.Delay(250);
                 }
@@ -79,7 +91,7 @@ namespace MauiMediaPlayer.ProgramLogic
                 }
                 else
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(Const.ClockTick);
                 }
             }
         }

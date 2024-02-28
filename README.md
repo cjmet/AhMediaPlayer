@@ -63,10 +63,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
-- [ ] Load the song cache and song play workers only once in main init ... use 'null' to signal restart of queue ... and possibly even combine the two into a single worker.
+- [ ] Progress reporting for ReadAllBytesAsync
 - [ ] More API work
-- [ ] Next Song on failure event, and check other events.
-- [ ] Song Caching, and automatically restart the cache task on each select.  Currently doesn't like NAS -> SMB -> VPN -> SMB -> Client relaying in real-time.
 - [ ] Song Cache Cleaning ... otherwise we'll run out of space.
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
 - [ ] Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
@@ -183,10 +181,11 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Known Issues
-* Trying to work on a Cache and Queue for slow connections.  It's only partially working.  The primary problem right now is synchronizing and controlling tasks.  Probably need to implement some locking.
-* Added pathname to the Playlist when in debug mode.
-  * Heinous Hackery with Bind Converters ensued to get around the headtruncate bug in Maui Windows Nested Labels.
-  * I'd love some help on solving this problem more appropriately.
+* More debugging and adjustments on the file caching.
+* GUI responsiveness to SMB WAN Operations.  These operations are running on separate async tasks, but the 'opening file' phase still locks the GUI.*  
+  * Even optimized with 'await filestream' opening a file over the WAN can take a few seconds locking the GUI until the async transfer starts.  The transfer itself is async, the 'opening' is not.
+  * tried a couple different methods, and outside of native code this seems to be as optimized as it is going to get.
+  * Reading the MP3 Tags over the WAN can also lock GUI for several seconds.  I'd have to rewrite this entire library, and even then it would not be entirely fixed without native code.
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
   * I disabled all the other targets for simplicity while learning, but that also allowed the project to introduce and use incompatible libraries.
   * At some point in the future I'll need to do a major refactor to fix this and enable android.
@@ -202,6 +201,29 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* This seems to be about as optimal as I can do without getting into platform specifics.
+    * Opening a WAN filestream can still lock the application for a few seconds, even with the filestream being awaited and async.
+* Save FileSize into the database so we don't have to call it from the WAN more than once.
+* Looks like this will require native code, and not Maui compatible, and I'm wanting to keep things as compatible as possible
+* FineInfo is insidious! ... going to see if I can find any other way to do this.
+    ```
+    // this should already be happening in a task, but it's lagging the GUI anyway
+    // so lets wrap it in another 'async Task<long>' and see if that helps.
+    // That did help, but it still lags the GUI.
+    long _sourceSize = await Task.Run<long>(async () => { return new FileInfo(_source).Length; });
+    ```
+* Implemented Cache Cleaning
+* Win11 does not automatically update last_access dates on media read. ... So we'll have to do it ourselves, so that cache cleaning can work use those dates.
+* Next song on failure.  That was definitely low hanging fruit.
+* Worked on File Caching.  After three tries I'm just glad it's working at all.   However, It could definitely use additional improvements.  I could also use additional guidance on how to do this kind of thing, and the other related tasks as well.
+  * solved the primary problem by limiting the workers to a single central worker and using async safe types.  But this brings up other issues of keeping the thread running, and monitoring, and so on.
+* THEY AREN'T KIDDING ABOUT ASYNC ISSUES.  
+  * Even when it's only a simple type, and limited to an unchanging read-only, somehow, when multiple threads are involved they can mis-read a read-only!
+  * Use async safe types, use locking, use dispatching, use task sync methods, or use some other mechanism to ensure that even simple reads of simple types do not happen at the same time by multiple threads.
+* Trying to work on a Cache and Queue for slow connections.  It's only partially working.  The primary problem right now is synchronizing and controlling tasks.  Probably need to implement some locking.
+* Added pathname to the Playlist when in debug mode.
+  * Heinous Hackery with Bind Converters ensued to get around the headtruncate bug in Maui Windows Nested Labels.
+  * I'd love some help on solving this problem more appropriately.
 * Implemented the First Pass Playlist API, need to work on the Song List API next.
 * Holy Mackerel 🐟, the following syntax was a complicated, cross-eyed, triple-nested puzzle.
 ```
