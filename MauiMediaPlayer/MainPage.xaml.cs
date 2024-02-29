@@ -22,6 +22,7 @@ namespace MauiMediaPlayer
         public static ConcurrentQueue<string> _messageQueue { get; set; } = new ConcurrentQueue<string>();
         private ConcurrentQueue<Song?> _cacheSongQueue = new ConcurrentQueue<Song>();
         private ConcurrentStack<Song> _playSongStack = new ConcurrentStack<Song>();
+        private bool _repeatPlaylist = false;
 
 
         // Heinous Hack-Stockings!  This is a lot of trouble for one label!
@@ -84,6 +85,7 @@ namespace MauiMediaPlayer
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 TestSonglist.ItemsSource = _songList;
+                if (_playlists.Count < 1) UpdateAllSongsPlaylist().Wait();  // cj this won't take effect till we re-load, but it's better than nothing.
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
                 LogDebug("=== /Database Loading Complete =============================== ===");
             }
@@ -150,10 +152,15 @@ namespace MauiMediaPlayer
             var _selectedSongIndex = _sourceSongList.IndexOf(_selectedSong);
             if (_selectedSongIndex < 0) _selectedSong = new Song { Title = "null" };
             var _newSong = _sourceSongList.ElementAtOrDefault(_selectedSongIndex + 1);
+            if (_newSong == null && _repeatPlaylist && _selectedSongIndex >= _sourceSongList.Count - 1) // cjm
+            {
+                LogMsg($"Repeating Playlist");
+                _newSong = _sourceSongList.ElementAtOrDefault(0);
+            }
             var _newSongIndex = _sourceSongList.IndexOf(_newSong);
             var _title = _newSong != null ? _newSong.Title : "null";
 
-            LogMsg($"ChangeSong:{_selectedSongIndex}->{_newSongIndex}: {_title}");
+            LogMsg($"ChangeSong:{_selectedSongIndex}->{_newSongIndex}/{_sourceSongList.Count-1 }: {_title}");
             LogDebug($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
             LogDebug($"     To[{_newSongIndex}]: {_title}");
 
@@ -555,6 +562,7 @@ namespace MauiMediaPlayer
 
         private void Shuffle_Clicked(object sender, EventArgs e)
         {
+            LogMsg("Shuffle");
             var button = (Button)sender;
             var _songList = TestSonglist.ItemsSource.Cast<Song>().ToArray();
             new Random().Shuffle(_songList);
@@ -563,7 +571,60 @@ namespace MauiMediaPlayer
             {
                 TestSonglist.ItemsSource = _list;
             });
-            
+        }
+
+        private void NextTrack_Clicked(object sender, EventArgs e)
+        {
+            LogMsg("Next Track");
+            var button = (Button)sender;
+            var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
+            var _selectedSong = (Song)TestSonglist.SelectedItem;
+            var _selectedSongIndex = _songList.IndexOf(_selectedSong);
+            var _newSong = _songList.ElementAtOrDefault(_selectedSongIndex + 1);
+            if (_newSong != null) 
+                Application.Current.Dispatcher.Dispatch( () => TestSonglist.SelectedItem = _newSong );
+        }
+
+        private void PreviousTrack_Clicked(object sender, EventArgs e)
+        {
+            LogMsg("Previous Track");
+            var button = (Button)sender;
+            var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
+            var _selectedSong = (Song)TestSonglist.SelectedItem;
+            var _selectedSongIndex = _songList.IndexOf(_selectedSong);
+            var _newSong = _songList.ElementAtOrDefault(_selectedSongIndex - 1);
+            if (_newSong != null)
+                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+        }
+
+        private void RepeatList_Clicked(object sender, EventArgs e)
+        {
+            LogMsg($"Repeat Playlist: {_repeatPlaylist}");
+            _repeatPlaylist = !_repeatPlaylist;
+            Application.Current.Dispatcher.Dispatch(() =>
+            {
+                RepeatList.BackgroundColor = _repeatPlaylist ? Color.Parse("LightBlue") : Color.Parse("Transparent");
+            });
+        }
+
+        private void FirstTrack_Clicked(object sender, EventArgs e)
+        {
+            LogMsg("First Track");
+            var button = (Button)sender;
+            var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
+            var _newSong = _songList.ElementAtOrDefault(0);
+            if (_newSong != null)
+                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+        }
+
+        private void LastTrack_Clicked(object sender, EventArgs e)
+        {
+            LogMsg("Last Track");
+            var button = (Button)sender;
+            var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
+            var _newSong = _songList.ElementAtOrDefault(_songList.Count - 1);
+            if (_newSong != null)
+                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
     }
 

@@ -165,54 +165,20 @@
 
 
 
+        <!-- ... Repeat and Random  ... -->
+        <!--Margin="45,0,0,8"-->
+        <!--Margin="80,0,0,8"-->
+        
         <Button x:Name="RepeatList"
             Text="🔁"
             Scale=".5"
             ScaleX="1.25"
-        
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="LightBlue"
-            FontSize="32"
-            Margin="90,0,20,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="0"
-            HorizontalOptions="Start"
-            VerticalOptions="Center"
-            ZIndex="3"/>
-
-        <Button x:Name="PreviousTrack"
-            Text="⏮️"
-            Scale=".5"
-            ScaleX="1.25"
-
+            Clicked="RepeatList_Clicked"
             TextColor="Black"
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="90,0,20,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="0"
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-            ZIndex="3"/>
-
-        
-
-        <Button x:Name="NextTrack"
-            Text="⏭️"
-            Scale=".5"
-            ScaleX="1.25"
-
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="20,0,90,8"
+            Margin="75,0,0,8"
             Padding="0"
             BorderColor="Transparent"
             Grid.Row="4"
@@ -230,14 +196,95 @@
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="20,0,90,8"
+            Margin="0,0,75,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+        
+        
+        <!--... First and Previous-->
+
+        <Button x:Name="FirstTrack"
+            Text="⏫"
+            Scale=".5"
+            Clicked="FirstTrack_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="0,0,45,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+        <Button x:Name="PreviousTrack"
+            Text="⏮️"
+            Scale=".5"
+            ScaleX="1.25"
+            Clicked="PreviousTrack_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="0,0,15,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+
+        
+        <!--... Next and Last ...-->
+
+
+        <Button x:Name="NextTrack"
+            Text="⏭️"
+            Scale=".5"
+            ScaleX="1.25"
+            Clicked="NextTrack_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="15,0,0,8"
             Padding="0"
             BorderColor="Transparent"
             Grid.Row="4"
             Grid.Column="1"
-            HorizontalOptions="End"
+            HorizontalOptions="Start"
             VerticalOptions="Center"
             ZIndex="3"/>
+
+        <Button x:Name="LastTrack"
+            Text="⏬"
+            Scale=".5"
+            Clicked="LastTrack_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="45,0,20,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="1"
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
+            ZIndex="3"/>
+
+
 
         <!--</Combined MediaElement with Labels>-->
         <!-- ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ -->
