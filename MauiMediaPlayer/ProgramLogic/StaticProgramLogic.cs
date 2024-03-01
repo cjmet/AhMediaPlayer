@@ -21,6 +21,8 @@ namespace MauiMediaPlayer.ProgramLogic
             int msgLevel = -1;
             int lastSongCount = 0;
 
+            
+
             Dictionary<string, int> msgLevelDict = new Dictionary<string, int>
             {
                 { "VRB", Const.VRB },
@@ -43,7 +45,7 @@ namespace MauiMediaPlayer.ProgramLogic
                         //Debug.WriteLine($"Page:{page.Width}   Grid:{grid.Width}   Msg:{messageBox.Width}");
                         // Default FontSize is 12, and since the 12 is hard coded, might as well well card code the 6.5 too.
                         //var denom = 12 / Const.FontSizeDivisor;
-                        var width = (int)(messageBox.Width / 6.5);
+                        var width = (int)(messageBox.Width / 6.5) - 1;
                         queuedMsg = AngelHornetLibrary.AhStrings.MiddleTruncate(queuedMsg, width);
                         var spin = " .".Substring(spinner++ % 2, 1);
                         sendMessages(queuedMsg, messageBox, spin, spinBox);

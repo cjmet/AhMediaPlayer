@@ -8,7 +8,6 @@ namespace AhConfig
         public const string AppName = "ahmediaplayer";   // This is so it will be available to the non-app projects
 
         public const int MinimumLogLevel = 2;  // 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
-        public const bool SearchMireille = true;
         public const bool UseSongCache = true;
         public const int ClockTick = 250;
 
@@ -19,7 +18,7 @@ namespace AhConfig
         public const int ERR = 12000;
         public const int FTL = 15000;
 
-public const int AppHeight = 720;
+        public const int AppHeight = 720;
         public const int AppWidth = 415;
         public const int AppDisplayBorder = 48;     // This is ~ Taskbar Height and the Titlebar Height.  There is probably a better way to do this.
         public const int AppMinimumWidth = 415;

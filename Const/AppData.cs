@@ -70,7 +70,6 @@ namespace AhConfig
         }
 
 
-
         private static string _tmpDataPath = "";
         public static string TmpDataPath
         {

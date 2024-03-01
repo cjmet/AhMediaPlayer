@@ -9,7 +9,9 @@ using static AngelHornetLibrary.AhLog;
 using static CommonNet8.AllSongsPlaylist;
 using static CommonNet8.SearchForMusic;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
+using CommunityToolkit.Maui.Core;
 using AhConfig;
+using CommunityToolkit.Maui.Storage;
 
 
 
@@ -558,6 +560,7 @@ namespace MauiMediaPlayer
                 Application.Current.Dispatcher.Dispatch(() =>
                 {
                     TestSonglist.ItemsSource = _songList;
+                    SearchCount.Text = $"{_songList.Count:n0}";
                 });
         }
 
@@ -633,19 +636,19 @@ namespace MauiMediaPlayer
             LogTrace($"RandomPersistentLogo: {data}"); // cjm 
             data = data.ToLower().Trim();
             var num = data.GetHashCode();
-            var images = new string[] 
+            var images = new string[]
             {   // cj - I can't seem to find a way to read these, so I'm just going to hard code them.
                 "angel_hornet_logo_cropped.png", "azrael.png",
                 "bad_grim.png", "baxters.png", "big_moon.png",
                 "brie.png", "bubby.png", "chex.png", "damnit_gizmo.png",
-                "django.png", "dot.png", "fox.png", "herc.png", 
-                "howard.png", "huggy.png", "kibbs.png", "kissy.png", 
-                "lucy.png", "luna.png", "nino.png", "pie.png", 
+                "django.png", "dot.png", "fox.png", "herc.png",
+                "howard.png", "huggy.png", "kibbs.png", "kissy.png",
+                "lucy.png", "luna.png", "nino.png", "pie.png",
                 "possum.png", "rey.png", "spicey.png", "stella.png",
                 "tiger.png"
             };
 
-            var index = (uint) num % images.Length;
+            var index = (uint)num % images.Length;
             if (data == "") index = 0;
             LogTrace($"RandomPersistentLogo: {index} / {images.Length}");
 
@@ -654,7 +657,7 @@ namespace MauiMediaPlayer
             if (Name == "angel_hornet_logo_cropped") Name = "Angel Hornet";
             var Names = Name.Split('_');
             Name = "";
-            foreach (var n in Names) 
+            foreach (var n in Names)
             {
                 if (n.Length >= 1) Name += n.Substring(0, 1).ToUpper() + n.Substring(1) + " ";
             }
@@ -665,6 +668,22 @@ namespace MauiMediaPlayer
             {
                 AngelHornetLogo.Source = ImageSource.FromFile(images[index]);
             });
+        }
+
+        private async void SearchDirectories_Clicked(object sender, EventArgs e)
+        {
+            var folder = Environment.SpecialFolder.UserProfile;
+            var _tmpPath = Environment.GetFolderPath(folder);
+            _tmpPath = Path.Join(_tmpPath, "Music");
+            var _searchDir = await FolderPicker.PickAsync(_tmpPath);  // cjm 
+            if (_searchDir == null || _searchDir.Folder == null) return;
+            var _path = _searchDir.Folder.Path;
+            LogMsg($"SearchDirectories: {_path}");
+            if (_path != "")
+            {
+                var _progress = new ReportProgressToQueue(_messageQueue);
+                _ = SearchUserProfileMusic(_progress, _path);
+            }
         }
     }
 
@@ -688,4 +707,5 @@ namespace MauiMediaPlayer
 
         }
     }
+
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using CommonNet8;
 using AhConfig;
+using CommunityToolkit.Maui.Core;
 
 
 
@@ -24,6 +25,7 @@ namespace MauiMediaPlayer
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitMediaElement()
+                .UseMauiApp<App>().UseMauiCommunityToolkitCore()
 
                 .ConfigureFonts(fonts =>
                 {

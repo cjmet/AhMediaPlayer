@@ -30,15 +30,14 @@ namespace CommonNet8
     public static class SearchForMusic
     {
 
-        public static async Task SearchUserProfileMusic(IProgress<string> progress)
+        public static async Task SearchUserProfileMusic(IProgress<string> progress, string SearchPath = "")
         {
             LogMsg($"Searching for Music");
             var folder = Environment.SpecialFolder.UserProfile;
             var path = Environment.GetFolderPath(folder);
-            List<string> MusicPaths = new List<string>();
-            MusicPaths.Add(Path.Join(path, "Music"));
-            if (Const.SearchMireille && Directory.Exists("M:\\music")) MusicPaths.Add("M:\\music");   // cj
-            else if (Const.SearchMireille && Directory.Exists("M:\\")) MusicPaths.Add("M:\\");   // cj
+            List<string> MusicPaths= new List<string>();
+            if (SearchPath != "") MusicPaths.Add(SearchPath);
+            else MusicPaths.Add(Path.Join(path, "Music"));
             foreach (var _path in MusicPaths) LogMsg($"   Path: {_path}");
 
             List<string> _filesCache = new List<string>();
@@ -59,7 +58,7 @@ namespace CommonNet8
                     //await Task.Delay(1);
                 }
             }
-            LogMsg("SearchUserProfileMusic Complete.");
+            LogMsg("Search for Music Complete.");
             return;
         }
 

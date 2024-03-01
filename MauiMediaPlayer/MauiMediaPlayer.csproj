@@ -108,6 +108,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="7.0.1" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="3.0.1" />
 		<PackageReference Include="FFMpegCore" Version="5.1.0" />
 		<PackageReference Include="ID3" Version="0.6.0" />

@@ -197,6 +197,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Added Manual Search Button, for use with Libraries, Servers, NASes, etc.
 * Added additional controls, Gui Work, and a few other things.
 * More debugging and adjustments on the file caching.
 * GUI responsiveness to SMB WAN Operations.  These operations are running on separate async tasks, but the 'opening file' phase still locks the GUI.*  
