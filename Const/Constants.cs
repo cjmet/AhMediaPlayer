@@ -8,7 +8,7 @@ namespace AhConfig
         public const string AppName = "ahmediaplayer";   // This is so it will be available to the non-app projects
 
         public const int MinimumLogLevel = 2;  // 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
-        public const bool SearchMireille = false;
+        public const bool SearchMireille = true;
         public const bool UseSongCache = true;
         public const int ClockTick = 250;
 

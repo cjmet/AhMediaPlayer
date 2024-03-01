@@ -33,6 +33,24 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 <br>
 
+## Known Issues
+* Use the latest update of Visual Studio 2022, C#12, .Net 8, and .Net MAUI
+* Load the Maui App first, this will help with making sure the semi-random virtualized directories can be found by the other projects.
+  * Maui apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
+* The first time you load the Maui App, it will scan your %userprofile%/music, this may take a while.
+  * Instantly for my local machine, 25 minutes for my LAN NAS, and Hours for my WAN NAS.
+* GUI responsiveness suffers to SMB WAN Operations.  This is as much an OS issue as programming issue.  
+  * The actual Data Transfers are async and non-blocking.  The problem is in the Synchronous IO Libraries during the OpenFile operation, and in Synchronous parts of the Id3 Library.
+
+## Suggestions
+* If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
+* MAUI Debugging is sometimes fairly generic and unhelpful. 
+* Buy a Wholesale Truckload of Salt: 
+  * Advice from earlier than Dec 2023 may be outdated or even incorrect.
+  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
+
+<br>
+
 ## Current Project Questions
 1. &nbsp; API Authentication and Validation
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
@@ -52,26 +70,23 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 1. &nbsp; How Do I? &ensp; - &ensp; Reference or Use MainPage.mediaElement from another file.cs class?  I could move the PlaySong() method to a library then, and re-use it on other pages later.  Dispatcher Maybe?  Syntax?
    1. Pass the target element to the method as a parameter?
 ---
-1. &nbsp; Maui Debugging?  Most crashes are "generic", and very unhelpful?  Am I missing a tool or plug-in or something?
-1. &nbsp; Windows.Storage.FileProperties.MusicProperties ? .Net 8? Maui?
-   * This is the second time I've needed a Windows.Storage class.  Any help here would be greatly appreciated. I'm not sure what I'm doing wrong. 
-   * On a related Note.  Always keep at least one 'other' target enabled, IE: 'Android'.  I disabled the other targets to make it simpler while learning and building ... and as a side-effect it enabled 'Windows.\*', including Windows.Storage.  But now I can't re-enable android targets without a major refactor.  Oops.
-1. &nbsp; Review how to async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
-1. &nbsp; Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
+1. &nbsp; Code Review how to async return a value, non-blocking, from a block-able operation, using a 4 step process.  (See Sandbox)
+1. &nbsp; Code Review of AhGetFiles.GetFilesAsync() and/or AhFileIO.PollLinesAsync().
+
 <br>
+
 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
-- [ ] Progress reporting for ReadAllBytesAsync
 - [ ] More API work
-- [ ] Song Cache Cleaning ... otherwise we'll run out of space.
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
-- [ ] Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
+- [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
 - [ ] Upgrade 10/100 switch on the Music NAS to 1Gb switch
 - [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
 - [ ] Resized Event
-- [ ] QueenBee Controller to monitor and direct all the worker tasks.
+- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
+
 
 * ### Music Player
 - [x] My First MAUI App
@@ -83,6 +98,7 @@ Create a music library Web API and simple Media Player
 - [x] Play as song from a static Playlist (Read)
 - [x] Play more than one song from a static Playlist
 - [x] Song Selection and Playing UI Layout
+- [x] On Error Skip
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
   - [x] Writes to a Pop-Up Window (if in debug mode)
   - [x] Improved Logging Window
@@ -91,17 +107,16 @@ Create a music library Web API and simple Media Player
 - [ ] Integration of Playlists, Songs, Search and GUI
   - [x] Playlist Selection GUI
   - [x] Initial Integration of Playlists and Songs
-  - [ ] Random and Loop Buttons
+  - [x] Random, Loop Buttons, Start, End, Next, Previous, ...
   - [ ] Adding Songs to Playlists GUI (Update)
   - [ ] Removing Songs from Playlists GUI (Update)
   - [ ] Adding Playlists GUI (Create)
   - [ ] Deleting Playlists GUI (Delete)
-  - [ ] Search and Filter functionality GUI
+  - [x] Basic Search and Filter functionality GUI
+  - [ ] Advanced Search and Filter GUI
   - [ ] Add Automatic Playlists based on Meta Data GUI
-- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
-- [ ] Handling of completely unplayable fubar mp3 files that aren't even mp3 files?  Right now they just don't play, and stop the playlist until you continue to the next song.
 
-
+  
 * ### Common Library 
 - [x] CommonLibrary Project so that program logic can be shared, then wire up individual wrappers in a project as needed.
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
@@ -123,7 +138,6 @@ Create a music library Web API and simple Media Player
     - [x] Read
     - [ ] Update
     - [ ] Delete
-- [ ] Generic Lockable Class: `Locked <T>`
 
 
 * ### Data Library
@@ -147,12 +161,14 @@ Create a music library Web API and simple Media Player
 - [ ] Develop basic API to match basic functionality of Music Library
   - [x] Basic Playlist API
   - [ ] Basic Song API
-  - [ ] Playlist Validation
-  - [ ] Song Validation
-  - [ ] Orphaned Songs from Playlist API
-  - [ ] Program Logic of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository?
+  - [ ] Basic CRUD API
+- [ ] Playlist Validation
+- [ ] Song Validation
+- [ ] Orphaned Songs from Playlist API
+- [ ] Program Logic of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the Program Logic, API, Interface, or Repository?
 
 <br>
+
 
 ## Project Requirements (Pick 3 or more)
 - [x] Async Task
@@ -180,29 +196,15 @@ Create a music library Web API and simple Media Player
 
 <br>
 
-## Known Issues
+## Dev Blog
+* Added additional controls, Gui Work, and a few other things.
 * More debugging and adjustments on the file caching.
 * GUI responsiveness to SMB WAN Operations.  These operations are running on separate async tasks, but the 'opening file' phase still locks the GUI.*  
-  * Even optimized with 'await filestream' opening a file over the WAN can take a few seconds locking the GUI until the async transfer starts.  The transfer itself is async, the 'opening' is not.
+  * Even optimized with 'await FileStream' opening a file over the WAN can take a few seconds locking the GUI until the async transfer starts.  The transfer itself is async, the 'opening' is not.
   * tried a couple different methods, and outside of native code this seems to be as optimized as it is going to get.
   * Reading the MP3 Tags over the WAN can also lock GUI for several seconds.  I'd have to rewrite this entire library, and even then it would not be entirely fixed without native code.
-* If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
-  * I disabled all the other targets for simplicity while learning, but that also allowed the project to introduce and use incompatible libraries.
-  * At some point in the future I'll need to do a major refactor to fix this and enable android.
-* Use the latest update of Visual Studio 2022, .Net 8, and .Net MAUI
-* MAUI Debugging is very generic and unhelpful.  It's hard to know what's wrong.  Any advice here would be greatly appreciated.
-* %AppData% is a Different location in Win11/Console, Win11/Web, and Win11/Maui.
-  * Maui has a virtual file-system redirect for %AppData%
-* Extra Wholesale Bag of Salt:
-  * Advice from earlier than Dec 2023 may be outdated or even incorrect.
-  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
-* Disable windows app virtualization of the %AppData file-system.  This options does not appear to be available in MAUI, only older UWP.
-
-<br>
-
-## Dev Blog
 * This seems to be about as optimal as I can do without getting into platform specifics.
-    * Opening a WAN filestream can still lock the application for a few seconds, even with the filestream being awaited and async.
+    * Opening a WAN FileStream can still lock the application for a few seconds, even with the FileStream being awaited and async.
 * Save FileSize into the database so we don't have to call it from the WAN more than once.
 * Looks like this will require native code, and not Maui compatible, and I'm wanting to keep things as compatible as possible
 * FineInfo is insidious! ... going to see if I can find any other way to do this.

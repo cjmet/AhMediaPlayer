@@ -12,7 +12,7 @@ namespace MauiCli
             await foreach (string filename in new AhGetFiles().GetFilesAsync(path, "*.mp3"))
             {
                 Console.WriteLine($"Adding[61]: {filename}");
-                AddFilenameToSongDb(filename);
+                await AddFilenameToSongDb(filename);
             }
             return;
         }

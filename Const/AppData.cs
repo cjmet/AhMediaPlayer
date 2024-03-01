@@ -87,5 +87,6 @@ namespace AhConfig
             }
             private set { _tmpDataPath = value; }
         }
+        
     }
 }

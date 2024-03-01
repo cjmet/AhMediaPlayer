@@ -51,7 +51,7 @@ namespace MauiMediaPlayer
                 Grid.SetColumnSpan(debugSpacer, 2);
 
                 // Heinous Hack-Stockings!
-                // cjm - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
+                // cj - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
                 //       Worse it only updates when you run a new search to redraw the list.
                 //       We could probably put an event in for on width change. 
                 FilePathFontSize = 8;
@@ -114,7 +114,7 @@ namespace MauiMediaPlayer
                 LogMsg("Startup Complete");
             });
 
- 
+
 
         }  // /Constructor
 
@@ -152,7 +152,7 @@ namespace MauiMediaPlayer
             var _selectedSongIndex = _sourceSongList.IndexOf(_selectedSong);
             if (_selectedSongIndex < 0) _selectedSong = new Song { Title = "null" };
             var _newSong = _sourceSongList.ElementAtOrDefault(_selectedSongIndex + 1);
-            if (_newSong == null && _repeatPlaylist && _selectedSongIndex >= _sourceSongList.Count - 1) // cjm
+            if (_newSong == null && _repeatPlaylist && _selectedSongIndex >= _sourceSongList.Count - 1)
             {
                 LogMsg($"Repeating Playlist");
                 _newSong = _sourceSongList.ElementAtOrDefault(0);
@@ -160,7 +160,7 @@ namespace MauiMediaPlayer
             var _newSongIndex = _sourceSongList.IndexOf(_newSong);
             var _title = _newSong != null ? _newSong.Title : "null";
 
-            LogMsg($"ChangeSong:{_selectedSongIndex}->{_newSongIndex}/{_sourceSongList.Count-1 }: {_title}");
+            LogMsg($"ChangeSong:{_selectedSongIndex}->{_newSongIndex}/{_sourceSongList.Count - 1}: {_title}");
             LogDebug($"   From[{_selectedSongIndex}]: {_selectedSong.Title}");
             LogDebug($"     To[{_newSongIndex}]: {_title}");
 
@@ -214,8 +214,8 @@ namespace MauiMediaPlayer
                 {
 
                     MediaSource _mediaSource = null;
-                    if (File.Exists(_cachedPath)) _mediaSource = MediaSource.FromFile(_cachedPath);            // cjm 
-                    else if (File.Exists(_cachedPath)) _mediaSource = MediaSource.FromFile(_cachedPath);            // cjm 
+                    if (File.Exists(_cachedPath)) _mediaSource = MediaSource.FromFile(_cachedPath);
+                    else if (File.Exists(_song.PathName)) _mediaSource = MediaSource.FromFile(_song.PathName);
                     else if (_cachedPath.StartsWith("embed://")) _mediaSource = MediaSource.FromResource(_cachedPath.Substring(8));
 
                     LogDebug($"MediaSource: {(_mediaSource == null ? "null" : _mediaSource.ToString())}");
@@ -386,13 +386,13 @@ namespace MauiMediaPlayer
                         }
                         _cacheSongQueue.TryDequeue(out _song);
                         LogTrace($" DeQueuing[{_cacheSongQueue.Count + 1}]: {_song.Title}");
-                        
+
                         if (_song != null && _song.PathName != null && isCached.Contains(_song.PathName))
                         {
                             LogDebug($"  Secondary PreCached: {_song.FileName}");
                             continue;  // we've already downloaded it.
                         }
-                        
+
                         _songTransferCTS = new CancellationTokenSource();
                         var _token = _songTransferCTS.Token;
                         _source = _song.PathName;
@@ -552,7 +552,8 @@ namespace MauiMediaPlayer
             _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
             _dbContext.Dispose();
 
-            LogMsg($"Found {_songList.Count} songs.");
+            LogDebug($"Found {_songList.Count} songs.");
+            RandomPersistentLogo(_searchText, _songList.Count);
             if (_songList.Count > 0)
                 Application.Current.Dispatcher.Dispatch(() =>
                 {
@@ -581,8 +582,8 @@ namespace MauiMediaPlayer
             var _selectedSong = (Song)TestSonglist.SelectedItem;
             var _selectedSongIndex = _songList.IndexOf(_selectedSong);
             var _newSong = _songList.ElementAtOrDefault(_selectedSongIndex + 1);
-            if (_newSong != null) 
-                Application.Current.Dispatcher.Dispatch( () => TestSonglist.SelectedItem = _newSong );
+            if (_newSong != null)
+                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
 
         private void PreviousTrack_Clicked(object sender, EventArgs e)
@@ -625,6 +626,45 @@ namespace MauiMediaPlayer
             var _newSong = _songList.ElementAtOrDefault(_songList.Count - 1);
             if (_newSong != null)
                 Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+        }
+
+        private void RandomPersistentLogo(string data, int found)
+        {
+            LogTrace($"RandomPersistentLogo: {data}"); // cjm 
+            data = data.ToLower().Trim();
+            var num = data.GetHashCode();
+            var images = new string[] 
+            {   // cj - I can't seem to find a way to read these, so I'm just going to hard code them.
+                "angel_hornet_logo_cropped.png", "azrael.png",
+                "bad_grim.png", "baxters.png", "big_moon.png",
+                "brie.png", "bubby.png", "chex.png", "damnit_gizmo.png",
+                "django.png", "dot.png", "fox.png", "herc.png", 
+                "howard.png", "huggy.png", "kibbs.png", "kissy.png", 
+                "lucy.png", "luna.png", "nino.png", "pie.png", 
+                "possum.png", "rey.png", "spicey.png", "stella.png",
+                "tiger.png"
+            };
+
+            var index = (uint) num % images.Length;
+            if (data == "") index = 0;
+            LogTrace($"RandomPersistentLogo: {index} / {images.Length}");
+
+            var image = images[index];
+            var Name = Path.GetFileNameWithoutExtension(image);
+            if (Name == "angel_hornet_logo_cropped") Name = "Angel Hornet";
+            var Names = Name.Split('_');
+            Name = "";
+            foreach (var n in Names) 
+            {
+                if (n.Length >= 1) Name += n.Substring(0, 1).ToUpper() + n.Substring(1) + " ";
+            }
+            Name = Name.Trim();
+            LogMsg($"{Name} found you {found} Songs!");
+
+            Application.Current.Dispatcher.Dispatch(() =>
+            {
+                AngelHornetLogo.Source = ImageSource.FromFile(images[index]);
+            });
         }
     }
 

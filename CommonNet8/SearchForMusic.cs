@@ -55,7 +55,7 @@ namespace CommonNet8
                 else
                 {
                     LogTrace($"Adding[23]: {filename}");
-                    AddFilenameToSongDb(filename);
+                    await AddFilenameToSongDb(filename);
                     //await Task.Delay(1);
                 }
             }
@@ -63,7 +63,7 @@ namespace CommonNet8
             return;
         }
 
-        public static void AddFilenameToSongDb(string filename)
+        public static async Task AddFilenameToSongDb(string filename)
         {
             var _adbContext = new PlaylistContext();
             {
@@ -86,11 +86,13 @@ namespace CommonNet8
                 }
                 if (tag == null)
                 {
+                    await Task.Delay(1);
                     try { tag = new Mp3(filename).GetTag(Id3TagFamily.Version1X); }
                     catch (Exception ex) { tag = null; LogTrace($"*** Tag v1 Exception: {ex.Message}"); }
                 }
                 if (tag == null)
                 {
+                    await Task.Delay(1);
                     try { tag = new Mp3(filename).GetAllTags().FirstOrDefault(); }
                     catch (Exception ex) { tag = null; LogTrace($"*** Tag Any Exception: {ex.Message}"); }
                 }
