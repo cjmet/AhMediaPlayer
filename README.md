@@ -116,10 +116,12 @@ Create a music library Web API and simple Media Player
   - [ ] Deleting Playlists GUI (Delete)
   - [x] Basic Search and Filter functionality GUI
   - [ ] Advanced Search and Filter GUI, && || !! ::, ... 
-    - [ ] [Addition] - (Rock Or Roll) 
-    - [ ] [Subtract] - (Rock Not Roll) 
-    - [ ] [LogicAnd] - (Rock And Roll) 
-    - [ ] [........] - (Rock Or Not Roll)
+    - [ ] [()()] - [OR (Union)] - (Rock Or Roll) 
+    - [ ] [.().][AND (Intersect)] - (Rock And Roll)
+    - [ ] [(...][NOT (Except)] - (Rock Not Roll) 
+    - [ ] [(...] - (Rock Or Not Roll) = [All Except Roll]
+    - [ ] [(...] - (Rock And Not Roll) = [Rock Except Roll]
+    - [ ] [....] - (Rock Not Not Roll) = [Empty Set]
   - [ ] Add Automatic Playlists based on Meta Data GUI
 
   

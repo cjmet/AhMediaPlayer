@@ -80,10 +80,10 @@
             </ListView>
         </ContentView>
 
-        <!-- Row 1 - 🎶 - 🗃️ -->
+        <!-- Row 1 - 🎶 🗃️ 🕵🏻‍♀️ 🐕‍🦺 💻 -->
         <!--// {Title} {Artist} {Band} {Album} {Genre}-->
         <Button x:Name="MenuBox"
-            Text="🗃️"
+            Text="🕵🏻‍♀"
             Scale=".7"
             Clicked="MenuBox_Clicked"
             TextColor="Black"
@@ -99,8 +99,9 @@
             VerticalOptions="Start"
             ZIndex="1"/>
 
+        <!--... 💾 💽 💻 🗃️ ...-->
         <Button x:Name="SearchDirectories"
-            Text="🎶"
+            Text="💽"
             Scale=".7"
             Clicked="SearchDirectories_Clicked"
             TextColor="Black"
@@ -161,20 +162,19 @@
             VerticalOptions="Start"
             ZIndex="2">
 
-            <Grid Padding="0" Margin="0">
+            <Grid Padding="0" Margin="0" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="75"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <SearchBar x:Name="AdvancedSearchBar"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="1"
                     Grid.RowSpan="1"
                     MinimumWidthRequest="355"
@@ -195,11 +195,12 @@
                 <Picker x:Name="Searchby"
                     Grid.Column="0"
                     Title="Search by"
-                        BackgroundColor="LightGray"
-                    Margin="-25"
+                    BackgroundColor="LightGray"
+                    WidthRequest="125"
+                    Margin="0,-25,-30,-25"
                     FontSize="26"
                     Scale=".5"
-                    HorizontalOptions="Center"
+                    HorizontalOptions="End"
                     VerticalOptions="Center"
                     ZIndex="3">
                     <Picker.ItemsSource>
@@ -216,22 +217,20 @@
                 <Picker x:Name="SearchAction"
                     Grid.Column="1"
                     Title="Action"
-                        BackgroundColor="LightGray"
-                    MinimumWidthRequest="100"
-                    Margin="-25"
+                    BackgroundColor="LightGray"
+                    Margin="-40,-25,0,-25"
+                    WidthRequest="270"
                     FontSize="26"
                     Scale=".5"
-                    HorizontalOptions="Center"
+                    HorizontalOptions="Start"
                     VerticalOptions="Center"
                     ZIndex="3">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}" >
                             <x:String>Search</x:String>
-                            <x:String>Or</x:String>
-                            <x:String>And</x:String>
-                            <x:String>Not</x:String>
-                            <x:String>Or Not</x:String>
-                            <x:String>And Not</x:String>
+                            <x:String>Or (union)</x:String>
+                            <x:String>And (intersection)</x:String>
+                            <x:String>Not (except)</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
