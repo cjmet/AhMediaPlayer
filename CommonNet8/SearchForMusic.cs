@@ -22,7 +22,10 @@ namespace CommonNet8
         }
         public void Report(string value)
         {
-            if (spinner++ % 6 == 0) LogDebug($"Srch: {value}");
+            if (spinner++ % 30 == 0)
+            {
+                LogInfo($"Srch: {value}");
+            }
         }
     }
 
@@ -55,7 +58,7 @@ namespace CommonNet8
                 {
                     LogTrace($"Adding[23]: {filename}");
                     await AddFilenameToSongDb(filename);
-                    //await Task.Delay(1);
+                    await Task.Delay(1);                    // We need this delay for GUI Responsiveness.  1ms minimum, 10ms on Gb Lan, 40ms is 25fps, 100ms 100mb LAN, 1000ms 10mb LAN
                 }
             }
             LogMsg("Search for Music Complete.");
@@ -78,29 +81,45 @@ namespace CommonNet8
 
                 Id3Tag? tag = null;
 
-                // Try Catch all the Id3TagFamily for malformed and corrupted tags
+
+
+
+
+
+                var isolatedIOTask = new Task( () =>              // cjm - Isolating this further into it's own task, to see if this helps GUI responsiveness
                 {
-                    try { tag = new Mp3(filename).GetTag(Id3TagFamily.Version2X); }
-                    catch (Exception ex) { tag = null; LogTrace($"*** Tag v2 Exception: {ex.Message}"); }
-                }
-                if (tag == null)
-                {
-                    await Task.Delay(1);
-                    try { tag = new Mp3(filename).GetTag(Id3TagFamily.Version1X); }
-                    catch (Exception ex) { tag = null; LogTrace($"*** Tag v1 Exception: {ex.Message}"); }
-                }
-                if (tag == null)
-                {
-                    await Task.Delay(1);
-                    try { tag = new Mp3(filename).GetAllTags().FirstOrDefault(); }
-                    catch (Exception ex) { tag = null; LogTrace($"*** Tag Any Exception: {ex.Message}"); }
-                }
-                // /Get Tag
+                    LogTrace($"Reading Tags[88]:  {filename}");
+                    // Try Catch all the Id3TagFamily for malformed and corrupted tags
+                    {
+                        try { tag = new Mp3(filename).GetTag(Id3TagFamily.Version2X); }
+                        catch (Exception ex) { tag = null; LogTrace($"*** Tag v2 Exception: {ex.Message}"); }
+                    }
+                    LogTrace($"Reading Tags[94]");
+                    if (tag == null)
+                    {
+                        //await Task.Delay(1);
+                        try { tag = new Mp3(filename).GetTag(Id3TagFamily.Version1X); }
+                        catch (Exception ex) { tag = null; LogTrace($"*** Tag v1 Exception: {ex.Message}"); }
+                    }
+                    LogTrace($"Reading Tags[101]");
+                    if (tag == null)
+                    {
+                        //await Task.Delay(1);
+                        try { tag = new Mp3(filename).GetAllTags().FirstOrDefault(); }
+                        catch (Exception ex) { tag = null; LogTrace($"*** Tag Any Exception: {ex.Message}"); }
+                    }
+                    // /Get Tag
+                    LogTrace($"Tags Read:[109] {(tag != null ? tag : "null")}");
+                    //await Task.Delay(1);
+                }, TaskCreationOptions.LongRunning);
+                isolatedIOTask.Start();
+                await isolatedIOTask;
+                LogTrace($"Tags Read Task Complete[114]: {(tag != null ? tag : "null")}");
+
 
                 if (tag == null)
                 {
                     LogTrace($"All Tags are Null! [{tag}] {_fileName}");
-                    tag = new Mp3(filename).GetTag(Id3TagFamily.Version1X);
                     tag = new Id3Tag
                     {
                         Title = _fileName,
@@ -124,11 +143,11 @@ namespace CommonNet8
                         }
 
                 // Fix Corrupted Tags
-                LogTrace($"*** Fix Corrupted Tags");
-                if (tag.Title.ToString() == null || tag.Title.ToString() == "") tag.Title = _fileName;
+                LogTrace($"*** Fix Corrupted Tags: {(tag != null ? tag : "null")}");
+                if (tag.Title == null || tag.Title.ToString() == null || tag.Title.ToString() == "") tag.Title = _fileName != null ? _fileName : "null";
 
                 LogTrace("Fix FileSize for Wan and FileInfo Lag Issues");
-                long _fileSize = new FileInfo(filename).Length;
+                long _fileSize = new FileInfo(filename).Length;                 // we want to ask this question only once if possible.
 
                 LogTrace("MP3 Trace Data");
                 LogTrace($"Pa:[{filename}]");

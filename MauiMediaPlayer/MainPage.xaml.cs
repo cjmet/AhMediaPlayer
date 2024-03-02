@@ -9,9 +9,9 @@ using static AngelHornetLibrary.AhLog;
 using static CommonNet8.AllSongsPlaylist;
 using static CommonNet8.SearchForMusic;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using CommunityToolkit.Maui.Core;
 using AhConfig;
 using CommunityToolkit.Maui.Storage;
+using SQLitePCL;
 
 
 
@@ -252,7 +252,7 @@ namespace MauiMediaPlayer
             LogDebug($"SongCache: {(_song != null ? _song.Title : "null")}");
             if (_song == null || _song.PathName == null)
             {
-                LogError("ERROR: Song is null");
+                LogDebug("Song is null");
                 return;
             }
 
@@ -265,7 +265,7 @@ namespace MauiMediaPlayer
 
             // (Re)Fill the Queue, Queue it up fast, don't check the file systems, that just slows it all down.
             {
-                for (int i = _index; i < _list.Count && i < _index + Const.QueueSize; i++)
+                for (int i = _index; i < _list.Count && i < _index + Const.CacheSize; i++)
                 {
                     if (_list[i] == null) continue;
                     var _source = _list[i];
@@ -411,7 +411,7 @@ namespace MauiMediaPlayer
                 }
                 else
                 {
-                    LogTrace(" SongCacheTask is Waiting");
+                    //LogTrace(" SongCacheTask is Waiting");
                     if (_cacheCleanDelay-- <= 0)
                     {
                         LogTrace("Cleaning Cache");
@@ -485,7 +485,7 @@ namespace MauiMediaPlayer
                 }
                 else
                 {
-                    LogTrace("  SongPlayTask is Waiting");
+                    //LogTrace("  SongPlayTask is Waiting"); 
                     await Task.Delay(Const.ClockTick);
                 }
             }
@@ -684,6 +684,33 @@ namespace MauiMediaPlayer
                 var _progress = new ReportProgressToQueue(_messageQueue);
                 _ = SearchUserProfileMusic(_progress, _path);
             }
+        }
+
+        private void MenuBox_Clicked(object sender, EventArgs e)
+        {
+            if (AdvandedSearchFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
+            {
+                AdvandedSearchFrame.IsVisible = false;
+                MenuBox.BackgroundColor = Color.Parse("Transparent");
+            });
+            else Application.Current.Dispatcher.Dispatch(() =>
+            {
+                AdvandedSearchFrame.IsVisible = true;
+                MenuBox.BackgroundColor = Color.Parse("LightBlue");
+                Searchby.SelectedIndex = 0;
+                SearchAction.SelectedIndex = 0;
+            });
+
+        }
+
+        private void AdvancedSearchBar_SearchButtonPressed(object sender, EventArgs e)
+        {
+            var _searchBar = (SearchBar)sender;
+            var _searchText = _searchBar.Text.ToLower();
+
+            LogMsg($"Advanced:  Searchby: '{Searchby.SelectedItem}'   Action: '{SearchAction.SelectedItem}'   SearchText: '{_searchText}'");
+            SearchBar_SearchButtonPressed(sender, e);    
+
         }
     }
 

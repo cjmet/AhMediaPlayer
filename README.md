@@ -25,8 +25,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 ## Instructions
 * Requires: Visual Studio 2022, C#12, .Net 8, .Net MAUI
-* Use: Solution Configuration: Debug
-  * This will put the DB on your desktop so that the CLI, API, and MAUI all use the same DB.  Otherwise, chaos ensues ... due to windows app virtualization of the %AppData file-system.
+* Run the App First.  Due to windows app virtualization of the %AppData% file-system, as well as other directories.
 * You'll Also need: 
   * https://github.com/cjmet/AngelHornetLibrary
 * ...
@@ -38,9 +37,10 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 * Load the Maui App first, this will help with making sure the semi-random virtualized directories can be found by the other projects.
   * Maui apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
 * The first time you load the Maui App, it will scan your %userprofile%/music, this may take a while.
-  * Instantly for my local machine, 25 minutes for my LAN NAS, and Hours for my WAN NAS.
-* GUI responsiveness suffers to SMB WAN Operations.  This is as much an OS issue as programming issue.  
-  * The actual Data Transfers are async and non-blocking.  The problem is in the Synchronous IO Libraries during the OpenFile operation, and in Synchronous parts of the Id3 Library.
+  * Seconds for my local machine, 25 minutes for a LAN NAS, and Hours for a WAN NAS.
+* GUI responsiveness suffers to SMB WAN Operations.  
+  * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
+  * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely solved the issue.
 
 ## Suggestions
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
@@ -52,6 +52,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Current Project Questions
+1. &nbsp;  var \_songs = \_context.Songs.Where(s => s.___\{TypeVariable\}___.Contains(_searchText)).ToList(); ???
 1. &nbsp; API Authentication and Validation
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
 1. &nbsp; Program Logic? of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository? ... I Feel like this should be in the repository so that incoming API calls can't Fubar a database?  Deleting from All Songs would also be different, in that it will just be added back next time it scans.... shouldn't we mark it deleted and hide it instead?  Or is this getting too much into the program logic arena?  And should go into a shared program logic?  But then how do you add that to an API, such that the raw API doesn't fubar working Db Systems and other shared applications?
@@ -79,6 +80,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
+- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
 - [ ] More API work
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
 - [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
@@ -113,7 +115,11 @@ Create a music library Web API and simple Media Player
   - [ ] Adding Playlists GUI (Create)
   - [ ] Deleting Playlists GUI (Delete)
   - [x] Basic Search and Filter functionality GUI
-  - [ ] Advanced Search and Filter GUI
+  - [ ] Advanced Search and Filter GUI, && || !! ::, ... 
+    - [ ] [Addition] - (Rock Or Roll) 
+    - [ ] [Subtract] - (Rock Not Roll) 
+    - [ ] [LogicAnd] - (Rock And Roll) 
+    - [ ] [........] - (Rock Or Not Roll)
   - [ ] Add Automatic Playlists based on Meta Data GUI
 
   
