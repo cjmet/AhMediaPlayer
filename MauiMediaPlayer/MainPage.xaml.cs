@@ -1,4 +1,5 @@
-﻿using CommonNet8;
+﻿using System.Linq;
+using CommonNet8;
 using CommunityToolkit.Maui.Views;
 using DataLibrary;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
 using AhConfig;
 using CommunityToolkit.Maui.Storage;
 using SQLitePCL;
+using Microsoft.VisualBasic;
 
 
 
@@ -633,7 +635,7 @@ namespace MauiMediaPlayer
 
         private void RandomPersistentLogo(string data, int found)
         {
-            LogTrace($"RandomPersistentLogo: {data}"); // cjm 
+            LogTrace($"RandomPersistentLogo: {data}"); // cj 
             data = data.ToLower().Trim();
             var num = data.GetHashCode();
             var images = new string[]
@@ -675,7 +677,7 @@ namespace MauiMediaPlayer
             var folder = Environment.SpecialFolder.UserProfile;
             var _tmpPath = Environment.GetFolderPath(folder);
             _tmpPath = Path.Join(_tmpPath, "Music");
-            var _searchDir = await FolderPicker.PickAsync(_tmpPath);  // cjm 
+            var _searchDir = await FolderPicker.PickAsync(_tmpPath);  // cj 
             if (_searchDir == null || _searchDir.Folder == null) return;
             var _path = _searchDir.Folder.Path;
             LogMsg($"SearchDirectories: {_path}");
@@ -707,10 +709,80 @@ namespace MauiMediaPlayer
         {
             var _searchBar = (SearchBar)sender;
             var _searchText = _searchBar.Text.ToLower();
+            if (_searchText == null) _searchText = "";
 
-            LogMsg($"Advanced:  Searchby: '{Searchby.SelectedItem}'   Action: '{SearchAction.SelectedItem}'   SearchText: '{_searchText}'");
-            SearchBar_SearchButtonPressed(sender, e);    
+            // Redirect to standard search until we can write the rest of this.   // cjm - More Where HERE!
+            //LogDebug("Redirecting Advanced Search to Regular Search!  ... Work on this Later");
+            //SearchBar_SearchButtonPressed(sender, e);
+            //return;
 
+            string? _by;
+            if (Searchby.SelectedItem == null) _by = "Any";
+            else _by = Searchby.SelectedItem.ToString().ToLower();
+
+            string? _action;
+            if (SearchAction.SelectedItem == null) _action = "Search";
+            else _action = SearchAction.SelectedItem.ToString().ToLower();
+
+            LogMsg($"Advanced:  Search by: '{_by}'   Action: '{_action}'   SearchText: '{_searchText}'");
+            var _db = new PlaylistContext();
+            var _nullSong = _db.Songs.Where(s => s.Id < 0).DefaultIfEmpty();        // This should always be an empty song, and type IQueryable<Song?>?, but not null.
+
+            // *** NOTE ***   // cjm 
+            // You can't seem to mix IQueryable<Song?> and List<Song>.  Or I can't figure out the correct syntax to do it.
+            // So I'm going to Isolate the Lists and Queryables separately.
+
+            // {Any} {Title} {Artist} {Album} {Band} {Genre}
+            var _currentSet = _nullSong;
+            if (TestSonglist != null && TestSonglist.ItemsSource != null) _currentSet = TestSonglist.ItemsSource.Cast<Song>().AsQueryable().DefaultIfEmpty();
+
+            LogTrace($"Advanced[730]:   CurrentSet: {_currentSet.Count()}");
+            var _selectionSet = _nullSong;
+            if (_by == "any" || _by == "Title")
+                { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
+            if (_by == "any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
+            if (_by == "any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
+            if (_by == "any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
+            if (_by == "any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
+            if (!(new string[] { "any", "title", "artist", "album", "band", "genre" }.Contains(_by))) LogError($"Invalid SearchBy: [{_by}]");
+
+
+            LogTrace($"Advanced[753]:   SelectionSet: {_selectionSet.Count()}");
+            // These probably have to be the same type, right now they are similar byt different.   // cjm ... 
+            LogTrace($"Double Checking:   CurrentSet: [{_currentSet.GetType()}] [{_currentSet.Count()}]");              
+            LogTrace($"Double Checking:   SelectionSet: [{_selectionSet.GetType()}] [{_selectionSet.Count()}]");
+
+
+            // {Search} {Or (union)} {And (intersection)} {Not (except)}
+            var _result = _nullSong;
+            if (_action == "search") { _result = _selectionSet; }
+            else if (_action.StartsWith("or")) {
+                //_result = _currentSet.Union(_selectionSet).DefaultIfEmpty();
+                //_result = _currentSet.UnionBy(_selectionSet, s => s.Id).DefaultIfEmpty();
+                List<Song> _listOne = _currentSet.ToList();
+                List<Song> _listTwo = _selectionSet.ToList();
+                LogTrace($"Advanced: ListOne: {_listOne.Count()}   ListTwo: {_listTwo.Count()}");
+                List<Song> _listThree = _listOne.Union(_listTwo).ToList();
+                _result = _listThree.AsQueryable().DefaultIfEmpty();  // cjm - This is what's throwing it.  Mixing these types?  Mixing List<Song> and IQueryable<Song?>?
+
+            }     // cjm - Start here ... Break them up, try opposite order, etc.
+            // cj - (O.O)!  Why do these not all use the same syntax?!?
+            //else if (_action.StartsWith("and")) { _result = _currentSet.Intersect(_selectionSet).DefaultIfEmpty(); }
+            //else if (_action.StartsWith("not")) { _result = _currentSet.Except(_selectionSet).DefaultIfEmpty(); }
+            //else LogError($"Invalid SearchAction: [{_action}]");
+           
+            _result = _result.Except(_nullSong); // have to strip that back out.
+            LogTrace($"Advanced[758]:   Result - _nullSong: {_result.Count()}");
+
+            var _songList = _result.ToList();
+            LogDebug($"Advanced Search Found {_songList.Count} songs.");
+            RandomPersistentLogo(_searchText, _songList.Count);
+            if (_songList.Count > 0)
+                Application.Current.Dispatcher.Dispatch(() =>
+                {
+                    TestSonglist.ItemsSource = _songList;
+                    SearchCount.Text = $"{_songList.Count:n0}";
+                });
         }
     }
 

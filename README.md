@@ -52,6 +52,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Current Project Questions
+1. &nbsp; You can't seem to mix IQueryable<Song?> and List<Song>.  How do you do this?  See Code.
+1. &nbsp; Predicate Builder for search and filter.
 1. &nbsp;  var \_songs = \_context.Songs.Where(s => s.___\{TypeVariable\}___.Contains(_searchText)).ToList(); ???
 1. &nbsp; API Authentication and Validation
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
@@ -205,6 +207,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Worked on Advanced Search.  Ugh.  Linq, and Dbs, and Types, and several other things to straighten out.
+* Worked on Advanced search and GUI Layout
 * Added Manual Search Button, for use with Libraries, Servers, NASes, etc.
 * Added additional controls, Gui Work, and a few other things.
 * More debugging and adjustments on the file caching.

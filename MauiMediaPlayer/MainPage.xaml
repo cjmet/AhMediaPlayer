@@ -208,6 +208,7 @@
                             <x:String>Any</x:String>
                             <x:String>Title</x:String>
                             <x:String>Artist</x:String>
+                            <x:String>Album</x:String>
                             <x:String>Band</x:String>
                             <x:String>Genre</x:String>
                         </x:Array>
