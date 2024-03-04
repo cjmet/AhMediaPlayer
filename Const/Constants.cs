@@ -5,12 +5,12 @@ namespace AhConfig
 {
     public static class Const
     {
-        public const int MinimumLogLevel = 0;  // 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
+        public const int MinimumLogLevel = 2;  // 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
         public const bool UseSongCache = true;
         public const int ClockTick = 250;
 
-        public const int CacheSize = 20;
-        public const int CacheSizeMax = 200;
+        public const int CacheSize = 10;
+        public const int CacheSizeMax = 400;
         public const int CacheCleanInterval = 300;  // 5 minutes
 
 

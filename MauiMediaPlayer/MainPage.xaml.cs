@@ -31,7 +31,7 @@ namespace MauiMediaPlayer
 
         // Heinous Hack-Stockings!  This is a lot of trouble for one label!
         public static int FilePathFontSize = 1;
-        public static int FilePathFontMargin { get => -int.Max(FilePathFontSize / 2 - 1, 1); }
+        public static int FilePathFontMargin { get => -int.Max(FilePathFontSize / 2 - 2 , 1); }
         public static string FilePathFontColor = "Transparent";
         public static int FilePathWindowWidth = 385;
         // /Hack-Stockings
@@ -53,24 +53,16 @@ namespace MauiMediaPlayer
                 var debugSpacer = new Label { Text = "Debug Toolbar Spacer ", HeightRequest = 48, HorizontalOptions = LayoutOptions.Center };
                 MainGrid.Children.Add(debugSpacer);
                 Grid.SetColumnSpan(debugSpacer, 2);
-
-                // Heinous Hack-Stockings!
-                // cj - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
-                //       Worse it only updates when you run a new search to redraw the list.
-                //       We could probably put an event in for on width change. 
-                FilePathFontSize = 8;
-                FilePathFontColor = "Black";
-                new Task(async () =>
-                {
-                    while (AngelHornetLogo.Height < 1) await Task.Delay(25);
-                    while (true)
-                    {
-                        // Read-Only so it should be fine this way.
-                        FilePathWindowWidth = int.Max((int)TestSonglist.Width, Const.AppMinimumWidth);
-                        await Task.Delay(3000);
-                    }
-                }, TaskCreationOptions.LongRunning).Start();
             }
+            // I went to a lot of trouble to create this, and now after input from others I'm going to make it permanent instead of a DEBUG_ONLY feature.
+            // Heinous Hack-Stockings!
+            // cj - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
+            //       Worse it only updates when you run a new search to redraw the list.
+            //       We could probably put an event in for on width change. 
+            FilePathFontSize = 8;
+            FilePathFontColor = "Black";
+            // /Heinous Hack-Stockings
+
 
             _ = DeliverMessageQueue(_messageQueue, spinBox, messageBox);
             _ = SecondWindow(Application.Current, AngelHornetLogo);
@@ -711,10 +703,6 @@ namespace MauiMediaPlayer
             var _searchText = _searchBar.Text.ToLower();
             if (_searchText == null) _searchText = "";
 
-            // Redirect to standard search until we can write the rest of this.   // cjm - More Where HERE!
-            //LogDebug("Redirecting Advanced Search to Regular Search!  ... Work on this Later");
-            //SearchBar_SearchButtonPressed(sender, e);
-            //return;
 
             string? _by;
             if (Searchby.SelectedItem == null) _by = "Any";
@@ -726,56 +714,36 @@ namespace MauiMediaPlayer
 
             LogMsg($"Advanced:  Search by: '{_by}'   Action: '{_action}'   SearchText: '{_searchText}'");
             var _db = new PlaylistContext();
-            var _nullSong = _db.Songs.Where(s => s.Id < 0).DefaultIfEmpty();        // This should always be an empty song, and type IQueryable<Song?>?, but not null.
 
-            // *** NOTE ***   // cjm 
-            // You can't seem to mix IQueryable<Song?> and List<Song>.  Or I can't figure out the correct syntax to do it.
-            // So I'm going to Isolate the Lists and Queryables separately.
+            // cj - CONVERT everything to CONCRETE LISTS, ***NOT*** IQueryable
+            // IQueryable should be used with caution in Union, Intersect, and Except.  Unless using EmptyOrDefault, and even then, it's still a bit finicky.
 
             // {Any} {Title} {Artist} {Album} {Band} {Genre}
-            var _currentSet = _nullSong;
-            if (TestSonglist != null && TestSonglist.ItemsSource != null) _currentSet = TestSonglist.ItemsSource.Cast<Song>().AsQueryable().DefaultIfEmpty();
+            List<Song> _currentSet = new List<Song>();
+            if (TestSonglist != null && TestSonglist.ItemsSource != null) _currentSet = TestSonglist.ItemsSource.Cast<Song>().ToList();
 
-            LogTrace($"Advanced[730]:   CurrentSet: {_currentSet.Count()}");
-            var _selectionSet = _nullSong;
-            if (_by == "any" || _by == "Title")
-                { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
-            if (_by == "any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
-            if (_by == "any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
-            if (_by == "any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
-            if (_by == "any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_searchText)).DefaultIfEmpty()); }
+            List<Song> _selectionSet = new List<Song>();
+            if (_by == "any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_searchText))).ToList(); }
+            if (_by == "any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_searchText))).ToList(); }
+            if (_by == "any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_searchText))).ToList(); }
+            if (_by == "any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_searchText))).ToList(); }
+            if (_by == "any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_searchText))).ToList(); }
+            if (_by == "any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_searchText))).ToList(); }
             if (!(new string[] { "any", "title", "artist", "album", "band", "genre" }.Contains(_by))) LogError($"Invalid SearchBy: [{_by}]");
 
-
-            LogTrace($"Advanced[753]:   SelectionSet: {_selectionSet.Count()}");
-            // These probably have to be the same type, right now they are similar byt different.   // cjm ... 
-            LogTrace($"Double Checking:   CurrentSet: [{_currentSet.GetType()}] [{_currentSet.Count()}]");              
-            LogTrace($"Double Checking:   SelectionSet: [{_selectionSet.GetType()}] [{_selectionSet.Count()}]");
-
-
             // {Search} {Or (union)} {And (intersection)} {Not (except)}
-            var _result = _nullSong;
+            List<Song> _result = new List<Song>();
             if (_action == "search") { _result = _selectionSet; }
-            else if (_action.StartsWith("or")) {
-                //_result = _currentSet.Union(_selectionSet).DefaultIfEmpty();
-                //_result = _currentSet.UnionBy(_selectionSet, s => s.Id).DefaultIfEmpty();
-                List<Song> _listOne = _currentSet.ToList();
-                List<Song> _listTwo = _selectionSet.ToList();
-                LogTrace($"Advanced: ListOne: {_listOne.Count()}   ListTwo: {_listTwo.Count()}");
-                List<Song> _listThree = _listOne.Union(_listTwo).ToList();
-                _result = _listThree.AsQueryable().DefaultIfEmpty();  // cjm - This is what's throwing it.  Mixing these types?  Mixing List<Song> and IQueryable<Song?>?
-
-            }     // cjm - Start here ... Break them up, try opposite order, etc.
+            else if (_action.StartsWith("or")) _result = _currentSet.UnionBy(_selectionSet, s => s.Id).ToList();
             // cj - (O.O)!  Why do these not all use the same syntax?!?
-            //else if (_action.StartsWith("and")) { _result = _currentSet.Intersect(_selectionSet).DefaultIfEmpty(); }
-            //else if (_action.StartsWith("not")) { _result = _currentSet.Except(_selectionSet).DefaultIfEmpty(); }
-            //else LogError($"Invalid SearchAction: [{_action}]");
-           
-            _result = _result.Except(_nullSong); // have to strip that back out.
-            LogTrace($"Advanced[758]:   Result - _nullSong: {_result.Count()}");
+            // var intersect = elements.IntersectBy(elements2.Select(e => e.X), x => x.X);
+            else if (_action.StartsWith("and")) { _result = _currentSet.IntersectBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); } // /cjm 
+            else if (_action.StartsWith("not")) { _result = _currentSet.ExceptBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); }
+            else LogError($"Invalid SearchAction: [{_action}]");
+
 
             var _songList = _result.ToList();
-            LogDebug($"Advanced Search Found {_songList.Count} songs.");
+            LogDebug($"CurrentSet: {_currentSet.Count},   SelectionSet: {_selectionSet.Count},   Action: {_action},   Result: {_result.Count}");
             RandomPersistentLogo(_searchText, _songList.Count);
             if (_songList.Count > 0)
                 Application.Current.Dispatcher.Dispatch(() =>
@@ -783,6 +751,18 @@ namespace MauiMediaPlayer
                     TestSonglist.ItemsSource = _songList;
                     SearchCount.Text = $"{_songList.Count:n0}";
                 });
+        }
+
+        private void FilePathDebug_SizeChanged(object sender, EventArgs e)
+        {
+            var _label = (Label)sender;
+
+            // cjm - This is working, but there HAS to be another better way!
+            //_label.SetBinding(Label.TextProperty, new Binding("PathName", source: _label.BindingContext, converter: new HeadTruncateConverter()));  // This might be correct Syntax?!?  Co-Pilot suggested it.
+            FilePathWindowWidth = int.Max((int)TestSonglist.Width, Const.AppMinimumWidth);
+            var tmp = _label.BindingContext;
+            _label.BindingContext = null;
+            _label.BindingContext = tmp;
         }
     }
 

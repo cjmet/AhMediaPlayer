@@ -501,6 +501,7 @@
                                     <Label x:Name="FilePathDebug"
                                         Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}"   
                                         Style="{StaticResource NormalText}" 
+                                        SizeChanged="FilePathDebug_SizeChanged"
                                         LineBreakMode="NoWrap"   
                                         Padding="0"
                                         Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"

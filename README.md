@@ -52,10 +52,16 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Current Project Questions
-1. &nbsp; You can't seem to mix IQueryable<Song?> and List<Song>.  How do you do this?  See Code.
+1. &nbsp; Class: API Authentication and Validation
+1. &nbsp; There HAS to be a better way to cause a binding value to update on an event triggering?
+    ```
+    var tmp = _label.BindingContext;
+    _label.BindingContext = null;
+    _label.BindingContext = tmp;
+    ```
+1. 1. &nbsp; IQueryable and Union, Intersect, Except?
 1. &nbsp; Predicate Builder for search and filter.
-1. &nbsp;  var \_songs = \_context.Songs.Where(s => s.___\{TypeVariable\}___.Contains(_searchText)).ToList(); ???
-1. &nbsp; API Authentication and Validation
+    1. &nbsp;  var \_songs = \_context.Songs.Where(s => s.___\{TypeVariable\}___.Contains(_searchText)).ToList(); ???
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
 1. &nbsp; Program Logic? of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository? ... I Feel like this should be in the repository so that incoming API calls can't Fubar a database?  Deleting from All Songs would also be different, in that it will just be added back next time it scans.... shouldn't we mark it deleted and hide it instead?  Or is this getting too much into the program logic arena?  And should go into a shared program logic?  But then how do you add that to an API, such that the raw API doesn't fubar working Db Systems and other shared applications?
 ---
@@ -82,14 +88,15 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
-- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
 - [ ] More API work
+- [ ] More Fluent Advanced Search with Parsing, to potentially completely replace both searches at once.
+---
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
 - [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
-- [ ] Upgrade 10/100 switch on the Music NAS to 1Gb switch
 - [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
-- [ ] Resized Event
 - [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
+- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
+
 
 
 * ### Music Player
@@ -117,16 +124,12 @@ Create a music library Web API and simple Media Player
   - [ ] Adding Playlists GUI (Create)
   - [ ] Deleting Playlists GUI (Delete)
   - [x] Basic Search and Filter functionality GUI
-  - [ ] Advanced Search and Filter GUI, && || !! ::, ... 
-    - [ ] [()()] - [OR (Union)] - (Rock Or Roll) 
-    - [ ] [.().][AND (Intersect)] - (Rock And Roll)
-    - [ ] [(...][NOT (Except)] - (Rock Not Roll) 
-    - [ ] [(...] - (Rock Or Not Roll) = [All Except Roll]
-    - [ ] [(...] - (Rock And Not Roll) = [Rock Except Roll]
-    - [ ] [....] - (Rock Not Not Roll) = [Empty Set]
+  - [x] Advanced Search and Filter First Pass
+  - [ ] Advanced Search and Filter Second Pass
   - [ ] Add Automatic Playlists based on Meta Data GUI
 
   
+
 * ### Common Library 
 - [x] CommonLibrary Project so that program logic can be shared, then wire up individual wrappers in a project as needed.
 - [x] Logging Service.  Move all the Debug.Writeline into a logging service that: 
@@ -150,6 +153,7 @@ Create a music library Web API and simple Media Player
     - [ ] Delete
 
 
+   
 * ### Data Library
 - [x] Store in SQLite database
 - [x] Integrate with Music Player
@@ -163,6 +167,7 @@ Create a music library Web API and simple Media Player
 - [ ] Deleting Playlists
 - [ ] DataLibary -> Models, Interfaces, and (Services or Contexts)
 - [ ] Implement the Interfaces and Repository Pattern.
+
 
 
 * ### Music Library Web API
@@ -207,6 +212,21 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Resized Event is _"working"_
+* There HAS to be a better way to cause a binding value to update on an event triggering?
+    ```
+    var tmp = _label.BindingContext;
+    _label.BindingContext = null;
+    _label.BindingContext = tmp;
+    ```
+* First pass on Advanced Search is complete and working.
+* 😕 __WHY!__ do these not all use the same syntax?!?
+    ```
+    _currentSet.UnionBy(_selectionSet, s => s.Id).ToList();
+    _currentSet.IntersectBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); 
+    _currentSet.ExceptBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); 
+    ```
+* Use Concrete Lists with Union, Intersect, and Except.  IQuerable should be worked around and converted ToList() as necessary ... when using Union, Intersect, or Except, or only used with caution by someone much more experienced than I currently am.
 * Worked on Advanced Search.  Ugh.  Linq, and Dbs, and Types, and several other things to straighten out.
 * Worked on Advanced search and GUI Layout
 * Added Manual Search Button, for use with Libraries, Servers, NASes, etc.
@@ -220,7 +240,7 @@ Create a music library Web API and simple Media Player
     * Opening a WAN FileStream can still lock the application for a few seconds, even with the FileStream being awaited and async.
 * Save FileSize into the database so we don't have to call it from the WAN more than once.
 * Looks like this will require native code, and not Maui compatible, and I'm wanting to keep things as compatible as possible
-* FineInfo is insidious! ... going to see if I can find any other way to do this.
+* FileInfo is insidious! ... going to see if I can find any other way to do this.
     ```
     // this should already be happening in a task, but it's lagging the GUI anyway
     // so lets wrap it in another 'async Task<long>' and see if that helps.
