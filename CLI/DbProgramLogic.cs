@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using static AngelHornetLibrary.AhLog;
 using static MauiCli.CliProgramLogic;
 using static CommonNet8.AllSongsPlaylist;
-using static CommonNet8.SearchForMusic;
+using static CommonNet8.SearchForMusicFiles;
 
 namespace MauiCli
 {

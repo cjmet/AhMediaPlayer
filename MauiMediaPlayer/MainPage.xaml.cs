@@ -8,12 +8,14 @@ using System.Diagnostics;
 using System.Globalization;
 using static AngelHornetLibrary.AhLog;
 using static CommonNet8.AllSongsPlaylist;
-using static CommonNet8.SearchForMusic;
+using static CommonNet8.SearchForMusicFiles;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
 using AhConfig;
 using CommunityToolkit.Maui.Storage;
 using SQLitePCL;
 using Microsoft.VisualBasic;
+using Microsoft.Maui;
+using AngelHornetLibrary;
 
 
 
@@ -28,16 +30,16 @@ namespace MauiMediaPlayer
         private ConcurrentStack<Song> _playSongStack = new ConcurrentStack<Song>();
         private bool _repeatPlaylist = false;
 
-
         // Heinous Hack-Stockings!  This is a lot of trouble for one label!
         public static int FilePathFontSize = 1;
-        public static int FilePathFontMargin { get => -int.Max(FilePathFontSize / 2 - 2 , 1); }
+        public static int FilePathFontMargin { get => -int.Max(FilePathFontSize / 2 - 2, 1); }
         public static string FilePathFontColor = "Transparent";
         public static int FilePathWindowWidth = 385;
         // /Hack-Stockings
 
 
 
+        // Constructor Main Page
         public MainPage(PlaylistContext dbcontext)
         //public MainPage()
         {
@@ -47,6 +49,15 @@ namespace MauiMediaPlayer
             InitializeComponent();
             _dbContext = dbcontext;
 
+            _ = DeliverMessageQueue(_messageQueue, spinBox, messageBox);
+            _ = SecondWindow(Application.Current, AngelHornetLogo);
+
+            if (Const.UseSongCache)
+            {
+                _ = PlaySongTask();
+                _ = CacheSongTask();
+            }
+
             if (Debugger.IsAttached)
             {
                 // Hack to space stuff down below the debug toolbar.  I know we can collapse it, but it's still in the way even then.
@@ -54,6 +65,7 @@ namespace MauiMediaPlayer
                 MainGrid.Children.Add(debugSpacer);
                 Grid.SetColumnSpan(debugSpacer, 2);
             }
+
             // I went to a lot of trouble to create this, and now after input from others I'm going to make it permanent instead of a DEBUG_ONLY feature.
             // Heinous Hack-Stockings!
             // cj - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
@@ -62,15 +74,6 @@ namespace MauiMediaPlayer
             FilePathFontSize = 8;
             FilePathFontColor = "Black";
             // /Heinous Hack-Stockings
-
-
-            _ = DeliverMessageQueue(_messageQueue, spinBox, messageBox);
-            _ = SecondWindow(Application.Current, AngelHornetLogo);
-            if (Const.UseSongCache)
-            {
-                _ = PlaySongTask();
-                _ = CacheSongTask();
-            }
 
             // Load Databases
             {
@@ -86,6 +89,18 @@ namespace MauiMediaPlayer
                 LogDebug("=== /Database Loading Complete =============================== ===");
             }
 
+            // Load Advanced Search Help List
+            Task.Run(async () =>
+            {
+                while (AdvancedSearchHelpList.Height < 1) await Task.Delay(25);
+                Application.Current.Dispatcher.Dispatch(() =>
+                {
+                    List<string> list = new List<string>();
+                    list = AdvancedSearchParseClass.ShortHelpText();
+                    AdvancedSearchHelpList.ItemsSource = list;
+                });
+            });
+
             // Search for More Music
             Task.Run(async () =>
             {
@@ -94,7 +109,7 @@ namespace MauiMediaPlayer
                 await SearchUserProfileMusic(_progress);
                 await UpdateAllSongsPlaylist();
 
-                LogDebug("Database Dispatch Start.");
+                LogDebug("Database Dispatch Start");
                 var _playlists = _dbContext.Playlists.ToList();
                 _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 this.Dispatcher.Dispatch(() =>
@@ -106,13 +121,13 @@ namespace MauiMediaPlayer
                                TestSonglist.ItemsSource = _songList);
                 await Task.Delay(1);
                 LogDebug("=== /Database Dispatch Complete =============================== ===");
-                await Task.Delay(3000);
+                await Task.Delay(1000);
                 LogMsg("Startup Complete");
             });
 
+        }  // /Constructor /Main Page
 
 
-        }  // /Constructor
 
         private void TestPlaylist_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
@@ -230,8 +245,6 @@ namespace MauiMediaPlayer
                 }, TaskCreationOptions.LongRunning).Start();
         }
 
-
-
         private async Task SongCache(Song _song, List<Song> _list, int _index)
         {
             // Cursory, Minimal, Check the Request
@@ -274,8 +287,6 @@ namespace MauiMediaPlayer
             // Signal the SongPlayTask
             _playSongStack.Push(_song);
         }
-
-
 
         private async Task<string> CopySongToCache(string _source, string _destination, long _fileSize, CancellationToken _token)
         {
@@ -333,8 +344,6 @@ namespace MauiMediaPlayer
             return _source;
         }
 
-
-
         private async Task CacheSongTask()
         {
             LogMsg($"SongCacheTask is Starting");
@@ -344,7 +353,7 @@ namespace MauiMediaPlayer
             var _source = "";
             var _fileName = "";
             var _destination = "";
-            var _cacheCleanDelay = Const.CacheCleanInterval / 10;
+            var _cacheCleanDelay = 0;
             var _songTransferCTS = new CancellationTokenSource();
             var _copyTask = new Task<string>(() => { return null; });
             _copyTask.Start();
@@ -420,15 +429,13 @@ namespace MauiMediaPlayer
                             _file.Delete();
                             _fileCount++;
                         }
-                        LogDebug($"Cleaning Cache: {_fileCount} files removed.");
+                        LogTrace($"Cleaning Cache: {_fileCount} files removed.");
                         _cacheCleanDelay = Const.CacheCleanInterval;
                     }
                     await Task.Delay(Const.ClockTick);
                 }
             }
         }
-
-
 
         private async Task PlaySongTask()
         {
@@ -486,8 +493,6 @@ namespace MauiMediaPlayer
 
         }
 
-
-
         private async Task SecondWindow(Application? app, Image logo)
         {
             LogDebug("Mainpage Creating SecondWindow");
@@ -525,37 +530,6 @@ namespace MauiMediaPlayer
             secondWindow.Title = "AhLog Window";
             app.OpenWindow(secondWindow);
             LogDebug("MainPage SecondWindow Creation Complete");
-        }
-
-        private async void SearchBar_SearchButtonPressed(object sender, EventArgs e)
-        {
-            var _searchBar = (SearchBar)sender;
-            var _searchText = _searchBar.Text.ToLower();
-            var _songList = new List<Song>();
-
-            LogMsg($"Searching: '{_searchText}'");
-            var _dbContext = new PlaylistContext();
-            // {Title} {Artist} {Band} {Album} {Genre}
-            _songList = await _dbContext.Songs.Where(s =>
-                s.Title.ToLower().Contains(_searchText) ||
-                s.Artist.ToLower().Contains(_searchText) ||
-                s.Band.ToLower().Contains(_searchText) ||
-                s.Album.ToLower().Contains(_searchText) ||
-                s.Genre.ToLower().Contains(_searchText))
-                .ToListAsync();
-
-            if (_songList == null) _songList = new List<Song>();
-            _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-            _dbContext.Dispose();
-
-            LogDebug($"Found {_songList.Count} songs.");
-            RandomPersistentLogo(_searchText, _songList.Count);
-            if (_songList.Count > 0)
-                Application.Current.Dispatcher.Dispatch(() =>
-                {
-                    TestSonglist.ItemsSource = _songList;
-                    SearchCount.Text = $"{_songList.Count:n0}";
-                });
         }
 
         private void Shuffle_Clicked(object sender, EventArgs e)
@@ -697,10 +671,11 @@ namespace MauiMediaPlayer
 
         }
 
+        private async void SearchBar_SearchButtonPressed(object sender, EventArgs e) => AdvancedSearchBar_SearchButtonPressed(sender, e);
         private void AdvancedSearchBar_SearchButtonPressed(object sender, EventArgs e)
         {
             var _searchBar = (SearchBar)sender;
-            var _searchText = _searchBar.Text.ToLower();
+            var _searchText = _searchBar.Text;
             if (_searchText == null) _searchText = "";
 
 
@@ -712,52 +687,54 @@ namespace MauiMediaPlayer
             if (SearchAction.SelectedItem == null) _action = "Search";
             else _action = SearchAction.SelectedItem.ToString().ToLower();
 
-            LogMsg($"Advanced:  Search by: '{_by}'   Action: '{_action}'   SearchText: '{_searchText}'");
             var _db = new PlaylistContext();
-
-            // cj - CONVERT everything to CONCRETE LISTS, ***NOT*** IQueryable
-            // IQueryable should be used with caution in Union, Intersect, and Except.  Unless using EmptyOrDefault, and even then, it's still a bit finicky.
-
-            // {Any} {Title} {Artist} {Album} {Band} {Genre}
             List<Song> _currentSet = new List<Song>();
             if (TestSonglist != null && TestSonglist.ItemsSource != null) _currentSet = TestSonglist.ItemsSource.Cast<Song>().ToList();
 
-            List<Song> _selectionSet = new List<Song>();
-            if (_by == "any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_searchText))).ToList(); }
-            if (_by == "any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_searchText))).ToList(); }
-            if (_by == "any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_searchText))).ToList(); }
-            if (_by == "any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_searchText))).ToList(); }
-            if (_by == "any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_searchText))).ToList(); }
-            if (_by == "any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_searchText))).ToList(); }
-            if (!(new string[] { "any", "title", "artist", "album", "band", "genre" }.Contains(_by))) LogError($"Invalid SearchBy: [{_by}]");
+            // Intercept with AdvancedSearchParse 
+            List<Song>? _advancedResult;
+            List<Song> _songList = _currentSet;
+            string? _searchBy = "Any";
+            string? _searchAction = "SEARCH";
 
-            // {Search} {Or (union)} {And (intersection)} {Not (except)}
-            List<Song> _result = new List<Song>();
-            if (_action == "search") { _result = _selectionSet; }
-            else if (_action.StartsWith("or")) _result = _currentSet.UnionBy(_selectionSet, s => s.Id).ToList();
-            // cj - (O.O)!  Why do these not all use the same syntax?!?
-            // var intersect = elements.IntersectBy(elements2.Select(e => e.X), x => x.X);
-            else if (_action.StartsWith("and")) { _result = _currentSet.IntersectBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); } // /cjm 
-            else if (_action.StartsWith("not")) { _result = _currentSet.ExceptBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); }
-            else LogError($"Invalid SearchAction: [{_action}]");
+            // *** Advanced Search Parse ***
+            LogTrace("===");
+            if (AhLog._LoggingLevel.MinimumLevel < Serilog.Events.LogEventLevel.Debug)
+                LogTrace($"Advanced Search by: '{_by}'   Action: '{_action}'   SearchText: '{_searchText}'");
+            else
+                LogMsg($"Search: \"{_searchText}\"");
 
 
-            var _songList = _result.ToList();
-            LogDebug($"CurrentSet: {_currentSet.Count},   SelectionSet: {_selectionSet.Count},   Action: {_action},   Result: {_result.Count}");
-            RandomPersistentLogo(_searchText, _songList.Count);
-            if (_songList.Count > 0)
-                Application.Current.Dispatcher.Dispatch(() =>
+            (_advancedResult, _searchBy, _searchAction) = AdvancedSearchParseClass.AdvancedSearchParse(_currentSet, _searchText, _by, _action);
+            if (_advancedResult != null)
+            {
+                _songList = _advancedResult.ToList();
+                if (_searchBy != null) _by = _searchBy;
+                if (_searchAction != null) _action = _searchAction;
+            }
+
+            if (_searchAction != "IS" && _advancedResult != null) RandomPersistentLogo(_searchText, _songList.Count);
+
+            Application.Current.Dispatcher.Dispatch(() =>
+            {
+                if (_songList.Count > 0)
                 {
                     TestSonglist.ItemsSource = _songList;
                     SearchCount.Text = $"{_songList.Count:n0}";
-                });
+                }
+                Searchby.SelectedItem = _searchBy;
+                SearchAction.SelectedItem = _searchAction;
+                var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";      // cjm
+                if (_by != null && _by != "Any") Placeholder = $"SearchBy: {_searchBy}     -     SearchAction: {_searchAction}";
+                _searchBar.Placeholder = Placeholder;
+            });
         }
 
         private void FilePathDebug_SizeChanged(object sender, EventArgs e)
         {
             var _label = (Label)sender;
 
-            // cjm - This is working, but there HAS to be another better way!
+            // cj - This is working, but there HAS to be another better way!
             //_label.SetBinding(Label.TextProperty, new Binding("PathName", source: _label.BindingContext, converter: new HeadTruncateConverter()));  // This might be correct Syntax?!?  Co-Pilot suggested it.
             FilePathWindowWidth = int.Max((int)TestSonglist.Width, Const.AppMinimumWidth);
             var tmp = _label.BindingContext;

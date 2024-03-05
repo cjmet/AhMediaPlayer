@@ -56,7 +56,7 @@ namespace MauiMediaPlayer.ProgramLogic
                     }
                     else
                     {
-                        var _songCount = new PlaylistContext().Songs.Count();   // cjm ... kill this when we get a chance to refactor
+                        var _songCount = new PlaylistContext().Songs.Count();   // cj ... kill this when we get a chance to refactor
                         if (_songCount != lastSongCount)
                         {
                             lastSongCount = _songCount;

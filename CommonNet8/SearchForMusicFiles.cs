@@ -30,7 +30,7 @@ namespace CommonNet8
     }
 
 
-    public static class SearchForMusic
+    public static class SearchForMusicFiles
     {
 
         public static async Task SearchUserProfileMusic(IProgress<string> progress, string SearchPath = "")
@@ -61,7 +61,7 @@ namespace CommonNet8
                     await Task.Delay(1);                    // We need this delay for GUI Responsiveness.  1ms minimum, 10ms on Gb Lan, 40ms is 25fps, 100ms 100mb LAN, 1000ms 10mb LAN
                 }
             }
-            LogMsg("Search for Music Complete.");
+            LogMsg("Search for Music Files Complete.");
             return;
         }
 

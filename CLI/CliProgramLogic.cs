@@ -1,5 +1,5 @@
 ﻿using static AngelHornetLibrary.AhLog;
-using static CommonNet8.SearchForMusic;
+using static CommonNet8.SearchForMusicFiles;
 
 namespace MauiCli
 {

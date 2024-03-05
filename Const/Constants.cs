@@ -11,7 +11,7 @@ namespace AhConfig
 
         public const int CacheSize = 10;
         public const int CacheSizeMax = 400;
-        public const int CacheCleanInterval = 300;  // 5 minutes
+        public const int CacheCleanInterval = 1000;  
 
 
 
@@ -33,9 +33,9 @@ namespace AhConfig
         public const int TimeOutShort = 30;
 
         public const int VRB = 1000;        // display delays for each log level
-        public const int DBG = 1250;
-        public const int INF = 1500;
-        public const int WRN = 10000;
+        public const int DBG = 1500;
+        public const int INF = 3000;
+        public const int WRN = 8000;
         public const int ERR = 12000;
         public const int FTL = 15000;
 

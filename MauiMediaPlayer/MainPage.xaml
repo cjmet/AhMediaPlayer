@@ -44,13 +44,17 @@
 
         <!-- Row 0 -->
         <!--<Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />-->
-        <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalOptions="End"  MaximumHeightRequest="27" ZIndex="0">
+        <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                     VerticalOptions="End"  
+                     MaximumHeightRequest="27" 
+                     ZIndex="0">
             <ListView x:Name="TestPlaylist"  
                       ItemSelected="TestPlaylist_ItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Frame Padding="10,0,10,2"  Margin="13,0,13,0" >
+                            <Frame Padding="10,0,10,0"  
+                                   Margin="13,0,40,0" >
                                 <Grid Padding="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -79,6 +83,27 @@
                 </ListView.ItemTemplate>
             </ListView>
         </ContentView>
+
+
+        <!--... 💾 💽 💻 🗃️ ...-->
+        <Button x:Name="SavePlaylistButton"
+            Text="💾"
+            Scale=".55"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="0,-6,0,-9"
+            Padding="0,-6,0,-6"
+            BorderColor="Blue"
+            Grid.Row="0"
+            Grid.Column="2"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            ZIndex="1"/>
+
+
+
 
         <!-- Row 1 - 🎶 🗃️ 🕵🏻‍♀️ 🐕‍🦺 💻 -->
         <!--// {Title} {Artist} {Band} {Album} {Genre}-->
@@ -117,8 +142,9 @@
             VerticalOptions="Start"
             ZIndex="1"/>
 
-        <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" HorizontalOptions="Center" ZIndex="0" Padding="-10" >
-            <SearchBar
+        <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
+               HorizontalOptions="Center" ZIndex="2" Padding="-10" >
+            <SearchBar x:Name="SearchBarStandard"
                 MinimumWidthRequest="335"
                 HorizontalOptions="Center"
                 VerticalOptions="StartAndExpand"
@@ -129,8 +155,7 @@
                 FontAutoScalingEnabled="True"
                 FontSize="13"
                 Placeholder="Search for a song, artist, band, album, or genre"
-                SearchButtonPressed="SearchBar_SearchButtonPressed"
-                ZIndex="1"/>
+                SearchButtonPressed="SearchBar_SearchButtonPressed"/>
         </Frame>
 
 
@@ -154,17 +179,18 @@
             BackgroundColor="#FFEEEEEE"
             IsVisible="false"        
             Grid.Row="1"
-            Grid.RowSpan="2"
+            Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="10,0,35,40"
             Padding="0"
-            VerticalOptions="Start"
+            VerticalOptions="Fill"
             ZIndex="2">
 
             <Grid Padding="0" Margin="0" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -172,29 +198,37 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <SearchBar x:Name="AdvancedSearchBar"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="4"
-                    Grid.Row="1"
-                    Grid.RowSpan="1"
-                    MinimumWidthRequest="355"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    VerticalTextAlignment="Center"
-                    IsTextPredictionEnabled="True"
-                    IsSpellCheckEnabled="True"
-                    FontAutoScalingEnabled="True"
-                    FontSize="13"
-                    SearchButtonPressed="AdvancedSearchBar_SearchButtonPressed"
-                    BackgroundColor="White"
+                <Frame Grid.Column="0"
+                       Grid.ColumnSpan="4" 
+                       Grid.Row="1"
+                       Grid.RowSpan="1"
+                       CornerRadius="5" 
+                       HorizontalOptions="Center"  
+                       Padding="0,-10" 
+                       ZIndex="4">
+                    <SearchBar x:Name="AdvancedSearchBar"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Grid.Row="1"
+                        Grid.RowSpan="1"
+                        MinimumWidthRequest="355"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        IsTextPredictionEnabled="True"
+                        IsSpellCheckEnabled="True"
+                        FontAutoScalingEnabled="True"
+                        FontSize="13"
+                        SearchButtonPressed="AdvancedSearchBar_SearchButtonPressed"
+                        BackgroundColor="White"
                     
-                    Placeholder="Advanced Search"
-                    ZIndex="4"/>
+                        Placeholder="Advanced Search"
+                        ZIndex="4"/>
+                </Frame>
 
                 <Picker x:Name="Searchby"
                     Grid.Column="0"
-                    Title="Search by"
                     BackgroundColor="LightGray"
                     WidthRequest="125"
                     Margin="0,-25,-30,-25"
@@ -211,13 +245,13 @@
                             <x:String>Album</x:String>
                             <x:String>Band</x:String>
                             <x:String>Genre</x:String>
+                            <x:String>Path</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
 
                 <Picker x:Name="SearchAction"
                     Grid.Column="1"
-                    Title="Action"
                     BackgroundColor="LightGray"
                     Margin="-40,-25,0,-25"
                     WidthRequest="270"
@@ -228,15 +262,30 @@
                     ZIndex="3">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}" >
-                            <x:String>Search</x:String>
-                            <x:String>Or (union)</x:String>
-                            <x:String>And (intersection)</x:String>
-                            <x:String>Not (except)</x:String>
+                            <x:String>SEARCH</x:String>
+                            <x:String>IS</x:String>
+                            <x:String>OR</x:String>
+                            <x:String>AND</x:String>
+                            <x:String>NOT</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
 
-
+                <CollectionView x:Name="AdvancedSearchHelpList"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="3"
+                    >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding}"
+                               Padding="5,0"
+                               FontFamily="Consolas"
+                               FontSize="11"
+                               VerticalOptions="End" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
 
             </Grid>

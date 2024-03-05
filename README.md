@@ -53,6 +53,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 ## Current Project Questions
 1. &nbsp; Class: API Authentication and Validation
+---
 1. &nbsp; There HAS to be a better way to cause a binding value to update on an event triggering?
     ```
     var tmp = _label.BindingContext;
@@ -89,7 +90,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 Create a music library Web API and simple Media Player
 * ### To-Do List
 - [ ] More API work
-- [ ] More Fluent Advanced Search with Parsing, to potentially completely replace both searches at once.
+
 ---
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
 - [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
@@ -125,8 +126,7 @@ Create a music library Web API and simple Media Player
   - [ ] Deleting Playlists GUI (Delete)
   - [x] Basic Search and Filter functionality GUI
   - [x] Advanced Search and Filter First Pass
-  - [ ] Advanced Search and Filter Second Pass
-  - [ ] Add Automatic Playlists based on Meta Data GUI
+  - [x] Advanced Search and Filter Second Pass
 
   
 
@@ -151,6 +151,7 @@ Create a music library Web API and simple Media Player
     - [x] Read
     - [ ] Update
     - [ ] Delete
+- [x] More Fluent Advanced Search with Parsing, to replace both Search and Advanced Search.
 
 
    
@@ -190,8 +191,8 @@ Create a music library Web API and simple Media Player
   * Created an async background task to scan local and remote SMB drives for media files, using callbacks to deliver updates asynchronously.
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
-- [ ] API
-  * Not yet implemented
+- [x] API
+  * Simple Endpoint Implementation
 - [ ] CRUD API
   * Not yet implemented
 - [x] Multiple Data Tables
@@ -201,7 +202,7 @@ Create a music library Web API and simple Media Player
 - [x] Regex
   * Regex to clean up and convert Title to AlphaTitle to sort by
 - [ ] Unit Testing
-  * Not yet implemented
+  * Wish List Item
 - [ ] ~~SOLID Principles~~
   * I'll do a better job of this in the future, and as I have time to refactor and clean things up.  I was too entirely clueless and stumbling around in the dark to properly implement a good SOLID plan.
 - [ ] ~~SQL Queries~~
@@ -212,6 +213,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Advanced Search, Version 2, with simple search parsing and filtering enabled.
 * Resized Event is _"working"_
 * There HAS to be a better way to cause a binding value to update on an event triggering?
     ```

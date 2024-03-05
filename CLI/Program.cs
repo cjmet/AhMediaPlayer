@@ -4,7 +4,7 @@
 
 using AngelHornetLibrary;
 using AngelHornetLibrary.CLI;
-using static CommonNet8.SearchForMusic;
+using static CommonNet8.SearchForMusicFiles;
 using static CommonNet8.AllSongsPlaylist;
 using static MauiCli.DbProgramLogic;
 using CommonNet8;
