@@ -39,9 +39,6 @@ namespace DataLibrary
                  );
 
             // Lets trying setting it separately ... That didn't work either.  
-            //_results += await _context.Playlists.Include(p => p.Songs).Where(p => p.Id == Id).ExecuteUpdateAsync(setters => setters
-            //    .SetProperty(p => p.Songs, playlist.Songs)
-
             // Lets try setting it directly, synchronously ... That worked. 
             var _playlist = await _context.Playlists.Where(p => p.Id == Id).Include(p => p.Songs).FirstOrDefaultAsync();
             _playlist.Songs = playlist.Songs;

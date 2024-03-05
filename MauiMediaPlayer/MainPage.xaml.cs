@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using AhConfig;
+using AngelHornetLibrary;
 using CommonNet8;
+using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Maui.Views;
 using DataLibrary;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
@@ -10,12 +11,7 @@ using static AngelHornetLibrary.AhLog;
 using static CommonNet8.AllSongsPlaylist;
 using static CommonNet8.SearchForMusicFiles;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using AhConfig;
-using CommunityToolkit.Maui.Storage;
-using SQLitePCL;
-using Microsoft.VisualBasic;
-using Microsoft.Maui;
-using AngelHornetLibrary;
+using static DataLibrary.DataLibraryAdvancedSearch;
 
 
 
@@ -96,7 +92,7 @@ namespace MauiMediaPlayer
                 Application.Current.Dispatcher.Dispatch(() =>
                 {
                     List<string> list = new List<string>();
-                    list = AdvancedSearchParseClass.ShortHelpText();
+                    list = CommonAdvancedSearch.ShortHelpText();
                     AdvancedSearchHelpList.ItemsSource = list;
                 });
             });
@@ -705,7 +701,8 @@ namespace MauiMediaPlayer
                 LogMsg($"Search: \"{_searchText}\"");
 
 
-            (_advancedResult, _searchBy, _searchAction) = AdvancedSearchParseClass.AdvancedSearchParse(_currentSet, _searchText, _by, _action);
+            //(_advancedResult, _searchBy, _searchAction) = CommonAdvancedSearch.AdvancedSearchParse(_currentSet, _searchText, _by, _action);  // cjm 
+            (_advancedResult, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchText, _by, _action);
             if (_advancedResult != null)
             {
                 _songList = _advancedResult.ToList();

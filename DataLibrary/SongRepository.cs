@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using static AngelHornetLibrary.AhLog;
+
 
 namespace DataLibrary
 {
@@ -12,22 +14,24 @@ namespace DataLibrary
             _context = context;
         }
 
-        public async Task AddSongAsync(Song song)
+        public async Task<int> AddSongAsync(Song song)
         {
             await _context.Songs.AddAsync(song);
-            _context.SaveChanges();
+            return _context.SaveChanges();
         }
-        public async Task DeleteSongAsync(int songId)
+        public async Task<int> DeleteSongAsync(int songId)
         {
+            int result = 0;
             Song song = await GetSongByIdAsync(songId);
             if (song != null)
             {
-                await _context.Songs.Where(s => s.Id == songId).ExecuteDeleteAsync();
+                result = await _context.Songs.Where(s => s.Id == songId).ExecuteDeleteAsync();
             }
+            return result;
         }
-        public async Task UpdateSongAsync(Song song)
+        public async Task<int> UpdateSongAsync(int Id, Song song)
         {
-            await _context.Songs.Where(s => s.Id == song.Id).ExecuteUpdateAsync(setters => setters
+            var results = await _context.Songs.Where(s => s.Id == Id).ExecuteUpdateAsync(setters => setters
                  .SetProperty(s => s.PathName, song.PathName)
                  .SetProperty(s => s.Title, song.Title)
                  .SetProperty(s => s.AlphaTitle, song.AlphaTitle)
@@ -39,6 +43,7 @@ namespace DataLibrary
                  .SetProperty(s => s.Track, song.Track)
                  .SetProperty(s => s.Length, song.Length)
                  );
+            return results;
         }
         public async Task<Song?> GetSongByIdAsync(int songId)
         {
@@ -56,18 +61,52 @@ namespace DataLibrary
             {
                 search = search.ToLower();
                 return await _context.Songs.Where( s => 
-                s.Title.ToLower().Contains(search) ||
-                s.Artist.ToLower().Contains(search) ||
-                s.Album.ToLower().Contains(search) ||
-                s.Band.ToLower().Contains(search) ||
-                s.Genre.ToLower().Contains(search))
+                s.Title.ToLower().Contains(search)      ||
+                s.Artist.ToLower().Contains(search)     ||
+                s.Album.ToLower().Contains(search)      ||
+                s.Band.ToLower().Contains(search)       ||
+                s.Genre.ToLower().Contains(search)      || 
+                s.PathName.ToLower().Contains(search)   )  
                 .OrderBy(s => s.AlphaTitle).ToListAsync();
             }
             return new List<Song>();
         }
+        public async Task<List<Song>> SearchQuery(string _by, string _search)
+        {
+            _by = _by.ToLower();
+            _by = _by.Substring(0, 1).ToUpper() + _by.Substring(1);  // Pascal Case
+            _search = _search.ToLower();
+
+            var _db = _context;
+            List<Song> _selectionSet = new List<Song>();
+            if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_search))).ToList(); }
+            if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search))).ToList(); }
+            if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_search))).ToList(); }
+            if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_search))).ToList(); }
+            if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search))).ToList(); }
+            if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search))).ToList(); }
+            if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
+
+            return _selectionSet.OrderBy(s => s.AlphaTitle).ToList();
+        }
+        
+        // Tuples are as much trouble as cats!
+        public async Task<(List<Song>, string, string)> AdvancedSearchRepository(List<Song> _currentSet, string _searchString, string _searchBy = "Any", string _searchAction = "SEARCH")
+        {
+            List<Song> _results = new List<Song>();
+            if (_currentSet == null) _currentSet = new List<Song>();
+            if (_searchString == null) _searchString = "";
+            if (_searchBy == null) _searchBy = "Any";
+            if (_searchAction == null) _searchAction = "SEARCH";
+            
+            (_results, _searchBy, _searchAction) = DataLibraryAdvancedSearch.AdvancedSearch(_currentSet, _searchString, _searchBy, _searchAction);
+            
+            if (_results == null) _results = new List<Song>();
+            if (_searchBy == null) _searchBy = "Any";
+            if (_searchAction == null) _searchAction = "SEARCH";
+
+            return (_results, _searchBy, _searchAction);
+        }
     }
-
-
-
 
 }

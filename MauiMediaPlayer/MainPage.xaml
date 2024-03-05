@@ -49,12 +49,14 @@
                      MaximumHeightRequest="27" 
                      ZIndex="0">
             <ListView x:Name="TestPlaylist"  
+                      VerticalOptions="End"
                       ItemSelected="TestPlaylist_ItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Frame Padding="10,0,10,0"  
-                                   Margin="13,0,40,0" >
+                            <Frame Padding="10,0"  
+                                   VerticalOptions="End"
+                                   Margin="13,2,40,2" >
                                 <Grid Padding="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -88,12 +90,12 @@
         <!--... 💾 💽 💻 🗃️ ...-->
         <Button x:Name="SavePlaylistButton"
             Text="💾"
-            Scale=".55"
+            Scale=".50"
             TextColor="Black"
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="0,-6,0,-9"
+            Margin="0,-6,0,-6"
             Padding="0,-6,0,-6"
             BorderColor="Blue"
             Grid.Row="0"

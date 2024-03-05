@@ -1,5 +1,9 @@
-﻿using API;
+﻿using AhConfig;
+using AngelHornetLibrary;
+using API;
 using DataLibrary;
+using static AngelHornetLibrary.AhLog;
+
 
 namespace API
 {
@@ -7,6 +11,9 @@ namespace API
     {
         public static void Main(string[] args)
         {
+            AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel);
+            LogMsg("API Started");
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

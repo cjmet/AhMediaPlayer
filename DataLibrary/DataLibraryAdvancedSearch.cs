@@ -1,17 +1,15 @@
 ﻿using AngelHornetLibrary;
-using DataLibrary;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System;
 using System.Text.RegularExpressions;
 using static AngelHornetLibrary.AhLog;
 
-namespace CommonNet8
+namespace DataLibrary
+
 {
-    public static class AdvancedSearchParseClass
+    public static class DataLibraryAdvancedSearch
     {
         public static List<string> ShortHelpText()
         {
-            return 
+            return
             [
                 "Simple Search:",
                 "   Simple_Search_Text",
@@ -22,8 +20,8 @@ namespace CommonNet8
                 "Properties: Title, Artist, Album, Genre, Path",
                 "Examples:",
                 "   Springsteen",
-                "   Springsteen OR Springstein",
-                "   IS Any Search Soundtrack IS Genre AND Country",
+                "   IS Any SEARCH Springst OR Petty OR Seger",
+                "   IS Any SEARCH Soundtrack IS Genre AND Country",
                 "   IS Any ?? Soundtrack IS Genre && Country",
                 "   IS Genre SEARCH Soft Rock OR Heavy Metal",
                 "   == Genre ?? Soft Rock || Heavy Metal",
@@ -59,7 +57,7 @@ namespace CommonNet8
         // "IS Genre ?? Soft Rock OR Heavy Metal == ARTIST NOT Metallica"
         // Will search Genre for "Soft Rock" or "Heavy Metal" and then search Artist for "Metallica" and then remove those from the set.
         // Triple Tuple Trouble!
-        public static (List<Song>?, string?, string?) AdvancedSearchParse(List<Song> _currentSet, string _searchString, string _searchBy = "Any", string _searchAction = "SEARCH")
+        public static (List<Song>?, string?, string?) AdvancedSearch(List<Song> _currentSet, string _searchString, string _searchBy = "Any", string _searchAction = "SEARCH")
         {
             Regex _regexSearchOperators = new Regex(@"^\s*(AND|OR|NOT|IS|SEARCH|&&|\|\||!!|==|\?\?)\s(.*)$");
             Regex _regexSearchStrings = new Regex(@"\s+(AND|OR|NOT|IS|SEARCH|&&|\|\||!!|==|\?\?)\s+(\w+)");
@@ -140,11 +138,11 @@ namespace CommonNet8
                 LogMsg($"{_opLog,-8} {_byLog,-8} [{_search}]");   // <=== Primary MSG for Info and Debug ***
 
             // Triple Tuple Trouble!
-            _searchAction = _operator1;  
+            _searchAction = _operator1;
             (_currentSet, _searchBy) = ExecuteSearchCommand(_currentSet, _operator1, _search, _searchBy);
 
             if (_searchString.Length > 0)
-                (_currentSet, _searchBy, _searchAction) = AdvancedSearchParse(_currentSet, _searchString, _searchBy, _searchAction);
+                (_currentSet, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchString, _searchBy, _searchAction);
 
             LogTrace($"Returning:   " +
                 $"CurrentSet: {(_currentSet != null ? _currentSet.Count : "null")},   " +
@@ -160,20 +158,48 @@ namespace CommonNet8
             // cj - CONVERT everything to CONCRETE LISTS, ***NOT*** IQueryable
             // IQueryable should be used with caution in Union, Intersect, and Except.  Unless using EmptyOrDefault, and even then, it's still a bit finicky.
 
-            // {Any} {Title} {Artist} {Album} {Band} {Genre}
-            var _db = new PlaylistContext();
             var _by = _searchBy.ToLower();
-            // Pascal Case
-            _by = _by.Substring(0, 1).ToUpper() + _by.Substring(1);
+            _by = _by.Substring(0, 1).ToUpper() + _by.Substring(1);  // Pascal Case
             _search = _search.ToLower();
-            List<Song> _selectionSet = new List<Song>();
-            if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search))).ToList(); }
+
+
+
+
+
+            // === ====================================================  // cjm
+            // vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            // {Any} {Title} {Artist} {Album} {Band} {Genre}
+            // ---
+            //var _db = new PlaylistContext();
+            //List<Song> _selectionSet = new List<Song>();
+            //if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_search))).ToList(); }
+            //if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search))).ToList(); }
+            //if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_search))).ToList(); }
+            //if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_search))).ToList(); }
+            //if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search))).ToList(); }
+            //if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search))).ToList(); }
+            //if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
+            // ---
+            // ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            // === ====================================================
+
+            // === ====================================================
+            // vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            // {Any} {Title} {Artist} {Album} {Band} {Genre}
+            // ---
+            var _repository = (ISongRepository)new SongRepository(new PlaylistContext());
+            List<Song> _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm cjm2
             if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
+            LogTrace($"SelectionSet: {_selectionSet.Count}");
+            // ---
+            // ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            // === ====================================================
+
+
+
+
+
+
 
             // {Search} {Or (union)} {And (intersection)} {Not (except)}
             var _action = _operator;
@@ -182,7 +208,7 @@ namespace CommonNet8
             else if (_action == "OR") _result = _currentSet.UnionBy(_selectionSet, s => s.Id).ToList();
             // cj - (O.O)!  Why do these not all use the same syntax?!?
             // var intersect = elements.IntersectBy(elements2.Select(e => e.X), x => x.X);
-            else if (_action == "AND") { _result = _currentSet.IntersectBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); } 
+            else if (_action == "AND") { _result = _currentSet.IntersectBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); }
             else if (_action == "NOT") { _result = _currentSet.ExceptBy(_selectionSet.Select(s => s.Id), c => c.Id).ToList(); }
             else if (_action == "IS")
             {

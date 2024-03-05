@@ -1,0 +1,5 @@
+Jackson Brodie Expanded Playlist:
+	IS Path SEARCH Jackson Brodie IS Artist OR Lucinda Williams OR First Aid Kit OR Lucinda Williams OR Iris DeMent OR Lori McKenna OR Cowboy Junkies OR Eliza Gilkyson OR Gillian Welch OR Kris DelmHorst OR Lynn Miles OR Madison Violet OR Mary Gauthier OR Nanci Griffith OR Sarah McLachlan
+
+True Detective Expanded Playlist:
+	IS Album SEARCH True Detective IS Artist OR Leonard Cohen OR Handsome OR Lera Lynn OR Nick Cave OR Warren Ellis OR John Paul White OR Alexandra Savior OR Cassandra Wilson OR Bob Dylan OR Bonnie "Prince" Billy OR Father John Misty OR Istwa IS Title NOT Beethoven IS Album NOT Casino de Montreux NOT Live in Laugardal IS Any NOT Live In NOT Live At

@@ -4,7 +4,7 @@
 #### This project is for Educational purposes.
 The goal is to create a simple Media Player, with Media Library and WebAPI using .Net MAUI.  
 
-CLI (and later API and Web) application using Entity Framework Core.  The application will have a simple system to Play MP3s, ... and maybe Add, Update, and Delete Songs and Playlists.  This is a learning experience.
+The application will have a simple system to Play MP3s, ... and hopefully Add, Update, and Delete Songs and Playlists.  In addition to the MAui App, I'd like to add API, CLI, and a Web application.  This is a learning experience.
 
 
 ### See Also: 
@@ -12,7 +12,6 @@ CLI (and later API and Web) application using Entity Framework Core.  The applic
   * https://dotnetpodcasts.azurewebsites.net/
   * https://github.com/microsoft/dotnet-podcasts
 
-<br>
 
 ### Code Kentucky
 Code Kentucky is a software development boot camp in Louisville, Kentucky.  The course is designed to teach the fundamentals of software development and to prepare students for a career in the field.  The course is taught by experienced professionals in the field.
@@ -24,23 +23,24 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Instructions
-* Requires: Visual Studio 2022, C#12, .Net 8, .Net MAUI
+* Requires: Updated Visual Studio 2022, C#12, .Net 8, .Net MAUI
 * Run the App First.  Due to windows app virtualization of the %AppData% file-system, as well as other directories.
 * You'll Also need: 
   * https://github.com/cjmet/AngelHornetLibrary
 * ...
 
-<br>
 
 ## Known Issues
-* Use the latest update of Visual Studio 2022, C#12, .Net 8, and .Net MAUI
-* Load the Maui App first, this will help with making sure the semi-random virtualized directories can be found by the other projects.
-  * Maui apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
+* Maui apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
+  * Since I'm not officially publishing, I have to "guess" where this directory will end up.
 * The first time you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a LAN NAS, and Hours for a WAN NAS.
-* GUI responsiveness suffers to SMB WAN Operations.  
+  * This scan will ***NOT*** follow reparse points.  This may cause it to miss some redirected paths, particularly with Onedrive.  If that happens you can use the manual scan button.
+* Swagger can only load about 1000 songs, any more and it locks up.  Use Postman if you want to test a larger query.
+* * GUI responsiveness suffers to SMB WAN Operations.  
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
   * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely solved the issue.
+
 
 ## Suggestions
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
@@ -53,6 +53,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 ## Current Project Questions
 1. &nbsp; Class: API Authentication and Validation
+1. &nbsp; The Sync / Async Task buried in the middle of the converted Advanced Search inside DataLibrary.  I need to learn how to comprehend and fix this particular pattern.
 ---
 1. &nbsp; There HAS to be a better way to cause a binding value to update on an event triggering?
     ```
@@ -60,11 +61,9 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
     _label.BindingContext = null;
     _label.BindingContext = tmp;
     ```
-1. 1. &nbsp; IQueryable and Union, Intersect, Except?
+1. &nbsp; IQueryable and Union, Intersect, Except?
 1. &nbsp; Predicate Builder for search and filter.
-    1. &nbsp;  var \_songs = \_context.Songs.Where(s => s.___\{TypeVariable\}___.Contains(_searchText)).ToList(); ???
-1. &nbsp; ExecuteUpdate on linked Songs item in Playlists?  See code.
-1. &nbsp; Program Logic? of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the API, Interface, or Repository? ... I Feel like this should be in the repository so that incoming API calls can't Fubar a database?  Deleting from All Songs would also be different, in that it will just be added back next time it scans.... shouldn't we mark it deleted and hide it instead?  Or is this getting too much into the program logic arena?  And should go into a shared program logic?  But then how do you add that to an API, such that the raw API doesn't fubar working Db Systems and other shared applications?
+1. &nbsp; ExecuteUpdate on linked Songs item in Playlists? 
 ---
 1. &nbsp; What is the correct place to put the second window's initialization code?
 1. &ensp; What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
@@ -85,19 +84,16 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 <br>
 
-
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
 - [ ] More API work
-
 ---
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
 - [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
 - [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
 - [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
 - [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
-
 
 
 * ### Music Player
@@ -127,7 +123,6 @@ Create a music library Web API and simple Media Player
   - [x] Basic Search and Filter functionality GUI
   - [x] Advanced Search and Filter First Pass
   - [x] Advanced Search and Filter Second Pass
-
   
 
 * ### Common Library 
@@ -153,7 +148,6 @@ Create a music library Web API and simple Media Player
     - [ ] Delete
 - [x] More Fluent Advanced Search with Parsing, to replace both Search and Advanced Search.
 
-
    
 * ### Data Library
 - [x] Store in SQLite database
@@ -170,21 +164,19 @@ Create a music library Web API and simple Media Player
 - [ ] Implement the Interfaces and Repository Pattern.
 
 
-
 * ### Music Library Web API
 - [x] Implement the Interfaces and Repository Pattern.
 - [x] Add an API Project to the solution
-- [ ] Develop basic API to match basic functionality of Music Library
+- [x] Develop basic API to match basic functionality of Music Library
   - [x] Basic Playlist API
-  - [ ] Basic Song API
-  - [ ] Basic CRUD API
+  - [x] Basic Song API
+  - [x] Basic CRUD API  (Songlist 1 is partially restricted, for internal use.)
 - [ ] Playlist Validation
 - [ ] Song Validation
 - [ ] Orphaned Songs from Playlist API
-- [ ] Program Logic of Locking Playlist 1 as internal "All Songs" Playlist"?  Does this go in the Program Logic, API, Interface, or Repository?
+- [x] API Locking Playlist 1 as internal "All Songs" Playlist". This is only locked in the API.
 
 <br>
-
 
 ## Project Requirements (Pick 3 or more)
 - [x] Async Task
@@ -192,15 +184,16 @@ Create a music library Web API and simple Media Player
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [x] API
-  * Simple Endpoint Implementation
-- [ ] CRUD API
-  * Not yet implemented
+  * Very Simple Default Endpoint Implementation, converted to Async and Repository Pattern.  I did add Advanced Search to the Song API, but it's hard to know where to go from there without a target for the API.
+- [x] CRUD API
+  * Very Simple Default Endpoint Implementation, converted to Async and Repository Pattern.
 - [x] Multiple Data Tables
   * modelBuilder.Entity<Song>().HasMany(s => s.Playlists).WithMany(p => p.Songs);
 - [x] Logging of Errors and Debug Info.
   * AhLog() class and Serilog
 - [x] Regex
   * Regex to clean up and convert Title to AlphaTitle to sort by
+  * Regex in the Advanced Search
 - [ ] Unit Testing
   * Wish List Item
 - [ ] ~~SOLID Principles~~
@@ -213,6 +206,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Worked on API.  Added searches to the Song API.  Converted Advanced Search to DataLibrary and Repository Pattern.  Turns out that's where it should have been in the first place, instead of common.
 * Advanced Search, Version 2, with simple search parsing and filtering enabled.
 * Resized Event is _"working"_
 * There HAS to be a better way to cause a binding value to update on an event triggering?
