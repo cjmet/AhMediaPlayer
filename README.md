@@ -206,6 +206,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Experimental Half-Baked Alpha Authentication added to the API.  This is a very basic and incomplete implementation. 
 * Worked on API.  Added searches to the Song API.  Converted Advanced Search to DataLibrary and Repository Pattern.  Turns out that's where it should have been in the first place, instead of common.
 * Advanced Search, Version 2, with simple search parsing and filtering enabled.
 * Resized Event is _"working"_
