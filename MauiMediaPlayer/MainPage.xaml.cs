@@ -54,13 +54,13 @@ namespace MauiMediaPlayer
                 _ = CacheSongTask();
             }
 
-            if (Debugger.IsAttached)
-            {
-                // Hack to space stuff down below the debug toolbar.  I know we can collapse it, but it's still in the way even then.
-                var debugSpacer = new Label { Text = "Debug Toolbar Spacer ", HeightRequest = 48, HorizontalOptions = LayoutOptions.Center };
-                MainGrid.Children.Add(debugSpacer);
-                Grid.SetColumnSpan(debugSpacer, 2);
-            }
+            //if (Debugger.IsAttached)
+            //{
+            //    // Hack to space stuff down below the debug toolbar.  I know we can collapse it, but it's still in the way even then.
+            //    var debugSpacer = new Label { Text = "Debug Toolbar Spacer ", HeightRequest = 48, HorizontalOptions = LayoutOptions.Center };
+            //    MainGrid.Children.Add(debugSpacer);
+            //    Grid.SetColumnSpan(debugSpacer, 2);
+            //}
 
             // I went to a lot of trouble to create this, and now after input from others I'm going to make it permanent instead of a DEBUG_ONLY feature.
             // Heinous Hack-Stockings!
@@ -132,6 +132,7 @@ namespace MauiMediaPlayer
             var _listView = (ListView)sender;
             _listView.Focus();
 
+            SetEditBarState();
             if (_playList != null)
             {
                 LogMsg($"Playlist Selected: {_playList.Id}   {_playList.Name}   {_playList.Description}");
@@ -192,9 +193,8 @@ namespace MauiMediaPlayer
             this.Dispatcher.Dispatch(() =>
             {
                 TestSonglist.ItemsSource = _songList;
-                TestSonglist.SelectedItem = _songList.FirstOrDefault();
+                //TestSonglist.SelectedItem = _songList.FirstOrDefault();   // changed my mind on this
             });
-
         }
 
         private void PlaySong(Song _song, String _cachedPath)
@@ -659,6 +659,7 @@ namespace MauiMediaPlayer
             });
             else Application.Current.Dispatcher.Dispatch(() =>
             {
+                SetEditBarState();
                 AdvandedSearchFrame.IsVisible = true;
                 MenuBox.BackgroundColor = Color.Parse("LightBlue");
                 Searchby.SelectedIndex = 0;
@@ -666,7 +667,28 @@ namespace MauiMediaPlayer
             });
 
         }
-
+        private void SetEditBarState()
+        {
+            Playlist? _playlist = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlist == null || _playlist.Id == 1) Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SavePlaylistGui.Opacity = 0.25;
+                SavePlaylistGui.IsEnabled = false;
+                DeletePlaylistGui.Opacity = 0.25;
+                DeletePlaylistGui.IsEnabled = false;
+                EditPlaylistGui.Opacity = 0.25;
+                EditPlaylistGui.IsEnabled = false;
+            });
+            else if (_playlist.Id > 1) Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SavePlaylistGui.Opacity = 1;
+                SavePlaylistGui.IsEnabled = true;
+                DeletePlaylistGui.Opacity = 1;
+                DeletePlaylistGui.IsEnabled = true;
+                EditPlaylistGui.Opacity = 1;
+                EditPlaylistGui.IsEnabled = true;
+            });
+        }
         private async void SearchBar_SearchButtonPressed(object sender, EventArgs e) => AdvancedSearchBar_SearchButtonPressed(sender, e);
         private void AdvancedSearchBar_SearchButtonPressed(object sender, EventArgs e)
         {

@@ -45,21 +45,23 @@
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
 
-        <!-- Row 0 -->
+        <!-- Row 0 ▲ ▼ -->
         <!--<Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />-->
         <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                      VerticalOptions="End"  
-                     MaximumHeightRequest="30" 
-                     ZIndex="0">
-            <ListView x:Name="TestPlaylist"  
+                     MaximumHeightRequest="50" 
+                     ZIndex="1">
+            <ListView x:Name="TestPlaylist"
+                      Margin="40,0"                     
                       VerticalOptions="End"
+                      VerticalScrollBarVisibility="Always"
                       ItemSelected="TestPlaylist_ItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Frame Padding="10,0"  
-                                   VerticalOptions="End"
-                                   Margin="40,2,40,2" >
+                            <Frame Padding="10,0"
+                                   Margin="0,0,10,0"
+                                   VerticalOptions="End" >
                                 <Grid Padding="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -68,14 +70,14 @@
                                     <Label Text="{Binding Name}"  
                                           Style="{StaticResource NormalText}"
                                           Grid.Column="0"
-                                          HorizontalOptions="Fill"
+                                          HorizontalOptions="StartAndExpand"
                                           LineBreakMode="TailTruncation"
                                           FontSize="Micro"
                                           FontAttributes="Bold" />
                                     <Label Text="{Binding Description}"   
                                           Style="{StaticResource NormalText}" 
                                           Grid.Column="1"
-                                          HorizontalOptions="Fill"
+                                          HorizontalOptions="EndAndExpand"
                                           Padding="0,2"
                                           LineBreakMode="TailTruncation"                                               
                                           FontSize="Caption"/>
@@ -90,8 +92,32 @@
             </ListView>
         </ContentView>
 
+        <!-- ▲ ▼ -->
+        <Label 
+            Text="▲"
+            FontSize="10"
+            IsEnabled="False"
+            Opacity=".66"
+            Grid.Column="2"
+            HorizontalOptions="End"
+            VerticalOptions="Start"
+            Margin="0,1,42,0"
+            ZIndex="0"/>
+    
+        <Label 
+            Text="▼"
+            FontSize="10"
+            IsEnabled="False"
+            Opacity=".66"
+            Grid.Column="2"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="0,1,42,0"
+            ZIndex="0"/>
+    
+
         <!--... 💾 💽 💻 🗃️ ⚙️ ... Settings and Gear ...-->
-        <Button x:Name="SavePlaylistButton"
+        <Button x:Name="SettingsGearButton"
             Text="⚙️"
             Scale=".65"
             TextColor="Black"
@@ -107,8 +133,8 @@
             VerticalOptions="End"
             ZIndex="1"/>
 
-        <!-- 🎶 🗃️ 🕵🏻‍♀️ 🐕‍🦺 💻 -->
-        <!--// {Title} {Artist} {Band} {Album} {Genre}-->
+        <!-- 🕵🏻‍♀️    🎶 🗃️ 🐕‍🦺 💻 -->
+        <!--// Advanced Search and Playlist Edit Button -->
         <Button x:Name="MenuBox"
             Text="🕵🏻‍♀"
             Scale=".7"
@@ -365,7 +391,7 @@
                             ZIndex="3"/>
 
                         <Button x:Name="SavePlaylistGui"
-                            Grid.Column="2"
+                            Grid.Column="3"
                             Text="💾Save"
                             Scale="1"
                             TextColor="Black"
@@ -381,7 +407,7 @@
                             ZIndex="3"/>
 
                         <Button x:Name="SaveAsPlaylistGui"
-                            Grid.Column="3"
+                            Grid.Column="2"
                             Text="📂SaveAs"
                             Scale="1"
                             TextColor="Black"
@@ -397,7 +423,7 @@
                             ZIndex="3"/>
 
                         <!--... ✒️ 🖋️ 📝 ✏️ ...--> 
-                        <Button x:Name="RenamePlaylistGui"
+                        <Button x:Name="EditPlaylistGui"
                             Grid.Column="4"
                             Text="✏️Edit"
                             Scale="1"
