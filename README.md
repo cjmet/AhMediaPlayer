@@ -87,13 +87,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
-- [ ] More API work
+- [ ] More API work?  Where do we go from here with the API?
 ---
-- [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
-- [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
-- [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
-- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
-- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
 
 
 * ### Music Player
@@ -111,19 +106,19 @@ Create a music library Web API and simple Media Player
   - [x] Writes to a Pop-Up Window (if in debug mode)
   - [x] Improved Logging Window
   - [x] `public async IAsyncEnumerable<string> PollLinesAsync(path, pollInterval, CancellationToken?)`
-- [ ] /MauiProgramLogic/MauiProgramLogic.cs
 - [ ] Integration of Playlists, Songs, Search and GUI
   - [x] Playlist Selection GUI
   - [x] Initial Integration of Playlists and Songs
   - [x] Random, Loop Buttons, Start, End, Next, Previous, ...
-  - [ ] Adding Songs to Playlists GUI (Update)
-  - [ ] Removing Songs from Playlists GUI (Update)
-  - [ ] Adding Playlists GUI (Create)
-  - [ ] Deleting Playlists GUI (Delete)
   - [x] Basic Search and Filter functionality GUI
   - [x] Advanced Search and Filter First Pass
   - [x] Advanced Search and Filter Second Pass
-  
+  - [ ] Adding Playlists GUI (Create)
+  - [ ] Deleting Playlists GUI (Delete)
+  - [ ] Adding Songs to Playlists GUI (Update)
+  - [ ] Removing Songs from Playlists GUI (Update)
+- [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
+
 
 * ### Common Library 
 - [x] CommonLibrary Project so that program logic can be shared, then wire up individual wrappers in a project as needed.
@@ -135,18 +130,14 @@ Create a music library Web API and simple Media Player
   - [x] Improved Background Task
   - [x] Add Callback Ability to the Background Task
   - [x] Integrate FileFind, Callback, EF Core, and Maui
-  - [x] Read and use Meta Data from MP3 files
-- [x] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
-- [ ] Work on general logic around the DB and App
+  - [x] Read and use Meta Data from MP3 fil
   - [x] Id each song by filename to eliminate duplicates.
-    - [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
+- [x] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
 - [x] Create Random Playlists for Testing
-- [ ] CRUD  (No this isn't the best way to implement this. Ideally it will go down into a repository.)
-    - [x] Create
-    - [x] Read
-    - [ ] Update
-    - [ ] Delete
 - [x] More Fluent Advanced Search with Parsing, to replace both Search and Advanced Search.
+- [ ] Work on general logic around the DB and App  
+- [ ] Convert CommonLibrary to the Repository Pattern and Interfaces.
+- [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
 
    
 * ### Data Library
@@ -156,12 +147,8 @@ Create a music library Web API and simple Media Player
 - [x] Move data files back out into a DataLibrary for easier management. 
 - [x] Initial Integration of Playlists and Songs
 - [x] Searching and Adding Songs to Db
-- [ ] Adding Songs to Playlists
-- [ ] Removing Songs from Playlists
-- [ ] Adding Playlists
-- [ ] Deleting Playlists
-- [ ] DataLibary -> Models, Interfaces, and (Services or Contexts)
-- [ ] Implement the Interfaces and Repository Pattern.
+- [x] Implement the Interfaces and Repository Pattern.
+- [x] CRUD Interfaces
 
 
 * ### Music Library Web API
@@ -170,23 +157,43 @@ Create a music library Web API and simple Media Player
 - [x] Develop basic API to match basic functionality of Music Library
   - [x] Basic Playlist API
   - [x] Basic Song API
-  - [x] Basic CRUD API  (Songlist 1 is partially restricted, for internal use.)
-- [ ] Playlist Validation
-- [ ] Song Validation
-- [ ] Orphaned Songs from Playlist API
-- [x] API Locking Playlist 1 as internal "All Songs" Playlist". This is only locked in the API.
+  - [x] Basic CRUD API 
+  - [x] API Locking of Playlist 1 and Songs Db as internal "All Songs" Playlist". (This is only locked in the API.)
+- [ ] API Playlist Validation
+- [ ] API Song Validation
+- [ ] API Orphaned Songs?
+
+
+* ### Wishlist and Refactoring
+- [ ] Unit Testing on the API.  It's the perfect candidate for unit testing.
+    - [ ] Create A Playlist, Modify It, Add Songs, Remove Songs, Delete it.
+    - [ ] Test Authentication, Register, Login, Test Authentication, Logout, Test Authentication, Delete? the Test Account.
+    - [ ] Automate an Advanced Search Test
+- [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
+- [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
+- [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
+- [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
+- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
+- [ ] Maybe only cache drives that take more than 3 seconds to load a file.
+- [ ] Maybe Refactor to Stream First, then Cache, then Read from Cache.  Right now everything caches.
 
 <br>
 
 ## Project Requirements (Pick 3 or more)
 - [x] Async Task
   * Created an async background task to scan local and remote SMB drives for media files, using callbacks to deliver updates asynchronously.
+  * Many other async tasks as well, throughout the project.
 - [x] List or Dictionary
   * Using multiple lists as well as the ConcurrentBag class in the background task.
 - [x] API
-  * Very Simple Default Endpoint Implementation, converted to Async and Repository Pattern.  I did add Advanced Search to the Song API, but it's hard to know where to go from there without a target for the API.
+  * Simple Default Endpoint Implementation, converted to Async and Repository Pattern, Added Default Basic Authentication.  Only one demo endpoint is locked by Authentication.
+  * I did add Search to the Song API, as well as a few other misc endpoints, However, it's hard to know where to go from here without a target for the API.
 - [x] CRUD API
-  * Very Simple Default Endpoint Implementation, converted to Async and Repository Pattern.
+  * Simple Default Endpoint Implementation, converted to Async and Repository Pattern.
+  * You can add, delete, and update new playlists, and add and delete songs_by_id to and from created playlists.
+  * By default Playlist[1] is locked in the API.  
+  * By default Songs are locked in the API.
+  * You can unlock the API by modifying the Constants.cs file.  It took days to scan the remote Db, so I didn't want to make any casual mistakes.  And I backed up the Db too, just in case.
 - [x] Multiple Data Tables
   * modelBuilder.Entity<Song>().HasMany(s => s.Playlists).WithMany(p => p.Songs);
 - [x] Logging of Errors and Debug Info.
@@ -206,6 +213,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* API Authentication, Various API Endpoints, Editing of misc Interface methods
 * Experimental Half-Baked Alpha Authentication added to the API.  This is a very basic and incomplete implementation. 
 * Worked on API.  Added searches to the Song API.  Converted Advanced Search to DataLibrary and Repository Pattern.  Turns out that's where it should have been in the first place, instead of common.
 * Advanced Search, Version 2, with simple search parsing and filtering enabled.

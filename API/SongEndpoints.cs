@@ -6,6 +6,8 @@ using DataLibrary;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using NuGet.Protocol.Core.Types;
+using AhConfig;
+
 namespace API;
 
 public static class SongEndpoints
@@ -15,36 +17,51 @@ public static class SongEndpoints
         var group = routes.MapGroup("/api/Song").WithTags(nameof(Song));
 
 
-        group.MapGet("/", async (ISongRepository _repository) =>
+        group.MapGet("/", async Task<Results<Ok<List<Song>>, NotFound>> (ISongRepository _repository) =>
         {
-            return await _repository.GetAllSongsAsync();
+            var _results = await _repository.GetAllSongsAsync();
+            if (Const.ApiDemoMode && _results.Count > Const.ApiDemoMax) _results = _results.GetRange(0, Const.ApiDemoMax);
+            return _results != null
+                ? TypedResults.Ok(_results)
+                : TypedResults.NotFound();
         })
         .WithName("GetAllSongs")
         .WithOpenApi();
 
 
-        group.MapGet("/Search", async (string _search, ISongRepository _repository) =>
+        group.MapGet("/Search", async Task<Results<Ok<List<Song>>, NotFound>> (string _search, ISongRepository _repository) =>
         {
-            return await _repository.SearchAllSongs(_search);
+            var _results = await _repository.SearchAllSongs(_search);
+            if (Const.ApiDemoMode && _results.Count > Const.ApiDemoMax) _results = _results.GetRange(0, Const.ApiDemoMax);
+            return _results != null
+                ? TypedResults.Ok(_results)
+                : TypedResults.NotFound();
         })
         .WithName("Search")
         .WithOpenApi();
 
 
-        group.MapGet("/SearchQuery", async (string _property, string _search, ISongRepository _repository) =>
+        group.MapGet("/SearchQuery", async Task<Results<Ok<List<Song>>, NotFound>> (string _property, string _search, ISongRepository _repository) =>
         {
-            return await _repository.SearchQuery(_property, _search);
+            var _results = await _repository.SearchQuery(_property, _search);
+            if (Const.ApiDemoMode && _results.Count > Const.ApiDemoMax) _results = _results.GetRange(0, Const.ApiDemoMax);
+            return _results != null
+                ? TypedResults.Ok(_results)
+                : TypedResults.NotFound();
         })
         .WithName("SearchQuery")
         .WithOpenApi();
 
 
-        group.MapGet("/SearchAdvanced", async (string _advancedSearch, ISongRepository _repository) =>
+        group.MapGet("/SearchAdvanced", async Task<Results<Ok<List<Song>>, NotFound>> (string _advancedSearch, ISongRepository _repository) =>
         {
-            var _list = new List<Song>();
+            var _results = new List<Song>();
 
-            (_list, _, _ ) = await _repository.AdvancedSearchRepository(_list, _advancedSearch);
-            return _list;
+            (_results, _, _ ) = await _repository.AdvancedSearchRepository(_results, _advancedSearch);
+            if (Const.ApiDemoMode && _results.Count > Const.ApiDemoMax) _results = _results.GetRange(0, Const.ApiDemoMax);
+            return _results != null
+                  ? TypedResults.Ok(_results)
+                  : TypedResults.NotFound();
         })
         .WithName("SearchAdvanced")
         .WithOpenApi();
@@ -61,9 +78,10 @@ public static class SongEndpoints
         .WithOpenApi();
 
 
-        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int id, Song song, ISongRepository
+        group.MapPut("/{id}", async Task<Results<Ok, NotFound, UnauthorizedHttpResult>> (int id, Song song, ISongRepository
             _repository) =>
         {
+            if (!Const.ApiAllowSongAdmin) return TypedResults.Unauthorized();
             var result = await _repository.UpdateSongAsync(id, song);
             return result > 0
                 ? TypedResults.Ok()
@@ -74,8 +92,9 @@ public static class SongEndpoints
 
 
         // the confusing one again.
-        group.MapPost("/", async Task<Results<Created<Song>, BadRequest>> (Song song, ISongRepository _repository) =>
+        group.MapPost("/", async Task<Results<Created<Song>, BadRequest, UnauthorizedHttpResult>> (Song song, ISongRepository _repository) =>
         {
+            if (!Const.ApiAllowSongAdmin) return TypedResults.Unauthorized();
             var result = await _repository.AddSongAsync(song);
             return result > 0
                 ? TypedResults.Created($"/api/Song/{song.Id}", song)
@@ -85,8 +104,9 @@ public static class SongEndpoints
         .WithOpenApi();
 
 
-        group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int id, ISongRepository _repository) =>
+        group.MapDelete("/{id}", async Task<Results<Ok, NotFound, UnauthorizedHttpResult>> (int id, ISongRepository _repository) =>
         {
+            if (!Const.ApiAllowSongAdmin) return TypedResults.Unauthorized();
             var result = await _repository.DeleteSongAsync(id);
             return result >= 1
                 ? TypedResults.Ok()

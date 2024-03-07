@@ -10,7 +10,6 @@ namespace DataLibrary
 {
     public class PlaylistContext : DbContext
     {
-        private const string dbName = "test_playlists.db";
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<Song> Songs { get; set; }
         public string DbPath { get; private set; }
@@ -24,7 +23,7 @@ namespace DataLibrary
 
             Directory.CreateDirectory(path);
             File.SetAttributes(path, FileAttributes.Hidden);
-            DbPath = Path.Join(path, dbName);
+            DbPath = Path.Join(path, Const.MusicDbName);
             if (!_quiet || VerboseSQL)
             {
                 LogDebug($"***  DbPath: {DbPath}");

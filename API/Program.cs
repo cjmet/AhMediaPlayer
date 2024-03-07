@@ -10,12 +10,16 @@ using Microsoft.EntityFrameworkCore.InMemory;
 
 using AhConfig;
 using AngelHornetLibrary;
-using API;
 using DataLibrary;
 using static AngelHornetLibrary.AhLog;
 using ApiEndpoints;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using CommonNet8;
+using static CommonNet8.SearchForMusicFiles;
+
+using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
 
 
 namespace API
@@ -24,9 +28,22 @@ namespace API
     {
         public static void Main(string[] args)
         {
-            AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel);
-            LogMsg("API Started");
+            AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel, "ApiLog.log");
+            if (Const.ApiAllowMusicSearch)
+            {
+                var task = new Task(async () =>
+                {
+                    LogMsg("Api Init: Searching for Music");
+                    await SearchUserProfileMusic(new ReportByAction(LogTrace));
+                    foreach (var _path in Const.ApiMusicSearchPaths)
+                    {
+                        await SearchUserProfileMusic(new ReportByAction(LogTrace), _path);
+                    }
+                }, TaskCreationOptions.LongRunning);
+                task.Start();
+            }
 
+            LogMsg("Starting API");
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -39,23 +56,32 @@ namespace API
             builder.Services.AddSwaggerGen();
 
             // Insert Authentication and Authorization code here
-            builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-              .AddNegotiate();
+            builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+                .AddIdentityCookies();
+            builder.Services.AddAuthorizationBuilder();
 
-            builder.Services.AddAuthorization(options =>
-            {
-                // By default, all incoming requests will be authorized according to the default policy.
-                options.FallbackPolicy = options.DefaultPolicy;
-            });
+            {   // cjm - why did this not work when written the other way like in the Maui App?
+                var _path = AppData.AppDataPath;
+                Directory.CreateDirectory(_path);
+                File.SetAttributes(_path, FileAttributes.Hidden);
+                _path = Path.Join(_path, Const.ApiIdDbName);
+                LogDebug($"***  DbPath: {_path}");
+                builder.Services.AddDbContext<ApiDbContext>(options => options.UseSqlite($"Data Source={_path}"));
+                // The following is unnecessarily complicated. 
+                var _dbContext = new ApiDbContext(new DbContextOptionsBuilder<ApiDbContext>().UseSqlite($"Data Source={_path}").Options);
+                _dbContext.Database.EnsureCreated();
+            }
 
-            builder.Services.AddDbContext<ApiDbContext>( options => options.UseInMemoryDatabase("ApiDb"));
-
-            builder.Services.AddIdentityCore<MyUser>()
-                .AddEntityFrameworkStores<ApiDbContext>()
-                .AddApiEndpoints();
+            builder.Services.AddIdentityCore<MyUser>().AddEntityFrameworkStores<ApiDbContext>().AddApiEndpoints();
             // /Authentication and Authorization code
 
             var app = builder.Build();
+
+            {
+                // cjm - I'm assuming this doesn't work here because it's before app.run()?
+                // var _dbContext = app.Services.GetService<ApiDbContext>();  
+                // _dbContext.Database.EnsureCreated();
+            }
 
             // Authenticate and Authorize
             app.MapIdentityApi<MyUser>();
@@ -77,6 +103,20 @@ namespace API
             app.MapSongEndpoints();
 
             app.MapPlaylistEndpoints();
+
+            app.MapPost("/logout", async (SignInManager<MyUser> signInManager, [FromBody] object empty) =>
+            {
+                if (empty != null)
+                {
+                    await signInManager.SignOutAsync();
+                    return Results.Ok();
+                }
+                return Results.Unauthorized();
+            })
+             .WithName("Logout")
+             .WithOpenApi()
+             .RequireAuthorization();
+
 
             app.Run();
         }

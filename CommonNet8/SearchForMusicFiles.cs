@@ -30,6 +30,21 @@ namespace CommonNet8
     }
 
 
+    public class ReportByAction : IProgress<string>
+    {
+        Action<string> _logFunction;
+        static int spinner = 0;
+        public ReportByAction(Action<string> function)
+        {
+            _logFunction = function;
+        }
+        public void Report(string value)
+        {
+            _logFunction(value);
+        }
+    }
+
+
     public static class SearchForMusicFiles
     {
 
