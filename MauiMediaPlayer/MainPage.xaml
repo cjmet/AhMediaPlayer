@@ -42,11 +42,14 @@
         </Grid.ColumnDefinitions>
 
 
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
+
         <!-- Row 0 -->
         <!--<Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />-->
         <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                      VerticalOptions="End"  
-                     MaximumHeightRequest="27" 
+                     MaximumHeightRequest="30" 
                      ZIndex="0">
             <ListView x:Name="TestPlaylist"  
                       VerticalOptions="End"
@@ -56,7 +59,7 @@
                         <ViewCell>
                             <Frame Padding="10,0"  
                                    VerticalOptions="End"
-                                   Margin="13,2,40,2" >
+                                   Margin="40,2,40,2" >
                                 <Grid Padding="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -65,14 +68,15 @@
                                     <Label Text="{Binding Name}"  
                                           Style="{StaticResource NormalText}"
                                           Grid.Column="0"
-                                          HorizontalOptions="Start"
+                                          HorizontalOptions="Fill"
                                           LineBreakMode="TailTruncation"
                                           FontSize="Micro"
                                           FontAttributes="Bold" />
                                     <Label Text="{Binding Description}"   
                                           Style="{StaticResource NormalText}" 
                                           Grid.Column="1"
-                                          HorizontalOptions="End"
+                                          HorizontalOptions="Fill"
+                                          Padding="0,2"
                                           LineBreakMode="TailTruncation"                                               
                                           FontSize="Caption"/>
                                 </Grid>
@@ -86,28 +90,24 @@
             </ListView>
         </ContentView>
 
-
-        <!--... 💾 💽 💻 🗃️ ...-->
+        <!--... 💾 💽 💻 🗃️ ⚙️ ... Settings and Gear ...-->
         <Button x:Name="SavePlaylistButton"
-            Text="💾"
-            Scale=".50"
+            Text="⚙️"
+            Scale=".65"
             TextColor="Black"
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="0,-6,0,-6"
-            Padding="0,-6,0,-6"
+            Margin="0,0,0,-8"
+            Padding="0"
             BorderColor="Blue"
             Grid.Row="0"
-            Grid.Column="2"
-            HorizontalOptions="End"
+            Grid.Column="0"
+            HorizontalOptions="Start"
             VerticalOptions="End"
             ZIndex="1"/>
 
-
-
-
-        <!-- Row 1 - 🎶 🗃️ 🕵🏻‍♀️ 🐕‍🦺 💻 -->
+        <!-- 🎶 🗃️ 🕵🏻‍♀️ 🐕‍🦺 💻 -->
         <!--// {Title} {Artist} {Band} {Album} {Genre}-->
         <Button x:Name="MenuBox"
             Text="🕵🏻‍♀"
@@ -117,33 +117,20 @@
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="0,-6,0,-3"
-            Padding="0,-6,0,6"
+            Margin="0,6,0,-6"
+            Padding="0,-6,0,-3"
             BorderColor="Blue"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="1"
             HorizontalOptions="End"
-            VerticalOptions="Start"
+            VerticalOptions="End"
             ZIndex="1"/>
 
-        <!--... 💾 💽 💻 🗃️ ...-->
-        <Button x:Name="SearchDirectories"
-            Text="💽"
-            Scale=".7"
-            Clicked="SearchDirectories_Clicked"
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="0,-6,0,-3"
-            Padding="0,-6,0,6"
-            BorderColor="Blue"
-            Grid.Row="1"
-            Grid.Column="0"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            ZIndex="1"/>
+        <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        
 
+        <!--... Standard Search Bar ...--> 
         <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
                HorizontalOptions="Center" ZIndex="2" Padding="-10" >
             <SearchBar x:Name="SearchBarStandard"
@@ -184,15 +171,16 @@
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Margin="10,0,35,40"
+            Margin="10,0,10,40"
             Padding="0"
             VerticalOptions="Fill"
-            ZIndex="2">
+            ZIndex="3">
 
             <Grid Padding="0" Margin="0" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="25"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="25"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -229,11 +217,51 @@
                         ZIndex="4"/>
                 </Frame>
 
+                <!--... 💾 💽 💻 🗃️ ...-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />  
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Button x:Name="SearchDirectories"
+                        Text="💽"
+                        Scale=".65"
+                        Clicked="SearchDirectories_Clicked"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        BackgroundColor="Transparent"
+                        FontSize="32"
+                        Margin="-10,-10"
+                        Padding="0,0"
+                        BorderColor="Blue"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        ZIndex="3"/>
+                    <Label 
+                        Text="Disk"
+                        Padding="25,0"
+                        Margin="0,-1"
+                        FontSize="12"
+                        VerticalOptions="Start"
+                        />
+                    <Label 
+                        Text="Search" 
+                        Padding="25,0"
+                        Margin="0,-1"
+                        FontSize="12"
+                        VerticalOptions="End"
+                        />              
+                </Grid>
+                <!--  Margin="0,-25,-30,-25"  -->
                 <Picker x:Name="Searchby"
                     Grid.Column="0"
                     BackgroundColor="LightGray"
-                    WidthRequest="125"
-                    Margin="0,-25,-30,-25"
+                    WidthRequest="130"
+                    Margin="0,-5,-25,-5"
                     FontSize="26"
                     Scale=".5"
                     HorizontalOptions="End"
@@ -252,11 +280,12 @@
                     </Picker.ItemsSource>
                 </Picker>
 
+                <!--   Margin="-40,-25,0,-25"  -->
                 <Picker x:Name="SearchAction"
                     Grid.Column="1"
                     BackgroundColor="LightGray"
-                    Margin="-40,-25,0,-25"
-                    WidthRequest="270"
+                    WidthRequest="150"
+                    Margin="-25,-5,0,-5"
                     FontSize="26"
                     Scale=".5"
                     HorizontalOptions="Start"
@@ -273,6 +302,140 @@
                     </Picker.ItemsSource>
                 </Picker>
 
+                
+                
+                <!-- Add, Remove, Save, Saveas, Rename, Delete -->
+                <Frame
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="2"
+                    HorizontalOptions="Center"
+                    Margin="0"
+                    Padding="0"
+                    CornerRadius="1"
+                    BackgroundColor="Transparent"
+                    BorderColor="Transparent"
+                    ZIndex="2">
+                    <Grid
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="2"
+                        Margin="0"
+                        Padding="0"
+                        ZIndex="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="AddSongsGui"
+                            Grid.Column="0"
+                            Text="➕Songs"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="3,-12,3,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            ZIndex="3"/>
+
+                        <Button x:Name="RemoveSongsGui"
+                            Grid.Column="1"
+                            Text="➖Songs"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="3,-12,3,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            ZIndex="3"/>
+
+                        <Button x:Name="SavePlaylistGui"
+                            Grid.Column="2"
+                            Text="💾Save"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="3,-12,3,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            ZIndex="3"/>
+
+                        <Button x:Name="SaveAsPlaylistGui"
+                            Grid.Column="3"
+                            Text="📂SaveAs"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="3,-12,3,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            ZIndex="3"/>
+
+                        <!--... ✒️ 🖋️ 📝 ✏️ ...--> 
+                        <Button x:Name="RenamePlaylistGui"
+                            Grid.Column="4"
+                            Text="✏️Edit"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="3,-12,3,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            ZIndex="3"/>
+
+                        <!--... 🚮 ♻️ ♺ ♼ 🗑️ ❌ ...-->
+                        <Button x:Name="DeletePlaylistGui"
+                            Grid.Column="5"
+                            Text="❌Delete"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="3,-12,3,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            ZIndex="3"/>
+
+                    </Grid>
+                </Frame>
+
+                
+                
+                <!-- Help Text -->
                 <CollectionView x:Name="AdvancedSearchHelpList"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -351,39 +514,36 @@
             ZIndex="1"/>
 
 
-
-        <!-- ... Repeat and Random  ... -->
-        <!--Margin="45,0,0,8"-->
-        <!--Margin="80,0,0,8"-->
-
-        <Button x:Name="RepeatList"
-            Text="🔁"
-            Scale=".5"
-            ScaleX="1.25"
-            Clicked="RepeatList_Clicked"
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="75,0,0,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="1"
-            HorizontalOptions="Start"
-            VerticalOptions="Center"
-            ZIndex="1"/>
+        <!--... Shuffle and Previous-->
 
         <Button x:Name="Shuffle"
             Text="🔀"
-            Scale=".5"
+            Scale=".55"
             ScaleX="1.25"
             Clicked="Shuffle_Clicked"
             TextColor="Black"
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="0,0,75,8"
+            Margin="0,0,64,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="End"
+            VerticalOptions="Center"
+            ZIndex="1"/>
+        
+        <Button x:Name="PreviousTrack"
+            Text="⏮️"
+            Scale=".55"
+            ScaleX="1.25"
+            Clicked="PreviousTrack_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="0,0,20,8"
             Padding="0"
             BorderColor="Transparent"
             Grid.Row="4"
@@ -394,9 +554,53 @@
 
 
 
-        <!--... First and Previous-->
+        <!--... Next and Loop ...-->
+        <!--... 8 to 108x, 33w, = 108 - 33x2 = 34 / 3 = 11, 8+11= *20*, 20+33+11= *64*...-->
+
+        <Button x:Name="NextTrack"
+            Text="⏭️"
+            Scale=".55"
+            ScaleX="1.25"
+            Clicked="NextTrack_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="20,0,0,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="1"
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
+            ZIndex="1"/>
+
+        <Button x:Name="RepeatList"
+            Text="🔁"
+            Scale=".55"
+            ScaleX="1.25"
+            Clicked="RepeatList_Clicked"
+            TextColor="Black"
+            FontAttributes="Bold"
+            BackgroundColor="Transparent"
+            FontSize="32"
+            Margin="64,0,0,8"
+            Padding="0"
+            BorderColor="Transparent"
+            Grid.Row="4"
+            Grid.Column="1"
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
+            ZIndex="1"/>
+
+        
+        <!--... First and Last - Depreciated ...-->
+        <!--Margin="45,0,0,8"-->
+        <!--Margin="80,0,0,8"-->
 
         <Button x:Name="FirstTrack"
+            IsVisible="False"
+            IsEnabled="False"
             Text="⏫"
             Scale=".5"
             Clicked="FirstTrack_Clicked"
@@ -413,48 +617,9 @@
             VerticalOptions="Center"
             ZIndex="1"/>
 
-        <Button x:Name="PreviousTrack"
-            Text="⏮️"
-            Scale=".5"
-            ScaleX="1.25"
-            Clicked="PreviousTrack_Clicked"
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="0,0,15,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="0"
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-            ZIndex="1"/>
-
-
-
-        <!--... Next and Last ...-->
-
-
-        <Button x:Name="NextTrack"
-            Text="⏭️"
-            Scale=".5"
-            ScaleX="1.25"
-            Clicked="NextTrack_Clicked"
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="15,0,0,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="1"
-            HorizontalOptions="Start"
-            VerticalOptions="Center"
-            ZIndex="1"/>
-
         <Button x:Name="LastTrack"
+            IsVisible="False"
+            IsEnabled="False"
             Text="⏬"
             Scale=".5"
             Clicked="LastTrack_Clicked"
@@ -470,7 +635,6 @@
             HorizontalOptions="Start"
             VerticalOptions="Center"
             ZIndex="1"/>
-
 
 
         <!--</Combined MediaElement with Labels>-->

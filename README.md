@@ -213,6 +213,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Started GUI Layout work for Editing Playlists
 * API Authentication, Various API Endpoints, Editing of misc Interface methods
 * Experimental Half-Baked Alpha Authentication added to the API.  This is a very basic and incomplete implementation. 
 * Worked on API.  Added searches to the Song API.  Converted Advanced Search to DataLibrary and Repository Pattern.  Turns out that's where it should have been in the first place, instead of common.
