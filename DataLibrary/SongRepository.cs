@@ -55,8 +55,6 @@ namespace DataLibrary
         }
         public async Task<List<Song>> SearchAllSongs(string search)
         {
-            var query = _context.Songs.AsQueryable();
-
             if (search != null)
             {
                 search = search.ToLower();
@@ -78,13 +76,13 @@ namespace DataLibrary
             _search = _search.ToLower();
 
             var _db = _context;
-            List<Song> _selectionSet = new List<Song>();
-            if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search))).ToList(); }
-            if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search))).ToList(); }
+            List<Song> _selectionSet = new List<Song>(); // cjm 
+            if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Title.ToLower().Contains(_search)),s => s.Id).ToList(); }
+            if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search)), s => s.Id).ToList(); }
+            if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Album.ToLower().Contains(_search)), s => s.Id).ToList(); }
+            if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Band.ToLower().Contains(_search)), s => s.Id).ToList(); }
+            if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search)), s => s.Id).ToList(); }
+            if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search)), s => s.Id).ToList(); }
             if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
 
             return _selectionSet.OrderBy(s => s.AlphaTitle).ToList();
@@ -99,7 +97,7 @@ namespace DataLibrary
             if (_searchBy == null) _searchBy = "Any";
             if (_searchAction == null) _searchAction = "SEARCH";
             
-            (_results, _searchBy, _searchAction) = DataLibraryAdvancedSearch.AdvancedSearch(_currentSet, _searchString, _searchBy, _searchAction);
+            (_results, _searchBy, _searchAction) = DataLibraryAdvancedSearch.AdvancedSearch(_currentSet, _searchString, _searchBy, _searchAction, _context);
             
             if (_results == null) _results = new List<Song>();
             if (_searchBy == null) _searchBy = "Any";

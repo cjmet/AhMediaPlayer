@@ -1,4 +1,5 @@
 ﻿using AngelHornetLibrary;
+using System.Data.Common;
 using System.Text.RegularExpressions;
 using static AngelHornetLibrary.AhLog;
 
@@ -57,7 +58,7 @@ namespace DataLibrary
         // "IS Genre ?? Soft Rock OR Heavy Metal == ARTIST NOT Metallica"
         // Will search Genre for "Soft Rock" or "Heavy Metal" and then search Artist for "Metallica" and then remove those from the set.
         // Triple Tuple Trouble!
-        public static (List<Song>?, string?, string?) AdvancedSearch(List<Song> _currentSet, string _searchString, string _searchBy = "Any", string _searchAction = "SEARCH")
+        public static (List<Song>?, string?, string?) AdvancedSearch(List<Song> _currentSet, string _searchString, string _searchBy = "Any", string _searchAction = "SEARCH", PlaylistContext? _dbContext = null)
         {
             Regex _regexSearchOperators = new Regex(@"^\s*(AND|OR|NOT|IS|SEARCH|&&|\|\||!!|==|\?\?)\s(.*)$");
             Regex _regexSearchStrings = new Regex(@"\s+(AND|OR|NOT|IS|SEARCH|&&|\|\||!!|==|\?\?)\s+(\w+)");
@@ -139,10 +140,10 @@ namespace DataLibrary
 
             // Triple Tuple Trouble!
             _searchAction = _operator1;
-            (_currentSet, _searchBy) = ExecuteSearchCommand(_currentSet, _operator1, _search, _searchBy);
+            (_currentSet, _searchBy) = ExecuteSearchCommand(_currentSet, _operator1, _search, _searchBy, _dbContext);
 
             if (_searchString.Length > 0)
-                (_currentSet, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchString, _searchBy, _searchAction);
+                (_currentSet, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchString, _searchBy, _searchAction, _dbContext);
 
             LogTrace($"Returning:   " +
                 $"CurrentSet: {(_currentSet != null ? _currentSet.Count : "null")},   " +
@@ -153,7 +154,7 @@ namespace DataLibrary
 
 
         // Double Tuple Trouble!
-        public static (List<Song>, string) ExecuteSearchCommand(List<Song> _currentSet, string _operator, string _search, string _searchBy)
+        public static (List<Song>, string) ExecuteSearchCommand(List<Song> _currentSet, string _operator, string _search, string _searchBy, PlaylistContext? _dbContext = null)
         {
             // cj - CONVERT everything to CONCRETE LISTS, ***NOT*** IQueryable
             // IQueryable should be used with caution in Union, Intersect, and Except.  Unless using EmptyOrDefault, and even then, it's still a bit finicky.
@@ -164,40 +165,20 @@ namespace DataLibrary
 
 
 
-
-
-            // === ====================================================  // cjm
-            // vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-            // {Any} {Title} {Artist} {Album} {Band} {Genre}
-            // ---
-            //var _db = new PlaylistContext();
-            //List<Song> _selectionSet = new List<Song>();
-            //if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Title.ToLower().Contains(_search))).ToList(); }
-            //if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search))).ToList(); }
-            //if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Album.ToLower().Contains(_search))).ToList(); }
-            //if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Band.ToLower().Contains(_search))).ToList(); }
-            //if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search))).ToList(); }
-            //if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.Union(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search))).ToList(); }
-            //if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
-            // ---
-            // ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            // === ====================================================
-
             // === ====================================================
             // vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             // {Any} {Title} {Artist} {Album} {Band} {Genre}
             // ---
-            var _repository = (ISongRepository)new SongRepository(new PlaylistContext());
-            List<Song> _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm cjm2
-            if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
-            LogTrace($"SelectionSet: {_selectionSet.Count}");
+            List<Song> _selectionSet = new List<Song>();
+            {
+                var _repository = (ISongRepository)new SongRepository(_dbContext);
+                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm cjm2
+                if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
+                LogTrace($"SelectionSet: {_selectionSet.Count}");
+            }
             // ---
             // ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // === ====================================================
-
-
-
-
 
 
 

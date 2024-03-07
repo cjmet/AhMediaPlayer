@@ -8,19 +8,6 @@
         <local:HeadTruncateConverter  x:Key="headTruncateConverter"/>
     </ContentPage.Resources>
 
-
-    <!-- Text Sizes:
-                Header
-                Large
-                Medium
-                Title
-                Subtitle
-                Small 
-                N/A - slightly larger than Micro
-                Micro, Default, Body
-                Caption
-                -->
-
     <Grid x:Name="MainGrid"
           BackgroundColor="#FFEEEEEE"
           MinimumWidthRequest="375" 
@@ -42,6 +29,21 @@
         </Grid.ColumnDefinitions>
 
 
+        <!-- Text Sizes:
+                Header  = 46
+                Large   = 32
+                Medium  = 24
+                Title   = 24
+                Subtitle= 20
+                Small   = 18
+                N/A     = 14        
+                Default = 14
+                Body    = 14
+                Micro   = 14
+                Caption = 12
+                -->
+
+        
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
 
@@ -49,7 +51,7 @@
         <!--<Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />-->
         <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                      VerticalOptions="End"  
-                     MaximumHeightRequest="50" 
+                     MaximumHeightRequest="70" 
                      ZIndex="1">
             <ListView x:Name="TestPlaylist"
                       Margin="40,0"                     
@@ -59,28 +61,34 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Frame Padding="10,0"
+                            <Frame Padding="0"
+                                   HeightRequest="35"
                                    Margin="0,0,10,0"
                                    VerticalOptions="End" >
                                 <Grid Padding="0">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Label Text="{Binding Name}"  
-                                          Style="{StaticResource NormalText}"
                                           Grid.Column="0"
-                                          HorizontalOptions="StartAndExpand"
+                                          Margin="5,0"
+                                          Style="{StaticResource NormalText}"
+                                          FontSize="13"
+                                          FontAttributes="Bold" 
+                                          HorizontalOptions="Start"
+                                          VerticalOptions="CenterAndExpand"
                                           LineBreakMode="TailTruncation"
-                                          FontSize="Micro"
-                                          FontAttributes="Bold" />
+                                          />
                                     <Label Text="{Binding Description}"   
-                                          Style="{StaticResource NormalText}" 
                                           Grid.Column="1"
-                                          HorizontalOptions="EndAndExpand"
-                                          Padding="0,2"
-                                          LineBreakMode="TailTruncation"                                               
-                                          FontSize="Caption"/>
+                                          Margin="5,0"
+                                          Style="{StaticResource NormalText}" 
+                                          FontSize="11"
+                                          HorizontalOptions="StartAndExpand"
+                                          VerticalOptions="CenterAndExpand"
+                                          MaxLines="2"
+                                          />
                                 </Grid>
                             </Frame>
                         </ViewCell>
@@ -118,19 +126,21 @@
 
         <!--... 💾 💽 💻 🗃️ ⚙️ ... Settings and Gear ...-->
         <Button x:Name="SettingsGearButton"
+            IsEnabled="False"
+                Opacity=".25"
             Text="⚙️"
             Scale=".65"
             TextColor="Black"
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="0,0,0,-8"
+            Margin="0,-6"
             Padding="0"
             BorderColor="Blue"
             Grid.Row="0"
             Grid.Column="0"
             HorizontalOptions="Start"
-            VerticalOptions="End"
+            VerticalOptions="Start"
             ZIndex="1"/>
 
         <!-- 🕵🏻‍♀️    🎶 🗃️ 🐕‍🦺 💻 -->
@@ -143,13 +153,13 @@
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
-            Margin="0,6,0,-6"
-            Padding="0,-6,0,-3"
+            Margin="0,-6"
+            Padding="0"
             BorderColor="Blue"
             Grid.Row="0"
             Grid.Column="1"
             HorizontalOptions="End"
-            VerticalOptions="End"
+            VerticalOptions="Start"
             ZIndex="1"/>
 
         <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
@@ -202,7 +212,7 @@
             VerticalOptions="Fill"
             ZIndex="3">
 
-            <Grid Padding="0" Margin="0" >
+            <Grid Padding="0" Margin="0" x:Name="AdvancedSearchGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="Auto"/>
@@ -391,6 +401,7 @@
                             ZIndex="3"/>
 
                         <Button x:Name="SavePlaylistGui"
+                            Clicked="SavePlaylistGui_Clicked"
                             Grid.Column="3"
                             Text="💾Save"
                             Scale="1"
@@ -407,6 +418,7 @@
                             ZIndex="3"/>
 
                         <Button x:Name="SaveAsPlaylistGui"
+                            Clicked="SaveAsPlaylistGui_Clicked"
                             Grid.Column="2"
                             Text="📂SaveAs"
                             Scale="1"
@@ -421,7 +433,7 @@
                             HorizontalOptions="Start"
                             VerticalOptions="End"
                             ZIndex="3"/>
-
+                        
                         <!--... ✒️ 🖋️ 📝 ✏️ ...--> 
                         <Button x:Name="EditPlaylistGui"
                             Grid.Column="4"
@@ -441,8 +453,9 @@
 
                         <!--... 🚮 ♻️ ♺ ♼ 🗑️ ❌ ...-->
                         <Button x:Name="DeletePlaylistGui"
+                            Clicked="DeletePlaylistGui_Clicked"
                             Grid.Column="5"
-                            Text="❌Delete"
+                            Text="🗑️Delete"
                             Scale="1"
                             TextColor="Black"
                             FontAttributes="Bold"
@@ -459,7 +472,87 @@
                     </Grid>
                 </Frame>
 
-                
+                <!--... SaveAsPlaylist Frame ...-->
+                <Frame x:Name="SaveAsPlaylistFrame"
+                    IsVisible="False"
+                    Grid.Row="2"
+                    Grid.RowSpan="2"
+                    Grid.ColumnSpan="2"
+                    Padding="0"
+                    Margin="0"
+                    ZIndex="4">
+                    <Grid Padding="0" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Frame Grid.Row="0" Grid.ColumnSpan="2" Padding="0" Margin="0">
+                            <Entry x:Name="SaveAsPlaylistName"
+                                Placeholder="New Playlist Name"
+                                PlaceholderColor="SlateGray"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                Margin="0,-10,0,0"
+                                IsTextPredictionEnabled="True"
+                                IsSpellCheckEnabled="True"
+                                HorizontalOptions="FillAndExpand" 
+                                VerticalOptions="Start" 
+                                   />
+                            </Frame>
+                        <Frame Grid.Row="1" Grid.ColumnSpan="2" Padding="0" Margin="0">
+                            <Editor x:Name="SaveAsPlaylistDesc"
+                                Placeholder="New Playlist Description"
+                                PlaceholderColor="SlateGray"
+                                FontSize="13"
+                                Margin="0,0,0,0"
+                                IsTextPredictionEnabled="True"
+                                IsSpellCheckEnabled="True"
+                                HorizontalOptions="FillAndExpand" 
+                                VerticalOptions="FillAndExpand"/>
+                        </Frame>
+                        <Button x:Name="DoSavePlaylistFrame"
+                            Clicked="DoSavePlaylistFrame_Clicked"
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Text="💾Save"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="10,-8,10,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="End"
+                            VerticalOptions="End"
+                            />
+                        <Button x:Name="DoCancelPlaylistFrame"
+                            Clicked="SaveAsPlaylistGui_Clicked"
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            Text="❌Cancel"
+                            Scale="1"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            BackgroundColor="Transparent"
+                            FontSize="13"
+                            Margin="10,-8,10,0"
+                            Padding="0"
+                            BorderWidth="0"
+                            BorderColor="Blue"
+                            HorizontalOptions="Start"
+                            VerticalOptions="End"
+                            />
+
+
+                    </Grid>
+                </Frame>
                 
                 <!-- Help Text -->
                 <CollectionView x:Name="AdvancedSearchHelpList"
@@ -624,6 +717,7 @@
         <!--Margin="45,0,0,8"-->
         <!--Margin="80,0,0,8"-->
 
+        <!--... Depreciated ...--> 
         <Button x:Name="FirstTrack"
             IsVisible="False"
             IsEnabled="False"
@@ -643,6 +737,7 @@
             VerticalOptions="Center"
             ZIndex="1"/>
 
+        <!--... Depreciated ...-->
         <Button x:Name="LastTrack"
             IsVisible="False"
             IsEnabled="False"

@@ -1,7 +1,7 @@
 Female Country:
 	IS Artist SEARCH Jarosz OR Hiatt OR Gretch OR Moorer OR Lera OR Oslin OR Neko OR Jacklin OR Gauthier OR Stevie OR Margo OR Beth Nielson OR DeMent OR Gillian Welch OR Amanda Shires OR Lori McKenna OR Dori Freeman OR Jessi Colter OR Marie Andrews OR Maddie OR Brandy Clark OR Musgraves OR Cowboy Junkies OR Lynn Miles OR Lucinda Williams OR Brandi Carlile OR Ashley McBryde OR Womack OR Dixie Chicks IS Genre AND Country
 	
-Jackson Brodie Expanded Playlist:
+Jackson Brodie's Road Trip - Expanded Playlist:
 	IS Path SEARCH Jackson Brodie IS Artist OR Lucinda Williams OR First Aid Kit OR Lucinda Williams OR Iris DeMent OR Lori McKenna OR Cowboy Junkies OR Eliza Gilkyson OR Gillian Welch OR Kris DelmHorst OR Lynn Miles OR Madison Violet OR Mary Gauthier OR Nanci Griffith OR Sarah McLachlan
 	
 Americana Rock

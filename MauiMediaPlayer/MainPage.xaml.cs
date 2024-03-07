@@ -15,12 +15,15 @@ using static DataLibrary.DataLibraryAdvancedSearch;
 
 
 
+
 namespace MauiMediaPlayer
 {
     public partial class MainPage : ContentPage
     {
 
         private readonly PlaylistContext _dbContext;
+        private readonly IPlaylistRepository _playlistRepository;
+        private readonly ISongRepository _songRepository;
         public static ConcurrentQueue<string> _messageQueue { get; set; } = new ConcurrentQueue<string>();
         private ConcurrentQueue<Song?> _cacheSongQueue = new ConcurrentQueue<Song>();
         private ConcurrentStack<Song> _playSongStack = new ConcurrentStack<Song>();
@@ -36,7 +39,7 @@ namespace MauiMediaPlayer
 
 
         // Constructor Main Page
-        public MainPage(PlaylistContext dbcontext)
+        public MainPage(PlaylistContext dbcontext, IPlaylistRepository playlistRepository, ISongRepository songRepository)
         //public MainPage()
         {
             // Change: Application.Current.MainPage.Dispatcher.Dispatch
@@ -44,6 +47,8 @@ namespace MauiMediaPlayer
 
             InitializeComponent();
             _dbContext = dbcontext;
+            _playlistRepository = playlistRepository;
+            _songRepository = songRepository;
 
             _ = DeliverMessageQueue(_messageQueue, spinBox, messageBox);
             _ = SecondWindow(Application.Current, AngelHornetLogo);
@@ -705,7 +710,6 @@ namespace MauiMediaPlayer
             if (SearchAction.SelectedItem == null) _action = "Search";
             else _action = SearchAction.SelectedItem.ToString().ToLower();
 
-            var _db = new PlaylistContext();
             List<Song> _currentSet = new List<Song>();
             if (TestSonglist != null && TestSonglist.ItemsSource != null) _currentSet = TestSonglist.ItemsSource.Cast<Song>().ToList();
 
@@ -723,8 +727,7 @@ namespace MauiMediaPlayer
                 LogMsg($"Search: \"{_searchText}\"");
 
 
-            //(_advancedResult, _searchBy, _searchAction) = CommonAdvancedSearch.AdvancedSearchParse(_currentSet, _searchText, _by, _action);  // cjm 
-            (_advancedResult, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchText, _by, _action);
+            (_advancedResult, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchText, _by, _action, _dbContext); // cjm 
             if (_advancedResult != null)
             {
                 _songList = _advancedResult.ToList();
@@ -743,7 +746,7 @@ namespace MauiMediaPlayer
                 }
                 Searchby.SelectedItem = _searchBy;
                 SearchAction.SelectedItem = _searchAction;
-                var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";      // cjm
+                var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";      
                 if (_by != null && _by != "Any") Placeholder = $"SearchBy: {_searchBy}     -     SearchAction: {_searchAction}";
                 _searchBar.Placeholder = Placeholder;
             });
@@ -759,6 +762,121 @@ namespace MauiMediaPlayer
             var tmp = _label.BindingContext;
             _label.BindingContext = null;
             _label.BindingContext = tmp;
+        }
+
+        private void SaveAsPlaylistGui_Clicked(object sender, EventArgs e)
+        {
+            var _sender = (Button)sender;
+
+            if (SaveAsPlaylistFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SaveAsPlaylistFrame.IsVisible = false;
+                SaveAsPlaylistName.Text = "";
+                SaveAsPlaylistDesc.Text = "";
+            });
+
+            else Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SaveAsPlaylistFrame.IsVisible = true;
+                SaveAsPlaylistName.Text = "";
+                SaveAsPlaylistDesc.Text = "";
+            });
+            return;
+
+        }
+
+        private void SavePlaylistGui_Clicked(object sender, EventArgs e)
+        {
+            var _sender = (Button)sender;
+
+
+        }
+
+        private async void DoSavePlaylistFrame_Clicked(object sender, EventArgs e)
+        {
+            var _sender = (Button)sender;
+
+            var _name = SaveAsPlaylistName.Text;
+            var _desc = SaveAsPlaylistDesc.Text;
+
+            if (_name == null || _name == "")
+            {
+                var _last = _dbContext.Playlists.ToList().LastOrDefault();
+                if (_last != null && _last.Id != null && _last.Id > 0) _name = $"Playlist {_last.Id + 1}";
+                else
+                {
+                    LogError("Playlists are null.");
+                    _name = null;
+                }
+            }
+            if (_desc == null) _desc = "";
+
+
+
+            if (_name != null)
+            {
+                var _playlist = new Playlist { Name = _name, Description = _desc, Songs = new List<Song>() };
+                _dbContext.Playlists.Add(_playlist);   
+                var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
+                foreach (Song _song in _songList)
+                    if (_song != null)
+                    {
+                        var _addSong = _dbContext.Songs.Find(_song.Id);             // cjm - EF Core Tracking I Hate You.
+                        if (_addSong != null) _playlist.Songs.Add(_addSong);
+                    }
+                _dbContext.SaveChanges();
+
+
+                LogMsg($"Playlist Saved: [{_playlist.Id}] {_playlist.Name} - {_playlist.Description}");
+                var _playlists = _dbContext.Playlists.ToList();
+                _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+                Application.Current.Dispatcher.Dispatch(async () =>
+                {
+                    TestPlaylist.ItemsSource = _playlists;
+                    await Task.Delay(1);
+                    TestPlaylist.SelectedItem = _playlist;
+                    await Task.Delay(1);
+                    TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
+                });
+            }
+
+            Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SaveAsPlaylistFrame.IsVisible = false;
+                SaveAsPlaylistName.Text = "";
+                SaveAsPlaylistDesc.Text = "";
+            });
+
+        }
+
+        private async void DeletePlaylistGui_Clicked(object sender, EventArgs e)
+        {
+            var _sender = (Button)sender;
+            var _playlist = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlist == null || _playlist.Id == 1) return;
+
+            bool answer = await DisplayAlert("Delete Playlist", _playlist.Name, "Delete", "Cancel");
+
+            if (answer)
+            {
+                var _playlists = _dbContext.Playlists.OrderBy(s => s.Name).ToList();
+                var _index = _playlists.IndexOf(_playlist);
+                if (--_index < 0) _index = 0;
+                _dbContext.Playlists.Remove(_playlist);
+                _dbContext.SaveChanges();
+                _playlists = _dbContext.Playlists.ToList();
+                _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+                _playlist = _playlists.ElementAtOrDefault(_index);
+                Application.Current.Dispatcher.Dispatch(async () =>
+                {
+                    TestPlaylist.ItemsSource = _playlists;
+                    await Task.Delay(1);
+                    if (_playlist != null) TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
+                });
+            }
+
+
+
         }
     }
 
