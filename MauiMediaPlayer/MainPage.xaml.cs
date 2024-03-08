@@ -12,6 +12,7 @@ using static CommonNet8.AllSongsPlaylist;
 using static CommonNet8.SearchForMusicFiles;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
 using static DataLibrary.DataLibraryAdvancedSearch;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -84,7 +85,7 @@ namespace MauiMediaPlayer
                 TestPlaylist.ItemsSource = _playlists;
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-                TestSonglist.ItemsSource = _songList;
+                DispatchSonglist(_songList);               
                 if (_playlists.Count < 1) UpdateAllSongsPlaylist().Wait();  // cj this won't take effect till we re-load, but it's better than nothing.
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
                 LogDebug("=== /Database Loading Complete =============================== ===");
@@ -118,8 +119,7 @@ namespace MauiMediaPlayer
 
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-                this.Dispatcher.Dispatch(() =>
-                               TestSonglist.ItemsSource = _songList);
+                await DispatchSonglist(_songList);
                 await Task.Delay(1);
                 LogDebug("=== /Database Dispatch Complete =============================== ===");
                 await Task.Delay(1000);
@@ -151,9 +151,8 @@ namespace MauiMediaPlayer
             var _song = (Song)e.SelectedItem;
             var _index = e.SelectedItemIndex;
             var _listView = (ListView)sender;
-            _listView.Focus();
-            var _list = _listView.ItemsSource.Cast<Song>().ToList();
 
+            var _list = _listView.ItemsSource.Cast<Song>().ToList();
             if (Const.UseSongCache) await SongCache(_song, _list, _index);
             else PlaySong(_song, _song.PathName);
         }
@@ -188,18 +187,50 @@ namespace MauiMediaPlayer
             }
         }
 
-        private void ChangePlaylist(Playlist playlist)
+        private async void ChangePlaylist(Playlist playlist)
         {
             if (playlist != null) LogMsg($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
             else LogWarning("WARN[124] playlist is null");
 
             var _songList = _dbContext.Songs.Where(s => s.Playlists.Contains(playlist)).ToList();
             _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-            this.Dispatcher.Dispatch(() =>
+
+            await DispatchSonglist(_songList);
+        }
+
+        private async Task DispatchSonglist(List<Song> _songList)
+        {
+            LogDebug($"Dispatch[203]"); // cjm ... continue here later.   Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
+            if (_songList == null || _songList.Count < 1) return;
+            var _currentPlaylist = (Playlist)TestPlaylist.SelectedItem;
+            List<int> _playlistIndices = new List<int>();
+            if (_currentPlaylist != null)
             {
+                LogDebug($"Dispatch[207]: Id:{_currentPlaylist.Id}");
+                LogDebug($"Dispatch[208]: Songs:{(_currentPlaylist.Songs != null ? _currentPlaylist.Songs.Count : "null")}");
+            }
+            if (_currentPlaylist != null && _currentPlaylist.Id > 1
+                && _currentPlaylist.Songs != null && _currentPlaylist.Songs.Count > 0) 
+            {
+                _playlistIndices = _currentPlaylist.Songs.Where(s => s != null).Select(s => s.Id).ToList();
+                LogDebug($"Dispatch[212]: {_playlistIndices.Count} Songs in Playlist");
+            }
+            
+            foreach (var _song in _songList)
+            {
+                if (_song == null) continue;
+                _song.Star = false;
+                if (_song.Id == null) continue;
+                if (_playlistIndices.Contains(_song.Id)) _song.Star = true;
+            }
+            var tmp = _songList.Where(s => s.Star).Count();
+            LogDebug($"Dispatch[221]: {tmp} Songs Starred");
+
+            await this.Dispatcher.DispatchAsync(() =>
+            {   // DispatchSonglist()
                 TestSonglist.ItemsSource = _songList;
-                //TestSonglist.SelectedItem = _songList.FirstOrDefault();   // changed my mind on this
             });
+
         }
 
         private void PlaySong(Song _song, String _cachedPath)
@@ -533,17 +564,15 @@ namespace MauiMediaPlayer
             LogDebug("MainPage SecondWindow Creation Complete");
         }
 
-        private void Shuffle_Clicked(object sender, EventArgs e)
+        private async void Shuffle_Clicked(object sender, EventArgs e)
         {
             LogMsg("Shuffle");
             var button = (Button)sender;
             var _songList = TestSonglist.ItemsSource.Cast<Song>().ToArray();
             new Random().Shuffle(_songList);
             var _list = _songList.ToList();
-            Application.Current.Dispatcher.Dispatch(() =>
-            {
-                TestSonglist.ItemsSource = _list;
-            });
+            await DispatchSonglist(_list);
+            
         }
 
         private void NextTrack_Clicked(object sender, EventArgs e)
@@ -695,7 +724,7 @@ namespace MauiMediaPlayer
             });
         }
         private async void SearchBar_SearchButtonPressed(object sender, EventArgs e) => AdvancedSearchBar_SearchButtonPressed(sender, e);
-        private void AdvancedSearchBar_SearchButtonPressed(object sender, EventArgs e)
+        private async void AdvancedSearchBar_SearchButtonPressed(object sender, EventArgs e)
         {
             var _searchBar = (SearchBar)sender;
             var _searchText = _searchBar.Text;
@@ -737,13 +766,14 @@ namespace MauiMediaPlayer
 
             if (_searchAction != "IS" && _advancedResult != null) RandomPersistentLogo(_searchText, _songList.Count);
 
+            if (_songList.Count > 0)
+            {
+                await DispatchSonglist(_songList);
+            }
+
             Application.Current.Dispatcher.Dispatch(() =>
             {
-                if (_songList.Count > 0)
-                {
-                    TestSonglist.ItemsSource = _songList;
-                    SearchCount.Text = $"{_songList.Count:n0}";
-                }
+                if (_songList.Count > 0) SearchCount.Text = $"{_songList.Count:n0}";
                 Searchby.SelectedItem = _searchBy;
                 SearchAction.SelectedItem = _searchAction;
                 var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";      

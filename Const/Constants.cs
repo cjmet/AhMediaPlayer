@@ -20,6 +20,7 @@ namespace AhConfig
         public const int CacheSizeMax = 400;                    // 400  : The maximum number of songs to cache.
         public const int CacheCleanInterval = 1000;             // 1000 : Check and clean the cache every 15 minutes or so.
 
+        public const string SpinChars = " ▪️";                   // " ▪️" : ⚬ ▪️ • The characters to use for the spinner.
         public const int ClockTick = 250;                       // 250  : Anything 250 to 1000 is good. Over 1000 is laggy.
                                                                 //      : Definitely don't go less than say 40, aka: 25fps.      
 

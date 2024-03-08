@@ -43,12 +43,9 @@
                 Caption = 12
                 -->
 
-        
-        <!-- === === === === === === === === === === === === === === === === === === === === === -->
-        <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
 
-        <!-- Row 0 ▲ ▼ -->
-        <!--<Frame Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="2" CornerRadius="0" />-->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        <!-- ... Playlists, Settings, Edit Playlists, Etc ... ▲ ▼ ... -->
         <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                      VerticalOptions="End"  
                      MaximumHeightRequest="70" 
@@ -100,7 +97,7 @@
             </ListView>
         </ContentView>
 
-        <!-- ▲ ▼ -->
+        <!-- Playlist Arrows ▲ ▼ -->
         <Label 
             Text="▲"
             FontSize="10"
@@ -111,7 +108,6 @@
             VerticalOptions="Start"
             Margin="0,1,42,0"
             ZIndex="0"/>
-    
         <Label 
             Text="▼"
             FontSize="10"
@@ -122,15 +118,14 @@
             VerticalOptions="End"
             Margin="0,1,42,0"
             ZIndex="0"/>
-    
 
         <!--... 💾 💽 💻 🗃️ ⚙️ ... Settings and Gear ...-->
+        <!--... D3AF37 FFC627 := E9BA1B ... -->
         <Button x:Name="SettingsGearButton"
             IsEnabled="False"
-                Opacity=".25"
+            Opacity=".25"
             Text="⚙️"
             Scale=".65"
-            TextColor="Black"
             FontAttributes="Bold"
             BackgroundColor="Transparent"
             FontSize="32"
@@ -161,12 +156,13 @@
             HorizontalOptions="End"
             VerticalOptions="Start"
             ZIndex="1"/>
-
-        <!-- ... Playlists, Settings, Edit Playlists, Etc ... -->
+        <!--/Playlists-->
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
-        
 
-        <!--... Standard Search Bar ...--> 
+
+
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        <!--... Standard Search Bar ...-->
         <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
                HorizontalOptions="Center" ZIndex="2" Padding="-10" >
             <SearchBar x:Name="SearchBarStandard"
@@ -182,9 +178,12 @@
                 Placeholder="Search for a song, artist, band, album, or genre"
                 SearchButtonPressed="SearchBar_SearchButtonPressed"/>
         </Frame>
+        <!--/Standard Search Bar-->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
 
 
-        <!-- Row 2 -->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        <!-- ... Angel Hornet Logo ... -->
         <Frame Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="5" BorderColor="Transparent" Opacity="1"  />
         <Image x:Name="AngelHornetLogo"  
                Source="angel_hornet_logo_cropped.png"
@@ -195,11 +194,12 @@
                     SemanticProperties.Description="Angel Hornet Logo.  A tuxedo cat with, angel wings, and a stinger" 
                     ZIndex="0"
                     />
+        <!--/Logo-->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
 
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
-        <!-- ... Row 2 ... Advanced Search ... -->
-
+        <!-- ... Advanced Search and Edit Playlists ... -->
         <Frame x:Name="AdvandedSearchFrame"
             BackgroundColor="#FFEEEEEE"
             IsVisible="false"        
@@ -224,6 +224,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
+                <!--... Advanced Search Bar Input ...-->
                 <Frame Grid.Column="0"
                        Grid.ColumnSpan="4" 
                        Grid.Row="1"
@@ -253,10 +254,10 @@
                         ZIndex="4"/>
                 </Frame>
 
-                <!--... 💾 💽 💻 🗃️ ...-->
+                <!--... Search Directories for Music Files ... 💾 💽 💻 🗃️ ...-->
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125" />  
+                        <ColumnDefinition Width="125" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -290,9 +291,10 @@
                         Margin="0,-1"
                         FontSize="12"
                         VerticalOptions="End"
-                        />              
+                        />
                 </Grid>
-                <!--  Margin="0,-25,-30,-25"  -->
+
+                <!--  SearchBy ... Margin="0,-25,-30,-25"  -->
                 <Picker x:Name="Searchby"
                     Grid.Column="0"
                     BackgroundColor="LightGray"
@@ -316,7 +318,7 @@
                     </Picker.ItemsSource>
                 </Picker>
 
-                <!--   Margin="-40,-25,0,-25"  -->
+                <!--   SearchAcion ... Margin="-40,-25,0,-25"  -->
                 <Picker x:Name="SearchAction"
                     Grid.Column="1"
                     BackgroundColor="LightGray"
@@ -338,8 +340,6 @@
                     </Picker.ItemsSource>
                 </Picker>
 
-                
-                
                 <!-- Add, Remove, Save, Saveas, Rename, Delete -->
                 <Frame
                     Grid.Column="0"
@@ -433,8 +433,8 @@
                             HorizontalOptions="Start"
                             VerticalOptions="End"
                             ZIndex="3"/>
-                        
-                        <!--... ✒️ 🖋️ 📝 ✏️ ...--> 
+
+                        <!--... ✒️ 🖋️ 📝 ✏️ ...-->
                         <Button x:Name="EditPlaylistGui"
                             Grid.Column="4"
                             Text="✏️Edit"
@@ -503,7 +503,7 @@
                                 HorizontalOptions="FillAndExpand" 
                                 VerticalOptions="Start" 
                                    />
-                            </Frame>
+                        </Frame>
                         <Frame Grid.Row="1" Grid.ColumnSpan="2" Padding="0" Margin="0">
                             <Editor x:Name="SaveAsPlaylistDesc"
                                 Placeholder="New Playlist Description"
@@ -553,8 +553,8 @@
 
                     </Grid>
                 </Frame>
-                
-                <!-- Help Text -->
+
+                <!-- Advanced Search Help Text -->
                 <CollectionView x:Name="AdvancedSearchHelpList"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -571,7 +571,6 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-
             </Grid>
         </Frame>
         <!-- ... /Advanced Search ... -->
@@ -582,8 +581,6 @@
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv vvv -->
         <!--<Combined MediaElement with Labels>-->
-
-        <!-- Row 3 -->
         <toolkit:MediaElement x:Name="mediaElement" 
             Source="embed://gs-16b-1c-44100hz.mp3"
             ShouldShowPlaybackControls="True"
@@ -595,7 +592,7 @@
             VerticalOptions="Start"
             MinimumWidthRequest="350"          
             ZIndex="0" />
-        <!-- Row 4 -->
+        <!--... Media Labels ...-->
         <Label x:Name="mediaTitle"
             Text="Song Title"
             Style="{StaticResource NormalText}"
@@ -609,7 +606,6 @@
             VerticalOptions="End"
             LineBreakMode="TailTruncation"
             ZIndex="1"/>
-        <!-- Row 5 -->
         <Label x:Name="mediaArtist"
             Text="Artist Name"
             FontSize="Caption"
@@ -620,7 +616,6 @@
             VerticalOptions="Start"
             LineBreakMode="TailTruncation"
             ZIndex="1"/>
-
         <Label x:Name="mediaAlbum"
             Text="Album Name"
             FontSize="Caption"
@@ -631,10 +626,7 @@
             VerticalOptions="Start"
             LineBreakMode="TailTruncation"
             ZIndex="1"/>
-
-
         <!--... Shuffle and Previous-->
-
         <Button x:Name="Shuffle"
             Text="🔀"
             Scale=".55"
@@ -652,7 +644,6 @@
             HorizontalOptions="End"
             VerticalOptions="Center"
             ZIndex="1"/>
-        
         <Button x:Name="PreviousTrack"
             Text="⏮️"
             Scale=".55"
@@ -670,12 +661,8 @@
             HorizontalOptions="End"
             VerticalOptions="Center"
             ZIndex="1"/>
-
-
-
         <!--... Next and Loop ...-->
         <!--... 8 to 108x, 33w, = 108 - 33x2 = 34 / 3 = 11, 8+11= *20*, 20+33+11= *64*...-->
-
         <Button x:Name="NextTrack"
             Text="⏭️"
             Scale=".55"
@@ -693,7 +680,6 @@
             HorizontalOptions="Start"
             VerticalOptions="Center"
             ZIndex="1"/>
-
         <Button x:Name="RepeatList"
             Text="🔁"
             Scale=".55"
@@ -711,60 +697,13 @@
             HorizontalOptions="Start"
             VerticalOptions="Center"
             ZIndex="1"/>
-
-        
-        <!--... First and Last - Depreciated ...-->
-        <!--Margin="45,0,0,8"-->
-        <!--Margin="80,0,0,8"-->
-
-        <!--... Depreciated ...--> 
-        <Button x:Name="FirstTrack"
-            IsVisible="False"
-            IsEnabled="False"
-            Text="⏫"
-            Scale=".5"
-            Clicked="FirstTrack_Clicked"
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="0,0,45,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="0"
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-            ZIndex="1"/>
-
-        <!--... Depreciated ...-->
-        <Button x:Name="LastTrack"
-            IsVisible="False"
-            IsEnabled="False"
-            Text="⏬"
-            Scale=".5"
-            Clicked="LastTrack_Clicked"
-            TextColor="Black"
-            FontAttributes="Bold"
-            BackgroundColor="Transparent"
-            FontSize="32"
-            Margin="45,0,20,8"
-            Padding="0"
-            BorderColor="Transparent"
-            Grid.Row="4"
-            Grid.Column="1"
-            HorizontalOptions="Start"
-            VerticalOptions="Center"
-            ZIndex="1"/>
-
-
         <!--</Combined MediaElement with Labels>-->
         <!-- ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ -->
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
 
 
-
-        <!-- Row 6 -->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        <!-- Primary Playlist ListView -->
         <ContentView 
             Grid.Row="5" 
             Grid.RowSpan="3"
@@ -796,7 +735,21 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
+                                    <!--... Star ⭐ ★ ✪ ✸ ... -->
+                                    <Label Text="★"
+                                        IsVisible="{Binding Star}"
+                                        Padding="0"
+                                        Margin="-10,-5,0,0"
+                                        Style="{StaticResource NormalText}"
+                                        TextColor="#FFE9BA1B"
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        FontSize="20"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        ZIndex="1"/>
                                     <Label Text="{Binding Title}"       
+                                        Margin="8,0,0,0"
                                         Style="{StaticResource NormalText}"
                                         Grid.Column="0"
                                         Grid.ColumnSpan="2"
@@ -807,23 +760,23 @@
                                         HorizontalOptions="Center"
                                         ZIndex="1"/>
                                     <Label Text="{Binding Artist}"  
-                                           Style="{StaticResource NormalText}" 
-                                           Margin="0,0,5,0"
-                                           Grid.Column="0"
-                                           Grid.Row="1"
-                                           HorizontalOptions="Center"
-                                           LineBreakMode="TailTruncation"
-                                           FontSize="Caption"
-                                           ZIndex="1"/>
+                                        Style="{StaticResource NormalText}" 
+                                        Margin="0,0,5,0"
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"
+                                        FontSize="Caption"
+                                        ZIndex="1"/>
                                     <Label Text="{Binding Album}"   
-                                           Style="{StaticResource NormalText}" 
-                                           Margin="5,0,0,0"
-                                           Grid.Column="1"
-                                           Grid.Row="1"
-                                           HorizontalOptions="Center"
-                                           LineBreakMode="TailTruncation"                                               
-                                           FontSize="Caption"
-                                           ZIndex="1"/>
+                                        Style="{StaticResource NormalText}" 
+                                        Margin="5,0,0,0"
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"                                               
+                                        FontSize="Caption"
+                                        ZIndex="1"/>
                                     <Label Text="{Binding Genre}"   
                                         Style="{StaticResource NormalText}" 
                                         Grid.Column="0"  
@@ -856,46 +809,56 @@
                 </ListView.ItemTemplate>
             </ListView>
         </ContentView>
+        <!-- /Primary Playlist ListView -->
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
 
-        <!-- Row 7 -->
-        <Frame Grid.Row="8" Grid.ColumnSpan="3" CornerRadius="0" />
-        <Label x:Name="spinBox" Padding="5,0"
-                Grid.Row="8" 
-                Text="."
-                Rotation="180"
-                Style="{StaticResource NormalText}"
-                FontSize="Caption"
-                LineBreakMode="MiddleTruncation"
-                HorizontalOptions="Start"
-                VerticalOptions="Start"
-                HeightRequest="20"
-                MinimumHeightRequest="20"
-                MaximumHeightRequest="20"/>
-        <Label x:Name="messageBox" Padding="15,0"
-                Text="Messages ..." 
-                LineBreakMode="NoWrap" 
-                Grid.Row="8" 
-                Grid.ColumnSpan="3"
-                Style="{StaticResource NormalText}"
-                FontSize="Caption"
-                HorizontalOptions="Fill"
-                VerticalOptions="Center"
-                HeightRequest="20"
-                MinimumHeightRequest="20"
-                MaximumHeightRequest="20"/>
-        <Label x:Name="SearchCount" 
-                Padding="2,0"
-                Text="..." 
-                LineBreakMode="NoWrap" 
-                Grid.Row="8" 
-                Grid.Column="2"
-                Style="{StaticResource NormalText}"
-                FontSize="8"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-               />
+
+        <!-- === === === === === === === === === === === === === === === === === === === === === -->
+        <!-- Status Bar and Message Bar -->
+        <Frame Grid.Row="8" Grid.ColumnSpan="3" CornerRadius="0" Padding="0"  Margin="0">
+            <Grid Padding="0" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="35"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <!--... ⚬ ▪️ • ... • º ° ∙ · ...-->
+                <Label x:Name="spinBox" 
+                        Padding="0"
+                        Margin="4,-3,4,0"
+                        Grid.Row="0" 
+                        Text="M"
+                        Style="{StaticResource NormalText}"
+                        FontSize="Caption"
+                        HorizontalOptions="Start"
+                        VerticalOptions="End"
+                        />
+                <Label x:Name="messageBox" Padding="0" Margin="0,-3,0,0"
+                        Text="Messages ... " 
+                        LineBreakMode="NoWrap" 
+                        Grid.Row="0" 
+                        Grid.Column="1"
+                        Style="{StaticResource NormalText}"
+                        FontSize="12"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="End" />
+                <Label x:Name="SearchCount" 
+                        Padding="3,2"
+                        Text="------" 
+                        LineBreakMode="NoWrap" 
+                        Grid.Row="0" 
+                        Grid.Column="2"
+                        Style="{StaticResource NormalText}"
+                        FontSize="8"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"/>
+            </Grid>
+        </Frame>
     </Grid>
-
-
+    <!--/Status Bar-->
+    <!-- === === === === === === === === === === === === === === === === === === === === === -->
 
 </ContentPage>

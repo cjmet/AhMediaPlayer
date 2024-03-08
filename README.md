@@ -213,6 +213,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Worked on the GUI, Database, and Some EF Core Issues.
 * Started GUI Layout work for Editing Playlists
 * API Authentication, Various API Endpoints, Editing of misc Interface methods
 * Experimental Half-Baked Alpha Authentication added to the API.  This is a very basic and incomplete implementation. 

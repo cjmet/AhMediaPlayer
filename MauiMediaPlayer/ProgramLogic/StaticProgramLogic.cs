@@ -47,7 +47,7 @@ namespace MauiMediaPlayer.ProgramLogic
                         //var denom = 12 / Const.FontSizeDivisor;
                         var width = (int)(messageBox.Width / 6.5) - 1;
                         queuedMsg = AngelHornetLibrary.AhStrings.MiddleTruncate(queuedMsg, width);
-                        var spin = " .".Substring(spinner++ % 2, 1);
+                        var spin = Const.SpinChars.Substring(spinner++ % 2, 1);
                         sendMessages(queuedMsg, messageBox, spin, spinBox);
                         var displayDuration = queuedMsgLevel;
                         queuedMsg = "";

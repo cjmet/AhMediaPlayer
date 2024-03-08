@@ -33,6 +33,7 @@ namespace DataLibrary
 
         public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
         public string LineItem { get => $"{Title} {Artist} {Band} {Album} {Genre}"; }
+        public bool Star { get; set; } = false;
 
 
 
