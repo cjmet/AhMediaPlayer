@@ -51,6 +51,8 @@
                      MaximumHeightRequest="70" 
                      ZIndex="1">
             <ListView x:Name="TestPlaylist"
+                      IsEnabled="False"
+                      Opacity=".25"
                       Margin="40,0"                     
                       VerticalOptions="End"
                       VerticalScrollBarVisibility="Always"
@@ -141,6 +143,8 @@
         <!-- 🕵🏻‍♀️    🎶 🗃️ 🐕‍🦺 💻 -->
         <!--// Advanced Search and Playlist Edit Button -->
         <Button x:Name="MenuBox"
+            IsEnabled="False"
+            Opacity=".25"
             Text="🕵🏻‍♀"
             Scale=".7"
             Clicked="MenuBox_Clicked"
@@ -166,6 +170,8 @@
         <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
                HorizontalOptions="Center" ZIndex="2" Padding="-10" >
             <SearchBar x:Name="SearchBarStandard"
+                IsEnabled="False"
+                Opacity=".25"
                 MinimumWidthRequest="335"
                 HorizontalOptions="Center"
                 VerticalOptions="StartAndExpand"
@@ -736,24 +742,22 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <!--... Star ⭐ ★ ✪ ✸ ... -->
-                                    <Label Text="★"
+                                    <Label Text="★"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
                                         IsVisible="{Binding Star}"
                                         Padding="0"
-                                        Margin="-10,-5,0,0"
+                                        Margin="-10,0,0,0"
                                         Style="{StaticResource NormalText}"
                                         TextColor="#FFE9BA1B"
-                                        Grid.Column="0"
-                                        Grid.Row="0"
-                                        FontSize="20"
+                                        FontSize="Micro"
+                                        FontAttributes="Bold"
                                         HorizontalOptions="Start"
-                                        VerticalOptions="Center"
                                         ZIndex="1"/>
                                     <Label Text="{Binding Title}"       
                                         Margin="8,0,0,0"
                                         Style="{StaticResource NormalText}"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="2"
+                                        Grid.Column="0" 
                                         Grid.Row="0"
+                                        Grid.ColumnSpan="2"
                                         LineBreakMode="TailTruncation"
                                         FontSize="Micro"
                                         FontAttributes="Bold" 
@@ -783,25 +787,30 @@
                                         Grid.ColumnSpan="2"
                                         Grid.Row="2"
                                         HorizontalOptions="Center"
-                                        VerticalOptions="Start"
                                         LineBreakMode="TailTruncation"                                           
                                         FontSize="Caption"
                                         ZIndex="1"/>
-                                    <Label x:Name="FilePathDebug"
-                                        Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}"   
-                                        Style="{StaticResource NormalText}" 
-                                        SizeChanged="FilePathDebug_SizeChanged"
-                                        LineBreakMode="NoWrap"   
-                                        Padding="0"
-                                        Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
-                                        Grid.Column="0"  
-                                        Grid.ColumnSpan="2"
-                                        Grid.Row="3"
-                                        HorizontalOptions="End"
-                                        VerticalOptions="Center"                                     
-                                        FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
-                                        TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
-                                        ZIndex="1"/>
+                                    <!--... This kept jumping around, but putting in in a frame fixed it ...--> 
+                                    <Frame Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"
+                                           Padding="0" Margin="-1" CornerRadius="0"
+                                           BorderColor="Transparent" BackgroundColor="Transparent"
+                                           MaximumHeightRequest="{Binding Const.SongPathFrameHeight}"
+                                           HorizontalOptions="Fill">
+                                        <Label x:Name="FilePathDebug"
+                                            SizeChanged="FilePathDebug_SizeChanged"
+                                            Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}" 
+                                            Style="{StaticResource NormalText}" 
+                                            Padding="0"
+                                            Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
+                                            Grid.Column="0"  
+                                            Grid.ColumnSpan="2"
+                                            Grid.Row="3"
+                                            HorizontalOptions="End"
+                                            LineBreakMode="HeadTruncation"
+                                            FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
+                                            TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
+                                            ZIndex="1"/>
+                                    </Frame>
                                 </Grid>
                             </Frame>
                         </ViewCell>

@@ -73,7 +73,7 @@ namespace MauiMediaPlayer
             // cj - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
             //       Worse it only updates when you run a new search to redraw the list.
             //       We could probably put an event in for on width change. 
-            FilePathFontSize = 8;
+            FilePathFontSize = Const.SongPathFontSize;
             FilePathFontColor = "Black";
             // /Heinous Hack-Stockings
 
@@ -123,7 +123,19 @@ namespace MauiMediaPlayer
                 await Task.Delay(1);
                 LogDebug("=== /Database Dispatch Complete =============================== ===");
                 await Task.Delay(1000);
-                LogMsg("Startup Complete");
+                _ = this.Dispatcher.DispatchAsync(async () =>
+                {
+                    LogMsg("Enabling Controls");
+                    TestPlaylist.IsEnabled = true;
+                    TestPlaylist.Opacity = 1;
+                    await Task.Delay(1);
+                    MenuBox.IsEnabled = true;
+                    MenuBox.Opacity = 1;
+                    await Task.Delay(1);
+                    SearchBarStandard.IsEnabled = true;
+                    SearchBarStandard.Opacity = 1;
+                    LogMsg("Startup Complete");
+                });
             });
 
         }  // /Constructor /Main Page
@@ -200,20 +212,25 @@ namespace MauiMediaPlayer
 
         private async Task DispatchSonglist(List<Song> _songList)
         {
-            LogDebug($"Dispatch[203]"); // cjm ... continue here later.   Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
-            if (_songList == null || _songList.Count < 1) return;
+            // EF Core I Hate you More!
+            // cjm! ... continue here later.   Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
+            LogDebug($"DispatchSongList[202]"); 
+            if (_songList == null ) return;
             var _currentPlaylist = (Playlist)TestPlaylist.SelectedItem;
+            int _currentPlaylistId = _currentPlaylist != null ? _currentPlaylist.Id : -1;
             List<int> _playlistIndices = new List<int>();
-            if (_currentPlaylist != null)
+
+            if (_currentPlaylist != null && _currentPlaylistId > 1)                 
             {
-                LogDebug($"Dispatch[207]: Id:{_currentPlaylist.Id}");
-                LogDebug($"Dispatch[208]: Songs:{(_currentPlaylist.Songs != null ? _currentPlaylist.Songs.Count : "null")}");
-            }
-            if (_currentPlaylist != null && _currentPlaylist.Id > 1
-                && _currentPlaylist.Songs != null && _currentPlaylist.Songs.Count > 0) 
-            {
-                _playlistIndices = _currentPlaylist.Songs.Where(s => s != null).Select(s => s.Id).ToList();
-                LogDebug($"Dispatch[212]: {_playlistIndices.Count} Songs in Playlist");
+                var _dbPlaylist = _dbContext.Playlists.Where(p => p.Id == _currentPlaylistId);
+                if (_dbPlaylist != null)
+                {
+                    var _dbSonglist = _dbPlaylist.SelectMany(p => p.Songs);
+                    if (_dbSonglist != null)
+                    {
+                        _playlistIndices = _dbSonglist.Select(s => s.Id).ToList();
+                    }
+                }
             }
             
             foreach (var _song in _songList)
@@ -224,7 +241,7 @@ namespace MauiMediaPlayer
                 if (_playlistIndices.Contains(_song.Id)) _song.Star = true;
             }
             var tmp = _songList.Where(s => s.Star).Count();
-            LogDebug($"Dispatch[221]: {tmp} Songs Starred");
+            LogDebug($"Dispatch[231]: {tmp} Songs Selected");
 
             await this.Dispatcher.DispatchAsync(() =>
             {   // DispatchSonglist()

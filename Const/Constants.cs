@@ -5,16 +5,17 @@ namespace AhConfig
 {
     public static class Const
     {                                                           // Default: Description
-        public const int MinimumLogLevel = 1;                   // INFO: 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
-        public const bool UseSongCache = true;                  // TRUE:
+        public const int MinimumLogLevel = 2;                   // 2    : 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
+        public const bool UseSongCache = true;                  // TRUE :
+        public const int SongPathFontSize = 8;                  // 8    : The font size for the song path.
 
         public const bool ApiAllowSongAdmin = false;            // FALSE: Allows adding, removing, and modifying raw song data.
-        public const bool ApiDemoMode = true;                   // N/A  : Limit the API responses so it doesn't crash the Swagger Page.
+        public const bool ApiDemoMode = true;                   // TRUE : Limit the API responses so it doesn't crash the Swagger Page.
         public const int ApiDemoMax = 256;                      // 256  : Limit the API to this number of responses.
         public const bool ApiAllowMusicSearch = false;          // FALSE: You should NOT do this, unless you are running API ONLY and not the App.
-        public static readonly string[]                         // N/A  : It will automatically search %userprofile%\Music
+        public static readonly string[]                         
             ApiMusicSearchPaths = 
-                [@"C:\Users\Public\Music"];                     // Additional paths to search for music.  This is for the API only.
+                [@"C:\Users\Public\Music"];                     // N/A  : If enabled above API will automatically search %userprofile%\Music
 
         public const int CacheSize = 10;                        // 10   : The number of songs to cache.
         public const int CacheSizeMax = 400;                    // 400  : The maximum number of songs to cache.
@@ -23,7 +24,8 @@ namespace AhConfig
         public const string SpinChars = " ▪️";                   // " ▪️" : ⚬ ▪️ • The characters to use for the spinner.
         public const int ClockTick = 250;                       // 250  : Anything 250 to 1000 is good. Over 1000 is laggy.
                                                                 //      : Definitely don't go less than say 40, aka: 25fps.      
-
+        public static readonly int SongPathFrameHeight
+            = (int)(1.5 * SongPathFontSize);                   // N/A  : The height of the song path frame.
 
         // *** ************************************
         // You probably don't want to change these

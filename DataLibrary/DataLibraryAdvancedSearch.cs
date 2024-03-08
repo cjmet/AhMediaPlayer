@@ -111,7 +111,7 @@ namespace DataLibrary
                 LogTrace($"isEmpty[{_searchErrorString.Length}],   Search[{_searchString.Length}]:[{_searchString}],   EndMatch[{_matchEnd.Success}]");
                 _search = _searchString;
                 _searchString = "";
-                if (_searchErrorString.Length == 0)  // cjm - mixed logic, we need to split this out
+                if (_searchErrorString.Length == 0)  // cj - mixed logic, we need to split this out
                 {
                     _search = "";
                     _searchBy = "Any";
@@ -172,7 +172,7 @@ namespace DataLibrary
             List<Song> _selectionSet = new List<Song>();
             {
                 var _repository = (ISongRepository)new SongRepository(_dbContext);
-                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm cjm2
+                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm 
                 if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
                 LogTrace($"SelectionSet: {_selectionSet.Count}");
             }

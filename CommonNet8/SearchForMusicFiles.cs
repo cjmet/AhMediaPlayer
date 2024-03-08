@@ -101,7 +101,7 @@ namespace CommonNet8
 
 
 
-                var isolatedIOTask = new Task( () =>              // cjm - Isolating this further into it's own task, to see if this helps GUI responsiveness
+                var isolatedIOTask = new Task( () =>              // cj - Isolating this further into it's own task, to see if this helps GUI responsiveness
                 {
                     LogTrace($"Reading Tags[88]:  {filename}");
                     // Try Catch all the Id3TagFamily for malformed and corrupted tags

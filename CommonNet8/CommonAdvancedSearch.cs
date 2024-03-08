@@ -114,7 +114,7 @@ namespace CommonNet8
                 LogTrace($"isEmpty[{_searchErrorString.Length}],   Search[{_searchString.Length}]:[{_searchString}],   EndMatch[{_matchEnd.Success}]");
                 _search = _searchString;
                 _searchString = "";
-                if (_searchErrorString.Length == 0)  // cjm - mixed logic, we need to split this out
+                if (_searchErrorString.Length == 0)  // cj - mixed logic, we need to split this out
                 {
                     _search = "";
                     _searchBy = "Any";
@@ -170,7 +170,7 @@ namespace CommonNet8
 
 
 
-            // === ====================================================  // cjm
+            // === ====================================================  // cj
             // vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             // {Any} {Title} {Artist} {Album} {Band} {Genre}
             // ---
@@ -192,7 +192,7 @@ namespace CommonNet8
             // {Any} {Title} {Artist} {Album} {Band} {Genre}
             // ---
             //var _repository = (ISongRepository)new SongRepository(new PlaylistContext());
-            //List<Song> _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm cjm2
+            //List<Song> _selectionSet = _repository.SearchQuery(_by, _search).Result;            // 
             //if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
             //LogTrace($"SelectionSet: {_selectionSet.Count}");
             // ---
