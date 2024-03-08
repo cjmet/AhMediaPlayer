@@ -32,6 +32,7 @@ namespace MauiMediaPlayer
 
         // Heinous Hack-Stockings!  This is a lot of trouble for one label!
         public static int FilePathFontSize = 1;
+        public static int FilePathFrameHeight = 1;
         public static int FilePathFontMargin { get => -int.Max(FilePathFontSize / 2 - 2, 1); }
         public static string FilePathFontColor = "Transparent";
         public static int FilePathWindowWidth = 385;
@@ -74,6 +75,7 @@ namespace MauiMediaPlayer
             //       Worse it only updates when you run a new search to redraw the list.
             //       We could probably put an event in for on width change. 
             FilePathFontSize = Const.SongPathFontSize;
+            FilePathFrameHeight = Const.SongPathFrameHeight;
             FilePathFontColor = "Black";
             // /Heinous Hack-Stockings
 

@@ -794,7 +794,7 @@
                                     <Frame Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"
                                            Padding="0" Margin="-1" CornerRadius="0"
                                            BorderColor="Transparent" BackgroundColor="Transparent"
-                                           MaximumHeightRequest="{Binding Const.SongPathFrameHeight}"
+                                           MaximumHeightRequest="{Binding Source={x:Static local:MainPage.FilePathFrameHeight}}"
                                            HorizontalOptions="Fill">
                                         <Label x:Name="FilePathDebug"
                                             SizeChanged="FilePathDebug_SizeChanged"
