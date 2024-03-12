@@ -42,7 +42,9 @@ namespace DataLibrary
                  .SetProperty(s => s.Year, song.Year)
                  .SetProperty(s => s.Track, song.Track)
                  .SetProperty(s => s.Length, song.Length)
+                 .SetProperty(s => s.Star, song.Star)
                  );
+
             return results;
         }
         public async Task<Song?> GetSongByIdAsync(int songId)

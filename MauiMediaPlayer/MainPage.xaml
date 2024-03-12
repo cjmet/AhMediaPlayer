@@ -346,7 +346,7 @@
                     </Picker.ItemsSource>
                 </Picker>
 
-                <!-- Add, Remove, Save, Saveas, Rename, Delete -->
+                <!-- Add Song, Remove Song, Save, Saveas, Rename, Delete -->
                 <Frame
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -375,6 +375,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Button x:Name="AddSongsGui"
+                            Clicked="AddSongsGui_Clicked"
                             Grid.Column="0"
                             Text="➕Songs"
                             Scale="1"
@@ -743,7 +744,7 @@
                                     </Grid.RowDefinitions>
                                     <!--... Star ⭐ ★ ✪ ✸ ... -->
                                     <Label Text="★"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
-                                        IsVisible="{Binding Star}"
+                                        IsVisible="{Binding Star, Mode=TwoWay} "
                                         Padding="0"
                                         Margin="-10,0,0,0"
                                         Style="{StaticResource NormalText}"

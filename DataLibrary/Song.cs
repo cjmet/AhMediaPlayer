@@ -8,10 +8,12 @@ namespace DataLibrary
     {
         [Key]
         public int Id { get; set; }
+		public List<Playlist> Playlists;
         public string PathName { get; set; } = "";
-        public long FileSize { get; set; }
-
-        public string Title
+        
+		public long FileSize { get; set; }
+		private string title;
+		public string Title
         {
             get => title;
             set
@@ -20,21 +22,22 @@ namespace DataLibrary
                 AlphaTitle= CreateSongAlphaTitle(value);
             }
         }
-        public string AlphaTitle { get; private set; } = "";  // Cleaned up AlphaNumeric Only, Alphabetical Title for Sorting
-        public string? Artist { get; set; }
+        
+		public string? Artist { get; set; }
         public string? Band { get; set; }
         public string? Album { get; set; }
-        public int? Track { get; set; }
+        
+		public int? Track { get; set; }
         public int? Year { get; set; }
         public string? Genre { get; set; }
-        public string? Length { get; set; }
-        public List<Playlist> Playlists;
-        private string title;
-
-        public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
-        public string LineItem { get => $"{Title} {Artist} {Band} {Album} {Genre}"; }
+        
+		public string? Length { get; set; }
         public bool Star { get; set; } = false;
-
+		
+		// Read-Only
+		public string AlphaTitle { get; private set; } = "";  // Cleaned up AlphaNumeric Only, Alphabetical Title for Sorting
+		public string FileName { get => Path.GetFileNameWithoutExtension(PathName); }
+        public string LineItem { get => $"{Title} {Artist} {Band} {Album} {Genre}"; }
 
 
         public static string CreateSongAlphaTitle(string title)

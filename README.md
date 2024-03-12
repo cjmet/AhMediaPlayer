@@ -52,6 +52,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Current Project Questions
+1. &nbsp; Making the listview redraw and update, either automatically or on command.
 1. &nbsp; Class: API Authentication and Validation
 1. &nbsp; The Sync / Async Task buried in the middle of the converted Advanced Search inside DataLibrary.  I need to learn how to comprehend and fix this particular pattern.
 ---
@@ -87,6 +88,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
+- [ ] Fix Github insisting on messing up lowercase file names.
 - [ ] More API work?  Where do we go from here with the API?
 ---
 

@@ -245,9 +245,16 @@ namespace MauiMediaPlayer
             var tmp = _songList.Where(s => s.Star).Count();
             LogDebug($"Dispatch[231]: {tmp} Songs Selected");
 
+            List<vSong> _vSongList = new List<vSong>();
+            foreach (var _song in _songList)
+            {
+                if (_song == null) continue;
+                _vSongList.Add(new vSong(_song));
+            }
+
             await this.Dispatcher.DispatchAsync(() =>
             {   // DispatchSonglist()
-                TestSonglist.ItemsSource = _songList;
+                TestSonglist.ItemsSource = _vSongList; 
             });
 
         }
@@ -926,6 +933,16 @@ namespace MauiMediaPlayer
 
 
 
+        }
+
+        private void AddSongsGui_Clicked(object sender, EventArgs e)    // cjm - remove later
+        {
+            var _sender = (Button)sender;
+            var _song = (vSong)TestSonglist.SelectedItem;
+            if (_song == null) return;
+            LogMsg($"Add Song[{_song.Star}]: {_song.Title}");
+            _song.Star = !_song.Star;
+            LogMsg($"Result[{_song.Star}]: {_song.Title}");
         }
     }
 
