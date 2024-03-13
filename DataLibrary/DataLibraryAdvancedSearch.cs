@@ -172,7 +172,7 @@ namespace DataLibrary
             List<Song> _selectionSet = new List<Song>();
             {
                 var _repository = (ISongRepository)new SongRepository(_dbContext);
-                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cjm 
+                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cj
                 if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
                 LogTrace($"SelectionSet: {_selectionSet.Count}");
             }

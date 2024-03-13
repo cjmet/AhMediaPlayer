@@ -62,7 +62,7 @@ namespace Playground
 
 
             //ItemsListView.SetBinding(ListView.ItemsSourceProperty, new Binding(".", source: _vList));   // cjm *** SetBinding() ***
-            ItemsListView.ItemsSource = _vList;     // cjm - this works too, and is much simpler.
+            ItemsListView.ItemsSource = _vList;     // this works too, and is much simpler.
 
 
 

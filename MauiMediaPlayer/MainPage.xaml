@@ -167,12 +167,13 @@
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!--... Standard Search Bar ...-->
+        <!--... Padding="0,-10,-10,0"  Margin="0,0,-40,0" ... -->
         <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
-               HorizontalOptions="Center" ZIndex="2" Padding="-10" >
+               HorizontalOptions="Center" ZIndex="2" Padding="-10"  Margin="0,0,0,0">
             <SearchBar x:Name="SearchBarStandard"
                 IsEnabled="False"
                 Opacity=".25"
-                MinimumWidthRequest="335"
+                MinimumWidthRequest="315"
                 HorizontalOptions="Center"
                 VerticalOptions="StartAndExpand"
                 HorizontalTextAlignment="Center"
@@ -181,9 +182,31 @@
                 IsSpellCheckEnabled="True"
                 FontAutoScalingEnabled="True"
                 FontSize="13"
-                Placeholder="Search for a song, artist, band, album, or genre"
+                Placeholder="Title, Artist, Band, Album, Genre, Path"
                 SearchButtonPressed="SearchBar_SearchButtonPressed"/>
         </Frame>
+        <Label 
+            BindingContext="{x:Reference Searchby}"
+            Text="{Binding SelectedItem}"
+            FontSize="10"
+            FontAttributes="Bold"
+            Grid.Row="1"
+            Margin="0"
+            Padding="10,0"
+            HorizontalOptions="Start"
+            VerticalOptions="End"
+            ZIndex="0"/>
+        <Label 
+            BindingContext="{x:Reference SearchAction}"
+            Text="{Binding SelectedItem}"
+            FontSize="10"
+            FontAttributes="Bold"
+            Grid.Row="1"
+            Margin="0"
+            Padding="10,0"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            ZIndex="0"/>
         <!--/Standard Search Bar-->
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
 
@@ -302,13 +325,13 @@
 
                 <!--  SearchBy ... Margin="0,-25,-30,-25"  -->
                 <Picker x:Name="Searchby"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     BackgroundColor="LightGray"
                     WidthRequest="130"
-                    Margin="0,-5,-25,-5"
+                    Margin="-25,-5,0,-5"
                     FontSize="26"
                     Scale=".5"
-                    HorizontalOptions="End"
+                    HorizontalOptions="Start"
                     VerticalOptions="Center"
                     ZIndex="3">
                     <Picker.ItemsSource>
@@ -326,13 +349,13 @@
 
                 <!--   SearchAcion ... Margin="-40,-25,0,-25"  -->
                 <Picker x:Name="SearchAction"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     BackgroundColor="LightGray"
                     WidthRequest="150"
-                    Margin="-25,-5,0,-5"
+                    Margin="0,-5,-25,-5"
                     FontSize="26"
                     Scale=".5"
-                    HorizontalOptions="Start"
+                    HorizontalOptions="End"
                     VerticalOptions="Center"
                     ZIndex="3">
                     <Picker.ItemsSource>

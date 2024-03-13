@@ -48,9 +48,12 @@ namespace CommonNet8
     public static class SearchForMusicFiles
     {
 
-        public static async Task SearchUserProfileMusic(PlaylistContext _dbContext, IProgress<string> progress, string SearchPath = "")
+        public static async Task SearchUserProfileMusic(PlaylistContext _mainDbContext, IProgress<string> progress, string SearchPath = "")
         {
+            // We need a separate context so we don't cause async issues with EF Core.  We can ignore the _mainDbContext now ... it's not used.
             LogMsg($"Searching for Music");
+            var _dbContext = new PlaylistContext();
+
             var folder = Environment.SpecialFolder.UserProfile;
             var path = Environment.GetFolderPath(folder);
             List<string> MusicPaths= new List<string>();
@@ -75,6 +78,8 @@ namespace CommonNet8
                     await Task.Delay(1);                    // We need this delay for GUI Responsiveness.  1ms minimum, 10ms on Gb Lan, 40ms is 25fps, 100ms 100mb LAN, 1000ms 10mb LAN
                 }
             }
+
+            _dbContext.Dispose();
             LogMsg("Search for Music Files Complete.");
             return;
         }

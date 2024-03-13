@@ -40,7 +40,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 * * GUI responsiveness suffers to SMB WAN Operations.  
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
   * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely solved the issue.
-
+* EF Core does not like multiple DbContexts Async.  This means you can't scan a disk for music while doing other Db related queries.
+  * I probably need to run the scan for music on a separate DbContext set to no-tracking.  I just recently moved it to the same context for consistency, but it turns out that might not be the best idea.
 
 ## Suggestions
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
@@ -85,6 +86,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
+- [ ] Delete Operation Optimization
+- [ ] Search For Music Separate DbContext with No-Tracking
 - [ ] Fix GitHub insisting on messing up lowercase file names.
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
@@ -213,6 +216,15 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Fixed a bug I introduced in the delete method.  I KNEW better, but forgot.
+  * You can't OrdinalIgnoreCase in EF on the Database side, only the client side.  This is one way to do it, the second line evaluates OrdinalIgnoreCase on the client side.
+    ```
+    var _playlists = await _dbContext.Playlists.ToListAsync();
+    _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+    ```  
+* Holy Swiss Cheese!  30 songs per second to 10k songs per second.
+  * At first the new version was hard locking.  I fixed that by making the list 'smarter', and I strongly suspect that's related to 'setting already set' AND using SaveChangesAsync() in place of SaveChages().  I can't explain the WHY, but the results are dramatic.
+  * Adding a song that's already added causes a MASSIVE slowdown and even causes the SaveChangesAsync to hard lock sometimes. It might be better to use SaveChanges() no Async.  However, making a 'smart' list of changes only, avoids the 'setting already set' problem which in turn avoids the massive slowdown and hard lock. Just 30 songs 'setting already set' was enough to cause a hard lock.
 * GitHub continues downloading Pascal Case image names to windows, but we can't compile them that way.  So I renamed everything _lc in lower case to hopefully force it to download lowercase.
 * `AliceBlue #FFF0F8FF`
 `Platform/Windows/App.Xaml`

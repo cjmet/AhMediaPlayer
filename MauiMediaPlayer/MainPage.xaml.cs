@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 
+
 namespace MauiMediaPlayer
 {
     public partial class MainPage : ContentPage
@@ -100,7 +101,7 @@ namespace MauiMediaPlayer
                 Application.Current.Dispatcher.Dispatch(() =>
                 {
                     List<string> list = new List<string>();
-                    list = DataLibraryAdvancedSearch.ShortHelpText(); /// cjm3
+                    list = DataLibraryAdvancedSearch.ShortHelpText();
                     AdvancedSearchHelpList.ItemsSource = list;
                 });
             });
@@ -144,7 +145,7 @@ namespace MauiMediaPlayer
                     while (TestSonglist.Height < 1) Task.Delay(25);
                     TestSonglist.GestureRecognizers.Add(tapGestureRecognizer);
                     LogDebug("=== Double Tap Gesture(s) Loaded");
-                });                
+                });
                 LogDebug("Delay Loading Double Tap Gesture(s) =============================== ===");
 
                 await Task.Delay(1000);
@@ -231,7 +232,7 @@ namespace MauiMediaPlayer
         private async Task DispatchSonglist(List<Song> _songList)
         {
             // EF Core I Hate you More!
-            // cjm! ... continue here later.   Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
+            // Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
             LogDebug($"DispatchSongList[202]");
             if (_songList == null) return;
             var _currentPlaylist = (Playlist)TestPlaylist.SelectedItem;
@@ -723,7 +724,7 @@ namespace MauiMediaPlayer
             if (_path != "")
             {
                 var _progress = new ReportProgressToQueue(_messageQueue);
-                _ = SearchUserProfileMusic(_dbContext,  _progress, _path);
+                _ = SearchUserProfileMusic(_dbContext, _progress, _path);
             }
         }
 
@@ -733,6 +734,7 @@ namespace MauiMediaPlayer
             {
                 AdvandedSearchFrame.IsVisible = false;
                 MenuBox.BackgroundColor = Color.Parse("Transparent");
+                SearchBarStandard.IsEnabled = true;
             });
             else Application.Current.Dispatcher.Dispatch(() =>
             {
@@ -741,8 +743,8 @@ namespace MauiMediaPlayer
                 MenuBox.BackgroundColor = Color.Parse("LightBlue");
                 Searchby.SelectedIndex = 0;
                 SearchAction.SelectedIndex = 0;
+                SearchBarStandard.IsEnabled = false;
             });
-
         }
         private void SetEditBarState()
         {
@@ -803,7 +805,7 @@ namespace MauiMediaPlayer
                 LogMsg($"Search: \"{_searchText}\"");
 
 
-            (_advancedResult, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchText, _by, _action, _dbContext); // cjm 
+            (_advancedResult, _searchBy, _searchAction) = AdvancedSearch(_currentSet, _searchText, _by, _action, _dbContext);
             if (_advancedResult != null)
             {
                 _songList = _advancedResult.ToList();
@@ -823,8 +825,8 @@ namespace MauiMediaPlayer
                 if (_songList.Count > 0) SearchCount.Text = $"{_songList.Count:n0}";
                 Searchby.SelectedItem = _searchBy;
                 SearchAction.SelectedItem = _searchAction;
-                var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";
-                if (_by != null && _by != "Any") Placeholder = $"SearchBy: {_searchBy}     -     SearchAction: {_searchAction}";
+                var Placeholder = "Title, Artist, Band, Album, Genre, Path";
+                if (_by != null && _action != null && ( _by.ToLower() != "any"  || _action.ToUpper() != "SEARCH")) Placeholder = $"SearchAction: {_searchAction}     -     SearchBy: {_searchBy}";
                 _searchBar.Placeholder = Placeholder;
             });
         }
@@ -885,7 +887,7 @@ namespace MauiMediaPlayer
                     else
                     {
                         var _playlist = (Playlist)TestPlaylist.SelectedItem;
-                        if (_playlist == null) { Enable_Gui(true); return; } 
+                        if (_playlist == null) { Enable_Gui(true); return; }
                         _name = $"Playlist {_playlist.Id}";
                     }
                 }
@@ -908,13 +910,13 @@ namespace MauiMediaPlayer
                     _playlist = new Playlist { Name = _name, Description = _desc, Songs = new List<Song>() };
                     _dbContext.Playlists.Add(_playlist);
                     List<Song>? _songList = new List<Song>();
-                    await Task.Run( () => _songList = TestSonglist.ItemsSource.Cast<Song>().ToList());
+                    await Task.Run(() => _songList = TestSonglist.ItemsSource.Cast<Song>().ToList());
                     if (_songList == null) _songList = new List<Song>();
                     int i = 0;
                     foreach (Song _song in _songList)
                         if (_song != null)
                         {
-                            var _addSong = _dbContext.Songs.Find(_song.Id);             // cjm - EF Core Tracking I Hate You.
+                            var _addSong = _dbContext.Songs.Find(_song.Id);             // EF Core Tracking I Hate You.
                             if (_addSong != null) _playlist.Songs.Add(_addSong);
                             if (i++ % 400 == 0) await Task.Delay(1);                    // roughly 25 fps on my machine.
                             if (i % 10000 == 0) LogMsg($"Adding Songs: {i}");
@@ -922,7 +924,7 @@ namespace MauiMediaPlayer
                     _dbContext.SaveChanges();
                 }
                 else
-                {                    
+                {
                     _playlist = (Playlist)TestPlaylist.SelectedItem;
                     if (_playlist == null) { Enable_Gui(true); return; }
                     _playlist.Name = _name;
@@ -953,10 +955,62 @@ namespace MauiMediaPlayer
             Enable_Gui(true);
         }
 
+        private async void DeletePlaylistImproved(object sender, EventArgs e)
+        {
+            // Removing the songs first, with a smart selective list, makes the delete playlist 100x faster.
+            // So we're reusing what we learned in Holy Swiss Cheese, then doing the playlist delete.
+            LogMsg("Intercepting DeletePlaylistGui_Clicked");
+            var _songs = (List<vSong>)TestSonglist.ItemsSource;
+            if (_songs == null) return;
+            
+            Enable_Gui(false);
+            await AddRemoveSongList(sender, e, _songs, false);
+            
+            var _appPlaylist = (Playlist)TestPlaylist.SelectedItem;
+            var _playlistID = _appPlaylist.Id;
+
+            var _playlists = await _dbContext.Playlists.ToListAsync();
+            _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            var _playListIndex = _playlists.IndexOf(_appPlaylist);
+
+            var _dbPlaylist = await _dbContext.Playlists.Where(p => p.Id == _playlistID).FirstOrDefaultAsync();
+            if (_dbPlaylist == null || _playlistID <= 1) { Enable_Gui(true); return; }
+
+            await Task.Run(async () =>
+            {
+                LogDebug($"Removing[967] ... ");
+                _dbContext.Playlists.Remove(_dbPlaylist);
+                LogDebug($"Removed[968] ... ");
+                await Task.Delay(1);
+                LogDebug($"Saving[973] ... ");
+                _dbContext.SaveChanges();
+                LogDebug($"Saved[975] ... ");
+            });
+
+            TestPlaylist.SelectedItem = null;
+            _playlists = await _dbContext.Playlists.ToListAsync();
+            _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            var _index = _playListIndex - 1;
+            _index = _index < 0 ? 0 : _index;   
+            _appPlaylist = _playlists.ElementAtOrDefault(_index);
+            LogDebug($"Dispatching[976] ... ");
+            await Application.Current.Dispatcher.DispatchAsync(async () =>
+            {
+                TestPlaylist.ItemsSource = _playlists;
+                await Task.Delay(1);
+                if (_appPlaylist != null)
+                {
+                    TestPlaylist.ScrollTo(_appPlaylist, ScrollToPosition.Start, true);
+                    TestPlaylist.SelectedItem = _appPlaylist;
+                }
+            });
+
+            Enable_Gui(true);
+
+            return;
+        }
         private async void DeletePlaylistGui_Clicked(object sender, EventArgs e)
         {
-            // Need to clean everything up to use Repositories before we can try this again. // // _dbContext.ChangeTracker.Clear();
-            // It probably would speed things up, but right now it causes context tracking issues.      // cj 
 
             var _sender = (Button)sender;
             var _playlist = (Playlist)TestPlaylist.SelectedItem;
@@ -964,67 +1018,76 @@ namespace MauiMediaPlayer
 
             bool answer = await DisplayAlert("Delete Playlist", _playlist.Name, "Delete", "Cancel");
 
-            if (answer)
-            {
-                Enable_Gui(false);
-                
-                
-                var spinner = 0;
-                var spinchar = new char[] { '|', '/', '-', '\\' };
-                var cts = new CancellationTokenSource();
-                var ct = cts.Token;
-                
+            // cjm 
+            // Interecept this and lets see if we can make it better.
+            if (answer) DeletePlaylistImproved(sender, e);
+            return;
 
-                Task spin = new Task(async () =>
-                {
-                    var id = _playlist.Id;
-                    var name = _playlist.Name;
-                    while (!ct.IsCancellationRequested)
-                    {
-                        LogMsg($"Deleting Playlist[{id}]: {(spinner++ == 0 ? name : spinchar[spinner % 4])}");
-                        await Task.Delay(3000);
-                    }
-                },  ct, TaskCreationOptions.LongRunning);
-                spin.Start();
 
-                LogDebug($"Deleting Playlist: [{_playlist.Id}] {_playlist.Name}");
-                var _playlists = await _dbContext.Playlists.OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase).ToListAsync();
-                var _index = _playlists.IndexOf(_playlist);
-                if (--_index < 0) _index = 0;
-                await Task.Run(() =>
-                {
-                    LogDebug($"Removing[967] ... ");
-                    _dbContext.Playlists.Remove(_playlist);
-                    LogDebug($"Removed[968] ... ");
-                    LogDebug($"Saving[973] ... ");
-                    _dbContext.SaveChanges();
-                    LogDebug($"Saved[975] ... ");
-                });
-                TestPlaylist.SelectedItem = null;
-                //_playlists = await _dbContext.Playlists.ToListAsync();      // Already did this above ... 
-                //_playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
-                _playlist = _playlists.ElementAtOrDefault(_index);
-                LogDebug($"Dispatching[976] ... ");
-                await Application.Current.Dispatcher.DispatchAsync(async () =>
-                {
-                    TestPlaylist.ItemsSource = _playlists;
-                    await Task.Delay(1);
-                    if (_playlist != null)
-                    {
-                        TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
-                        TestPlaylist.SelectedItem = _playlist;  
-                    }
-                });
+            //if (answer)
+            //{
+            //    Enable_Gui(false);
 
-                cts.Cancel();
-                Enable_Gui(true);
-            }
+
+            //    var spinner = 0;
+            //    var spinchar = new char[] { '|', '/', '-', '\\' };
+            //    var cts = new CancellationTokenSource();
+            //    var ct = cts.Token;
+
+
+            //    Task spin = new Task(async () =>
+            //    {
+            //        var id = _playlist.Id;
+            //        var name = _playlist.Name;
+            //        while (!ct.IsCancellationRequested)
+            //        {
+            //            LogMsg($"Deleting Playlist[{id}]: {(spinner++ == 0 ? name : spinchar[spinner % 4])}");
+            //            await Task.Delay(3000);
+            //        }
+            //    }, ct, TaskCreationOptions.LongRunning);
+            //    spin.Start();
+
+            //    LogDebug($"Deleting Playlist[990]: [{_playlist.Id}] {_playlist.Name}");
+            //    // WARNING:  You can't do StringComparer in dbContext.  I knew that, but forgot.
+            //    var _playlists = await _dbContext.Playlists.ToListAsync();
+            //    _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            //    var _index = _playlists.IndexOf(_playlist);
+            //    if (--_index < 0) _index = 0;
+            //    await Task.Run(() =>
+            //    {
+            //        LogDebug($"Removing[967] ... ");
+            //        _dbContext.Playlists.Remove(_playlist);
+            //        LogDebug($"Removed[968] ... ");
+            //        LogDebug($"Saving[973] ... ");
+            //        _dbContext.SaveChanges();
+            //        LogDebug($"Saved[975] ... ");
+            //    });
+            //    TestPlaylist.SelectedItem = null;
+            //    _playlists = await _dbContext.Playlists.ToListAsync();    
+            //    _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            //    _playlist = _playlists.ElementAtOrDefault(_index);
+            //    LogDebug($"Dispatching[976] ... ");
+            //    await Application.Current.Dispatcher.DispatchAsync(async () =>
+            //    {
+            //        TestPlaylist.ItemsSource = _playlists;
+            //        await Task.Delay(1);
+            //        if (_playlist != null)
+            //        {
+            //            TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
+            //            TestPlaylist.SelectedItem = _playlist;
+            //        }
+            //    });
+
+            //    cts.Cancel();
+            //    Enable_Gui(true);
+            //}
 
 
 
         }
 
-       private void Enable_Gui(bool _enable) {  
+        private void Enable_Gui(bool _enable)
+        {
             LogMsg($"* {(_enable ? "En" : "Dis")}abling Controls");
             var _opacity = _enable ? 1 : 0.25;
             TestPlaylist.IsEnabled = _enable;
@@ -1033,80 +1096,154 @@ namespace MauiMediaPlayer
             EditFrame.Opacity = _opacity;
             SearchBarStandard.IsEnabled = _enable;
             SearchBarStandard.Opacity = _opacity;
-            AdvancedSearchGrid.IsEnabled = _enable;            
+            AdvancedSearchGrid.IsEnabled = _enable;
             AdvancedSearchGrid.Opacity = _opacity;
             MenuBox.IsEnabled = _enable;
             MenuBox.Opacity = _opacity;
         }
-        private async void AddSongsGui_Clicked(object sender, EventArgs e)    // cjm - remove later
+        private async Task AddRemoveSongList(object sender, EventArgs e, List<vSong>? _songlist, Boolean _addSongs)
         {
-            LogMsg("Checking Playlist");
-            var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
-            if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
-            Enable_Gui(false);
-            LogMsg($"Reading Songs ... ");
-            var _sender = (Button)sender;
-            var _songs = (List<vSong>) TestSonglist.ItemsSource;
-            if (_songs != null)
-            {
-                LogMsg($"Adding {_songs.Count} Songs");
-                int i = 0;
-                foreach (var _song in _songs)
-                {
-                    if (_song != null) AddRemoveSong(_song, true);
-                    if (++i % 30 == 0) LogMsg($"Adding Songs: {i}");
-                    await Task.Delay(1);
-                }
-            }
-            Enable_Gui(true);
-        }
-        private async void RemoveSongsGui_Clicked(object sender, EventArgs e)
-        {
-            LogMsg("Checking Playlist");
-            var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
-            if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
-            Enable_Gui(false);
-            LogMsg($"Reading Songs ... ");
-            var _sender = (Button)sender;
-            var _songs = (List<vSong>)TestSonglist.ItemsSource;
-            if (_songs != null)
-            {
-                LogMsg($"Remove {_songs.Count} Songs");
-                int i = 0;
-                foreach (var _song in _songs)
-                {
-                    if (_song != null) await AddRemoveSong(_song, false);
-                    if (++i % 30 == 0) LogMsg($"Removing Songs: {i}");
-                    await Task.Delay(1);
-                }
-                Enable_Gui(true);
-            }
-        }
-        private async Task AddRemoveSong(vSong _song, bool _add)
-        {
-            if (_song == null) return;
-            var _playlist = (Playlist)TestPlaylist.SelectedItem;
-            if (_playlist == null) return;
-            if (_playlist.Id == 1) return;
+            // cjm - Holy Swiss Cheese!  
+            // Adding a song that's already added causes a MASSIVE slowdown and even causes the SaveChangesAsync to hard lock sometimes.
+            // It might be better to use SaveChanges() no Async.
+            // However, making a 'smart' list of changes only, avoids the 'setting already set' problem which in turn avoids the massive slowdown and hard lock.
+            // Just 30 songs 'setting already set' was enough to cause a hard lock.
+            // ... now to test more extensively.
 
-            var _dbSong = await _dbContext.Songs.Include(s => s.Playlists).Where(s => s.Id == _song.Id).FirstOrDefaultAsync();
-            if (_dbSong == null) return;
-            var _dbPlaylist = await _dbContext.Playlists.Where(p => p.Id == _playlist.Id).FirstOrDefaultAsync();
-            if (_add)
+            LogMsg("Intercepting Add/Remove Song");
+            var _sender = (Button)sender;
+            var _playlist = (Playlist)TestPlaylist.SelectedItem;
+            var _playlistId = _playlist.Id;
+            //var _songlist = (List<vSong>)TestSonglist.ItemsSource; // Pass this in instead, then I can use this method for other things as well.
+            var _songlistIds = _songlist.Select(s => s.Id).ToList();
+            if (_playlist == null || _playlist.Id <= 1) return;
+            if (_songlist == null) return;
+
+            await Task.Delay(1);
+            if (_addSongs)
             {
-                _song.Star = true;
-                _dbSong.Playlists.Add(_playlist);
-                if (_playlist.Songs != null) _playlist.Songs.Add(_dbSong);
+                var _existingIds = await _dbContext.Songs.Where(s => s.Playlists.Any(p => p.Id == _playlistId)).Select(s => s.Id).ToListAsync();
+                var _newSongIds = _songlistIds.Except(_existingIds).ToList();
+                LogMsg($"Adding {_newSongIds.Count} Songs to Playlist (DB)[{_playlistId}]");
+                // cjm - check for null playlists.  Use "?" notation!
+                await _dbContext.Songs.Where(s => _newSongIds.Contains(s.Id)).Include(s => s.Playlists).ForEachAsync(s =>{ s.Playlists?.Add(_playlist); });  
+                await Task.Delay(1);
+
+                // Stars are just a visual aid, we don't have to actually set them in the database, just the View.
+                LogMsg($"Setting Stars {_newSongIds.Count} Songs to Playlist (local)[{_playlistId}]");
+                foreach (var song in _songlist.Where(s => _newSongIds.Contains(s.Id))) song.Star = true;
+
+                LogMsg($"Saving ... ");
+                var results = await _dbContext.SaveChangesAsync();
+                if (results < _newSongIds.Count ) LogError($"ERROR: Saved [{results}] of [{_newSongIds.Count}] ");
+                LogMsg($"Saved [{results}] ... ");
             }
             else
             {
-                _song.Star = false;
-                _dbSong.Playlists.Remove(_playlist);
-                if (_playlist.Songs != null) _playlist.Songs.Remove(_dbSong);
-            }
+                var _existingIds = await _dbContext.Songs.Where(s => s.Playlists.Any(p => p.Id == _playlistId)).Select(s => s.Id).ToListAsync();
+                var _removeSongIds = _songlistIds.Intersect(_existingIds).ToList();
+                LogMsg($"Removing {_removeSongIds.Count} Songs from Playlist (DB)[{_playlistId}]");
+                // cjm - check for null playlists.  Use "?" notation!
+                await _dbContext.Songs.Where(s => _removeSongIds.Contains(s.Id)).Include(s => s.Playlists).ForEachAsync(s => { s.Playlists?.Remove(_playlist); }); 
+                await Task.Delay(1);
 
-            var results = _dbContext.SaveChanges();
-            LogTrace($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_add ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
+                // Stars are just a visual aid, we don't have to actually set them in the database, just the View.
+                LogMsg($"Setting Stars {_removeSongIds.Count} Songs from Playlist (local)[{_playlistId}]");
+                foreach (var song in _songlist.Where(s => _removeSongIds.Contains(s.Id))) song.Star = false;
+
+                LogMsg($"Saving ... ");
+                var results = await _dbContext.SaveChangesAsync();
+                if (results < _removeSongIds.Count) LogError($"ERROR: Saved [{results}] of [{_removeSongIds.Count}] ");
+                LogMsg($"Saved [{results}] ... ");
+            }
+        }
+        private async void AddSongsGui_Clicked(object sender, EventArgs e)    // cjm 
+        {
+            // Intercept and lets see if we can do this more efficiently.
+            var _songs = (List<vSong>)TestSonglist.ItemsSource;
+            if (_songs == null) return;
+            Enable_Gui(false);
+            await AddRemoveSongList(sender, e, _songs, true);
+            Enable_Gui(true);
+            return;
+
+
+            //LogMsg("Checking Playlist");
+            //var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
+            //if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
+            //Enable_Gui(false);
+            //LogMsg($"Reading Songs ... ");
+            //var _sender = (Button)sender;
+            //var _songs = (List<vSong>)TestSonglist.ItemsSource;
+            //if (_songs != null)
+            //{
+            //    LogMsg($"Adding {_songs.Count} Songs");
+            //    int i = 0;
+            //    foreach (var _song in _songs)
+            //    {
+            //        if (_song != null) AddRemoveSong(_song, true);
+            //        if (++i % 30 == 0) LogMsg($"Adding Songs: {i}");
+            //        await Task.Delay(1);
+            //    }
+            //}
+            //Enable_Gui(true);
+        }
+        private async void RemoveSongsGui_Clicked(object sender, EventArgs e)
+        {
+            // Intercept and lets see if we can do this more efficiently.
+            var _songs = (List<vSong>)TestSonglist.ItemsSource;
+            if (_songs == null) return;
+            Enable_Gui(false);
+            await AddRemoveSongList(sender, e, _songs, false);
+            Enable_Gui(true);
+            return;
+
+            //LogMsg("Checking Playlist");
+            //var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
+            //if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
+            //Enable_Gui(false);
+            //LogMsg($"Reading Songs ... ");
+            //var _sender = (Button)sender;
+            //var _songs = (List<vSong>)TestSonglist.ItemsSource;
+            //if (_songs != null)
+            //{
+            //    LogMsg($"Remove {_songs.Count} Songs");
+            //    int i = 0;
+            //    foreach (var _song in _songs)
+            //    {
+            //        if (_song != null) await AddRemoveSong(_song, false);
+            //        if (++i % 30 == 0) LogMsg($"Removing Songs: {i}");
+            //        await Task.Delay(1);
+            //    }
+            //    Enable_Gui(true);
+            //}
+        }
+        private async Task AddRemoveSong(vSong _song, bool _add)
+        {
+            throw new Exception("This is not used anymore.");
+            //if (_song == null) return;
+            //var _playlist = (Playlist)TestPlaylist.SelectedItem;
+            //if (_playlist == null) return;
+            //if (_playlist.Id == 1) return;
+
+            //var _dbSong = await _dbContext.Songs.Include(s => s.Playlists).Where(s => s.Id == _song.Id).FirstOrDefaultAsync();
+            //if (_dbSong == null) return;
+            //var _dbPlaylist = await _dbContext.Playlists.Where(p => p.Id == _playlist.Id).FirstOrDefaultAsync();
+            //if (_add)
+            //{
+            //    _song.Star = true;
+            //    _dbSong.Playlists.Add(_playlist);
+            //    if (_playlist.Songs != null) _playlist.Songs.Add(_dbSong);
+            //}
+            //else
+            //{
+            //    _song.Star = false;
+            //    _dbSong.Playlists.Remove(_playlist);
+            //    if (_playlist.Songs != null) _playlist.Songs.Remove(_dbSong);
+            //}
+
+            //var results = _dbContext.SaveChanges();
+            //LogTrace($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_add ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
         }
 
         private void OnStar_Clicked(object sender, EventArgs e)
@@ -1139,7 +1276,7 @@ namespace MauiMediaPlayer
             LogMsg($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_song.Star ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
         }
 
-        private void EditPlaylistGui_Clicked(object sender, EventArgs e)        // cjm 
+        private void EditPlaylistGui_Clicked(object sender, EventArgs e)
         {
             Gui_SaveAs = false;
             var _sender = (Button)sender;

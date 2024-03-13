@@ -78,7 +78,7 @@ namespace DataLibrary
             _search = _search.ToLower();
 
             var _db = _context;
-            List<Song> _selectionSet = new List<Song>(); // cjm 
+            List<Song> _selectionSet = new List<Song>(); // cj
             if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Title.ToLower().Contains(_search)),s => s.Id).ToList(); }
             if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search)), s => s.Id).ToList(); }
             if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Album.ToLower().Contains(_search)), s => s.Id).ToList(); }
