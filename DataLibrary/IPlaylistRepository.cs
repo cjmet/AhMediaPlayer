@@ -13,6 +13,7 @@ namespace DataLibrary
         public Task<List<Playlist>> GetAllPlaylistsAsync();
         public Task<int> AddSongToPlaylistAsync(int playlistId, int songId);
         public Task<int> RemoveSongFromPlaylist(int playlistId, int songId);
+        public void DbContextChangeTrackerClear();
 
     }
 }

@@ -48,7 +48,7 @@ namespace CommonNet8
     public static class SearchForMusicFiles
     {
 
-        public static async Task SearchUserProfileMusic(IProgress<string> progress, string SearchPath = "")
+        public static async Task SearchUserProfileMusic(PlaylistContext _dbContext, IProgress<string> progress, string SearchPath = "")
         {
             LogMsg($"Searching for Music");
             var folder = Environment.SpecialFolder.UserProfile;
@@ -59,7 +59,6 @@ namespace CommonNet8
             foreach (var _path in MusicPaths) LogMsg($"   Path: {_path}");
 
             List<string> _filesCache = new List<string>();
-            var _dbContext = new PlaylistContext();
             _filesCache = await _dbContext.Songs.Select(s => s.PathName).ToListAsync();
 
             await foreach (string filename in new AhGetFiles().GetFilesAsync(MusicPaths, "*.mp3", iprogress: progress))
@@ -72,7 +71,7 @@ namespace CommonNet8
                 else
                 {
                     LogTrace($"Adding[23]: {filename}");
-                    await AddFilenameToSongDb(filename);
+                    await AddFilenameToSongDb(filename, _dbContext);
                     await Task.Delay(1);                    // We need this delay for GUI Responsiveness.  1ms minimum, 10ms on Gb Lan, 40ms is 25fps, 100ms 100mb LAN, 1000ms 10mb LAN
                 }
             }
@@ -80,9 +79,9 @@ namespace CommonNet8
             return;
         }
 
-        public static async Task AddFilenameToSongDb(string filename)
+        public static async Task AddFilenameToSongDb(string filename, PlaylistContext _adbContext)
         {
-            var _adbContext = new PlaylistContext();
+
             {
                 LogTrace($"*** Checking: {filename}");
                 var _dirName = Path.GetDirectoryName(filename);

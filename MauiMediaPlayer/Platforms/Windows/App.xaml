@@ -8,7 +8,7 @@
     <maui:MauiWinUIApplication.Resources>
         <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="SystemControlForegroundAccentBrush" />
         <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="SystemControlForegroundAccentBrush" />
-        <SolidColorBrush x:Key="SystemControlForegroundAccentBrush"  Color="#FFE3E3E3" />
+        <SolidColorBrush x:Key="SystemControlForegroundAccentBrush"  Color="AliceBlue" />
     </maui:MauiWinUIApplication.Resources>
 
 

@@ -28,21 +28,20 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-
-        <!-- Text Sizes:
-                Header  = 46
-                Large   = 32
-                Medium  = 24
-                Title   = 24
-                Subtitle= 20
-                Small   = 18
-                N/A     = 14        
-                Default = 14
-                Body    = 14
-                Micro   = 14
-                Caption = 12
-                -->
-
+        <!-- 
+            Text Sizes:
+            Header  = 46
+            Large   = 32
+            Medium  = 24
+            Title   = 24
+            Subtitle= 20
+            Small   = 18
+            N/A     = 14        
+            Default = 14
+            Body    = 14
+            Micro   = 14
+            Caption = 12
+        -->
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- ... Playlists, Settings, Edit Playlists, Etc ... ▲ ▼ ... -->
@@ -61,6 +60,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <Frame Padding="0"
+                                   BackgroundColor="Transparent"
                                    HeightRequest="35"
                                    Margin="0,0,10,0"
                                    VerticalOptions="End" >
@@ -347,7 +347,7 @@
                 </Picker>
 
                 <!-- Add Song, Remove Song, Save, Saveas, Rename, Delete -->
-                <Frame
+                <Frame x:Name="EditFrame"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Grid.Row="2"
@@ -376,8 +376,8 @@
 
                         <Button x:Name="AddSongsGui"
                             Clicked="AddSongsGui_Clicked"
-                            Grid.Column="0"
-                            Text="➕Songs"
+                            Grid.Column="1"
+                            Text="➕Selected"
                             Scale="1"
                             TextColor="Black"
                             FontAttributes="Bold"
@@ -392,25 +392,9 @@
                             ZIndex="3"/>
 
                         <Button x:Name="RemoveSongsGui"
-                            Grid.Column="1"
-                            Text="➖Songs"
-                            Scale="1"
-                            TextColor="Black"
-                            FontAttributes="Bold"
-                            BackgroundColor="Transparent"
-                            FontSize="13"
-                            Margin="3,-12,3,0"
-                            Padding="0"
-                            BorderWidth="0"
-                            BorderColor="Blue"
-                            HorizontalOptions="Start"
-                            VerticalOptions="End"
-                            ZIndex="3"/>
-
-                        <Button x:Name="SavePlaylistGui"
-                            Clicked="SavePlaylistGui_Clicked"
-                            Grid.Column="3"
-                            Text="💾Save"
+                            Clicked="RemoveSongsGui_Clicked"
+                            Grid.Column="2"
+                            Text="➖Selected"
                             Scale="1"
                             TextColor="Black"
                             FontAttributes="Bold"
@@ -426,7 +410,7 @@
 
                         <Button x:Name="SaveAsPlaylistGui"
                             Clicked="SaveAsPlaylistGui_Clicked"
-                            Grid.Column="2"
+                            Grid.Column="0"
                             Text="📂SaveAs"
                             Scale="1"
                             TextColor="Black"
@@ -443,6 +427,7 @@
 
                         <!--... ✒️ 🖋️ 📝 ✏️ ...-->
                         <Button x:Name="EditPlaylistGui"
+                            Clicked="EditPlaylistGui_Clicked"
                             Grid.Column="4"
                             Text="✏️Edit"
                             Scale="1"
@@ -743,16 +728,17 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <!--... Star ⭐ ★ ✪ ✸ ... -->
-                                    <Label Text="★"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
-                                        IsVisible="{Binding Star, Mode=TwoWay} "
+                                    <Button Text="{Binding StarSymbol}"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                                        Clicked="OnStar_Clicked"
+                                        Scale=".65"
                                         Padding="0"
-                                        Margin="-10,0,0,0"
-                                        Style="{StaticResource NormalText}"
-                                        TextColor="#FFE9BA1B"
-                                        FontSize="Micro"
+                                        Margin="-20,-12,0,0"
+                                        TextColor="{Binding StarColor}"
+                                        BackgroundColor="Transparent"
+                                        FontSize="32"
                                         FontAttributes="Bold"
                                         HorizontalOptions="Start"
-                                        ZIndex="1"/>
+                                        ZIndex="2"/>
                                     <Label Text="{Binding Title}"       
                                         Margin="8,0,0,0"
                                         Style="{StaticResource NormalText}"

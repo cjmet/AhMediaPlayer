@@ -9,7 +9,7 @@ namespace AhConfig
         public const bool UseSongCache = true;                  // TRUE :
         public const int SongPathFontSize = 8;                  // 8    : The font size for the song path.
 
-        public const bool ApiAllowSongAdmin = true;            // FALSE: Allows adding, removing, and modifying raw song data.
+        public const bool ApiAllowSongAdmin = false;            // FALSE: Allows adding, removing, and modifying raw song data.
         public const bool ApiDemoMode = true;                   // TRUE : Limit the API responses so it doesn't crash the Swagger Page.
         public const int ApiDemoMax = 256;                      // 256  : Limit the API to this number of responses.
         public const bool ApiAllowMusicSearch = false;          // FALSE: You should NOT do this, unless you are running API ONLY and not the App.

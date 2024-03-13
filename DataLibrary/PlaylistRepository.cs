@@ -83,6 +83,11 @@ namespace DataLibrary
             }
             return _results;
         }
+
+        public void DbContextChangeTrackerClear()
+        {
+            _context.ChangeTracker.Clear();
+        }
     }
 
 

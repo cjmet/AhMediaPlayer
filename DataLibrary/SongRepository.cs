@@ -107,6 +107,11 @@ namespace DataLibrary
 
             return (_results, _searchBy, _searchAction);
         }
+
+        public void DbContextChangeTrackerClear()
+        {
+            _context.ChangeTracker.Clear();
+        }
     }
 
 }

@@ -17,7 +17,7 @@ namespace Playground
 
             if (true)   // Load from Database
             {
-                var _dbContext = new PlaylistContext();
+                var _dbContext = new PlaylistContext(); // Playground 
 
                 LogDebug("Loading Saved Database");
                 var _songList = _dbContext.Songs.ToList();

@@ -10,6 +10,7 @@
         public Task<List<Song>> SearchAllSongs(string search);  // Searching "" will return all songs
         public Task<List<Song>> SearchQuery(string property, string search);
         public Task<(List<Song>, string, string)> AdvancedSearchRepository(List<Song> _currentSet, string _searchString, string _searchBy = "Any", string _searchAction = "SEARCH");
+        public void DbContextChangeTrackerClear();
 
     }
 }

@@ -11,10 +11,9 @@ namespace CommonNet8
 {
     public class AllSongsPlaylist
     {
-        public static async Task UpdateAllSongsPlaylist()
+        public static async Task UpdateAllSongsPlaylist(PlaylistContext dbContext)
         {
             LogMsg("Updating All Songs Playlist");
-            var dbContext = new PlaylistContext();
 
             var _playlist = await dbContext.Playlists.Where(p => p.Name == " All Songs").Include(p => p.Songs).FirstOrDefaultAsync();
             if (_playlist == null)

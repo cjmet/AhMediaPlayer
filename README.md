@@ -31,11 +31,11 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 
 ## Known Issues
-* Maui apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
+* Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
   * Since I'm not officially publishing, I have to "guess" where this directory will end up.
 * The first time you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a LAN NAS, and Hours for a WAN NAS.
-  * This scan will ***NOT*** follow reparse points.  This may cause it to miss some redirected paths, particularly with Onedrive.  If that happens you can use the manual scan button.
+  * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan button.
 * Swagger can only load about 1000 songs, any more and it locks up.  Use Postman if you want to test a larger query.
 * * GUI responsiveness suffers to SMB WAN Operations.  
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
@@ -52,16 +52,13 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Current Project Questions
-1. &nbsp; Making the listview redraw and update, either automatically or on command.
-1. &nbsp; Class: API Authentication and Validation
+1. &nbsp; In the process of eliminating one question, I get three more:
+   1. &nbsp; Class: MvvM, Data Transformation Objects (or Data Transfer Objects or Data Transport Objects), Authentication, and Authorization.
+   1. &nbsp; Question about MvvM and planning and layout.  View as a whole, whole page, partial page(s), or organized by data structures and sections?
+   1. &nbsp; MvvM vs Events and Commands.  More Command Info, as I'm still lacking entirely where commands are concerned.
 1. &nbsp; The Sync / Async Task buried in the middle of the converted Advanced Search inside DataLibrary.  I need to learn how to comprehend and fix this particular pattern.
 ---
-1. &nbsp; There HAS to be a better way to cause a binding value to update on an event triggering?
-    ```
-    var tmp = _label.BindingContext;
-    _label.BindingContext = null;
-    _label.BindingContext = tmp;
-    ```
+1. &nbsp; Class: API Authentication and Validation
 1. &nbsp; IQueryable and Union, Intersect, Except?
 1. &nbsp; Predicate Builder for search and filter.
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists? 
@@ -88,8 +85,9 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### To-Do List
-- [ ] Fix Github insisting on messing up lowercase file names.
+- [ ] Fix GitHub insisting on messing up lowercase file names.
 - [ ] More API work?  Where do we go from here with the API?
+- [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
 ---
 
 
@@ -108,17 +106,17 @@ Create a music library Web API and simple Media Player
   - [x] Writes to a Pop-Up Window (if in debug mode)
   - [x] Improved Logging Window
   - [x] `public async IAsyncEnumerable<string> PollLinesAsync(path, pollInterval, CancellationToken?)`
-- [ ] Integration of Playlists, Songs, Search and GUI
+- [x] Integration of Playlists, Songs, Search and GUI
   - [x] Playlist Selection GUI
   - [x] Initial Integration of Playlists and Songs
   - [x] Random, Loop Buttons, Start, End, Next, Previous, ...
   - [x] Basic Search and Filter functionality GUI
   - [x] Advanced Search and Filter First Pass
   - [x] Advanced Search and Filter Second Pass
-  - [ ] Adding Playlists GUI (Create)
-  - [ ] Deleting Playlists GUI (Delete)
-  - [ ] Adding Songs to Playlists GUI (Update)
-  - [ ] Removing Songs from Playlists GUI (Update)
+  - [x] Adding Playlists GUI (Create)
+  - [x] Deleting Playlists GUI (Delete)
+  - [x] Adding Songs to Playlists GUI (Update)
+  - [x] Removing Songs from Playlists GUI (Update)
 - [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
 
 
@@ -132,7 +130,7 @@ Create a music library Web API and simple Media Player
   - [x] Improved Background Task
   - [x] Add Callback Ability to the Background Task
   - [x] Integrate FileFind, Callback, EF Core, and Maui
-  - [x] Read and use Meta Data from MP3 fil
+  - [x] Read and use Meta Data from MP3 files
   - [x] Id each song by filename to eliminate duplicates.
 - [x] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
 - [x] Create Random Playlists for Testing
@@ -166,7 +164,7 @@ Create a music library Web API and simple Media Player
 - [ ] API Orphaned Songs?
 
 
-* ### Wishlist and Refactoring
+* ### Wish List and Refactoring
 - [ ] Unit Testing on the API.  It's the perfect candidate for unit testing.
     - [ ] Create A Playlist, Modify It, Add Songs, Remove Songs, Delete it.
     - [ ] Test Authentication, Register, Login, Test Authentication, Logout, Test Authentication, Delete? the Test Account.
@@ -175,8 +173,8 @@ Create a music library Web API and simple Media Player
 - [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
 - [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
 - [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
-- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging offline or malfunctioning drives.
-- [ ] Maybe only cache drives that take more than 3 seconds to load a file.
+- [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging off-line or malfunctioning drives.
+- [ ] Maybe only cache drives that take more than 3-5 seconds to load a file.
 - [ ] Maybe Refactor to Stream First, then Cache, then Read from Cache.  Right now everything caches.
 
 <br>
@@ -215,6 +213,37 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* GitHub continues downloading Pascal Case image names to windows, but we can't compile them that way.  So I renamed everything _lc in lower case to hopefully force it to download lowercase.
+* `AliceBlue #FFF0F8FF`
+`Platform/Windows/App.Xaml`
+    ```
+    <maui:MauiWinUIApplication ... 
+        <maui:MauiWinUIApplication.Resources>
+            <StaticResource x:Key="ListViewItemBackgroundSelectedPointerOver" ResourceKey="SystemControlForegroundAccentBrush" />
+            <StaticResource x:Key="ListViewItemBackgroundSelected" ResourceKey="SystemControlForegroundAccentBrush" />
+            <SolidColorBrush x:Key="SystemControlForegroundAccentBrush"  Color="AliceBlue" />
+        </maui:MauiWinUIApplication.Resources>
+    </maui:MauiWinUIApplication>
+    ```
+    Another Alternative I did not use:
+    ```
+	    <maui:MauiWinUIApplication ......>
+		    <maui:MauiWinUIApplication.Resources>
+			    <ResourceDictionary>
+				    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#Ff0000" />
+				    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#Ff0000" />
+				    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="#Ff0000" />
+				    <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush" Color="#Ff0000" />
+			    </ResourceDictionary>
+		    </maui:MauiWinUIApplication.Resources>
+	    </maui:MauiWinUIApplication>
+    ```
+* Add/Remove, Add All, Remove All, Edit, ... 
+* Also dove into starting to learn some of the custom gestures.  Mostly just played with select, click, double-click so far, and how to get them to play nice with each other.  It was a productive day of experimentation.
+* First alpha of the Gui layout for adding/removing songs from the playlist.  It's not going to look anything at all like what I originally imagined, but hopefully it works well enough.
+* After the detour to learn more things, I'm once again making slow, but sometimes tedious forward progress.
+* 🤬 "And we just paste this 180 character long mystical incantation written in ancient Sumerian here, and voila!  It works!"  What is possibly the most incomprehensible yet also most important line of code, and there's no attempt made to even try to explain it.  Then the actual source code and files are missing so you can't even try to decipher it without watching the video 47 times.
+* Make that a super tanker boatload of salt. Spent several days watching videos and doing tutorials on various aspects of Maui.  Even some of the official sources are of dubious quality, others ... 
 * Worked on the GUI, Database, and Some EF Core Issues.
 * Started GUI Layout work for Editing Playlists
 * API Authentication, Various API Endpoints, Editing of misc Interface methods
@@ -222,7 +251,7 @@ Create a music library Web API and simple Media Player
 * Worked on API.  Added searches to the Song API.  Converted Advanced Search to DataLibrary and Repository Pattern.  Turns out that's where it should have been in the first place, instead of common.
 * Advanced Search, Version 2, with simple search parsing and filtering enabled.
 * Resized Event is _"working"_
-* There HAS to be a better way to cause a binding value to update on an event triggering?
+* There HAS to be a better way to cause a binding value to update on an event triggering?  There is, we're getting there.  I'm currently learning one way with `INotifyPropertyChanged`, but would like to learn the other as well, but can't find any info on it beyond one mention.
     ```
     var tmp = _label.BindingContext;
     _label.BindingContext = null;
@@ -241,7 +270,7 @@ Create a music library Web API and simple Media Player
 * Added Manual Search Button, for use with Libraries, Servers, NASes, etc.
 * Added additional controls, Gui Work, and a few other things.
 * More debugging and adjustments on the file caching.
-* GUI responsiveness to SMB WAN Operations.  These operations are running on separate async tasks, but the 'opening file' phase still locks the GUI.*  
+* GUI responsiveness to SMB WAN Operations.  These operations are running on separate async tasks, but the 'opening file' phase still locks the GUI.
   * Even optimized with 'await FileStream' opening a file over the WAN can take a few seconds locking the GUI until the async transfer starts.  The transfer itself is async, the 'opening' is not.
   * tried a couple different methods, and outside of native code this seems to be as optimized as it is going to get.
   * Reading the MP3 Tags over the WAN can also lock GUI for several seconds.  I'd have to rewrite this entire library, and even then it would not be entirely fixed without native code.

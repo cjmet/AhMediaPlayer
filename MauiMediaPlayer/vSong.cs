@@ -46,8 +46,19 @@ namespace MauiMediaPlayer
             set
             {
                 base.Star = value;
+                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Star)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Star)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StarSymbol)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StarColor)));
             }
+        }
+        public string StarSymbol
+        {
+            get { return Star ? "★" : "☆"; }
+        }
+        public string StarColor
+        {
+            get { return Star ? "#FFE9BA1B" : "LightGray"; }
         }
     }
 }

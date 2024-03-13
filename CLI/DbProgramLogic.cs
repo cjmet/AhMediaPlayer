@@ -12,19 +12,19 @@ namespace MauiCli
     {
 
 
-        public static async Task CompleteResetTest()
+        public static async Task CompleteResetTest(PlaylistContext _dbContext)
         {
             Console.WriteLine("Resetting Db");
             DbContextTest(true);
             Console.WriteLine("Searching for Music");
             var progress = new ReportProgressToQueue(new System.Collections.Concurrent.ConcurrentQueue<string>());
-            await SearchUserProfileMusic(progress);
+            await SearchUserProfileMusic(_dbContext, progress);
             Console.WriteLine("Updating All Songs Playlist");
-            await UpdateAllSongsPlaylist();
+            await UpdateAllSongsPlaylist(_dbContext);
             Console.WriteLine("Randomizing Playlists");
             DbRandomizePlaylists();
             Console.WriteLine("Reading Playlists");
-            DbReadPlaylists().Wait();
+            DbReadPlaylists(_dbContext).Wait();
         }
 
 
@@ -96,11 +96,10 @@ namespace MauiCli
             _dbContext.Dispose();
         }
 
-        public static async Task DbReadPlaylists()
+        public static async Task DbReadPlaylists(PlaylistContext _dbContext)
         {
-            UpdateAllSongsPlaylist().Wait();
+            UpdateAllSongsPlaylist(_dbContext).Wait();
 
-            var _dbContext = new PlaylistContext();
             var playlists = _dbContext.Playlists.Include(p => p.Songs).ToList();
             var songs = _dbContext.Songs.ToList();
             _dbContext.Dispose();

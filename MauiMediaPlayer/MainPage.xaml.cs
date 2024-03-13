@@ -87,8 +87,8 @@ namespace MauiMediaPlayer
                 TestPlaylist.ItemsSource = _playlists;
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-                DispatchSonglist(_songList);               
-                if (_playlists.Count < 1) UpdateAllSongsPlaylist().Wait();  // cj this won't take effect till we re-load, but it's better than nothing.
+                DispatchSonglist(_songList);
+                if (_playlists.Count < 1) UpdateAllSongsPlaylist(_dbContext).Wait();  // cj this won't take effect till we re-load, but it's better than nothing.
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
                 LogDebug("=== /Database Loading Complete =============================== ===");
             }
@@ -100,7 +100,7 @@ namespace MauiMediaPlayer
                 Application.Current.Dispatcher.Dispatch(() =>
                 {
                     List<string> list = new List<string>();
-                    list = CommonAdvancedSearch.ShortHelpText();
+                    list = DataLibraryAdvancedSearch.ShortHelpText(); /// cjm3
                     AdvancedSearchHelpList.ItemsSource = list;
                 });
             });
@@ -110,8 +110,8 @@ namespace MauiMediaPlayer
             {
                 var _progress = new ReportProgressToQueue(_messageQueue);
 
-                await SearchUserProfileMusic(_progress);
-                await UpdateAllSongsPlaylist();
+                await SearchUserProfileMusic(_dbContext, _progress);
+                await UpdateAllSongsPlaylist(_dbContext);
 
                 LogDebug("Database Dispatch Start");
                 var _playlists = _dbContext.Playlists.ToList();
@@ -123,20 +123,36 @@ namespace MauiMediaPlayer
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 await DispatchSonglist(_songList);
                 await Task.Delay(1);
-                LogDebug("=== /Database Dispatch Complete =============================== ===");
+                LogDebug("Database Dispatch Complete");
+                //AddDoubleTapGesture(TestSonglist);
+                TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer();
+                tapGestureRecognizer.NumberOfTapsRequired = 2;
+                tapGestureRecognizer.Tapped += (sender, args) =>
+                {
+                    var _sender = sender as ListView;
+                    var _selected = _sender.SelectedItem;
+                    if (_selected == null) return;
+                    _sender.SelectedItem = null;
+                    _sender.SelectedItem = _selected;
+                    LogDebug("Double Tapped!");
+                };
+                //Dispatch Doubletap ... we have to hope they are loaded by then ... 
+                this.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(3), () =>
+                {
+                    while (TestPlaylist.Height < 1) Task.Delay(25);
+                    TestPlaylist.GestureRecognizers.Add(tapGestureRecognizer);
+                    while (TestSonglist.Height < 1) Task.Delay(25);
+                    TestSonglist.GestureRecognizers.Add(tapGestureRecognizer);
+                    LogDebug("=== Double Tap Gesture(s) Loaded");
+                });                
+                LogDebug("Delay Loading Double Tap Gesture(s) =============================== ===");
+
                 await Task.Delay(1000);
                 _ = this.Dispatcher.DispatchAsync(async () =>
                 {
-                    LogMsg("Enabling Controls");
-                    TestPlaylist.IsEnabled = true;
-                    TestPlaylist.Opacity = 1;
-                    await Task.Delay(1);
-                    MenuBox.IsEnabled = true;
-                    MenuBox.Opacity = 1;
-                    await Task.Delay(1);
-                    SearchBarStandard.IsEnabled = true;
-                    SearchBarStandard.Opacity = 1;
-                    LogMsg("Startup Complete");
+                    Enable_Gui(true);
+                    await Task.Delay(1000);
+                    LogMsg("*** Startup Complete ***");
                 });
             });
 
@@ -157,7 +173,7 @@ namespace MauiMediaPlayer
                 LogMsg($"Playlist Selected: {_playList.Id}   {_playList.Name}   {_playList.Description}");
                 ChangePlaylist(_playList);
             }
-            else LogWarning("WARN[080] Playlist is null");
+            else LogMsg("Playlist is null");
         }
 
         private async void TestSonglist_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -216,13 +232,13 @@ namespace MauiMediaPlayer
         {
             // EF Core I Hate you More!
             // cjm! ... continue here later.   Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
-            LogDebug($"DispatchSongList[202]"); 
-            if (_songList == null ) return;
+            LogDebug($"DispatchSongList[202]");
+            if (_songList == null) return;
             var _currentPlaylist = (Playlist)TestPlaylist.SelectedItem;
             int _currentPlaylistId = _currentPlaylist != null ? _currentPlaylist.Id : -1;
             List<int> _playlistIndices = new List<int>();
 
-            if (_currentPlaylist != null && _currentPlaylistId > 1)                 
+            if (_currentPlaylist != null && _currentPlaylistId > 1)
             {
                 var _dbPlaylist = _dbContext.Playlists.Where(p => p.Id == _currentPlaylistId);
                 if (_dbPlaylist != null)
@@ -234,7 +250,7 @@ namespace MauiMediaPlayer
                     }
                 }
             }
-            
+
             foreach (var _song in _songList)
             {
                 if (_song == null) continue;
@@ -254,7 +270,7 @@ namespace MauiMediaPlayer
 
             await this.Dispatcher.DispatchAsync(() =>
             {   // DispatchSonglist()
-                TestSonglist.ItemsSource = _vSongList; 
+                TestSonglist.ItemsSource = _vSongList;
             });
 
         }
@@ -598,7 +614,7 @@ namespace MauiMediaPlayer
             new Random().Shuffle(_songList);
             var _list = _songList.ToList();
             await DispatchSonglist(_list);
-            
+
         }
 
         private void NextTrack_Clicked(object sender, EventArgs e)
@@ -662,14 +678,14 @@ namespace MauiMediaPlayer
             var num = data.GetHashCode();
             var images = new string[]
             {   // cj - I can't seem to find a way to read these, so I'm just going to hard code them.
-                "angel_hornet_logo_cropped.png", "azrael.png",
-                "bad_grim.png", "baxters.png", "big_moon.png",
-                "brie.png", "bubby.png", "chex.png", "damnit_gizmo.png",
-                "django.png", "dot.png", "fox.png", "herc.png",
-                "howard.png", "huggy.png", "kibbs.png", "kissy.png",
-                "lucy.png", "luna.png", "nino.png", "pie.png",
-                "possum.png", "rey.png", "spicey.png", "stella.png",
-                "tiger.png"
+                "angel_hornet_logo_cropped.png", "azrael_lc.png",
+                "bad_grim_lc.png", "baxters_lc.png", "big_moon_lc.png",
+                "brie_lc.png", "bubby_lc.png", "chex_lc.png", "damnit_gizmo_lc.png",
+                "django_lc.png", "dot_lc.png", "fox_lc.png", "herc_lc.png",
+                "howard_lc.png", "huggy_lc.png", "kibbs_lc.png", "kissy_lc.png",
+                "lucy_lc.png", "luna_lc.png", "nino_lc.png", "pie_lc.png",
+                "possum_lc.png", "rey_lc.png", "spicey_lc.png", "stella_lc.png",
+                "tiger_lc.png"
             };
 
             var index = (uint)num % images.Length;
@@ -686,6 +702,7 @@ namespace MauiMediaPlayer
                 if (n.Length >= 1) Name += n.Substring(0, 1).ToUpper() + n.Substring(1) + " ";
             }
             Name = Name.Trim();
+            Name = Name.Replace(" Lc", "");                 // Curse you GitHub for making me rename the files so you'd respect lower case!
             LogMsg($"{Name} found you {found} Songs!");
 
             Application.Current.Dispatcher.Dispatch(() =>
@@ -706,7 +723,7 @@ namespace MauiMediaPlayer
             if (_path != "")
             {
                 var _progress = new ReportProgressToQueue(_messageQueue);
-                _ = SearchUserProfileMusic(_progress, _path);
+                _ = SearchUserProfileMusic(_dbContext,  _progress, _path);
             }
         }
 
@@ -732,8 +749,10 @@ namespace MauiMediaPlayer
             Playlist? _playlist = (Playlist)TestPlaylist.SelectedItem;
             if (_playlist == null || _playlist.Id == 1) Application.Current.Dispatcher.Dispatch(() =>
             {
-                SavePlaylistGui.Opacity = 0.25;
-                SavePlaylistGui.IsEnabled = false;
+                AddSongsGui.Opacity = 0.25;
+                AddSongsGui.IsEnabled = false;
+                RemoveSongsGui.Opacity = 0.25;
+                RemoveSongsGui.IsEnabled = false;
                 DeletePlaylistGui.Opacity = 0.25;
                 DeletePlaylistGui.IsEnabled = false;
                 EditPlaylistGui.Opacity = 0.25;
@@ -741,8 +760,10 @@ namespace MauiMediaPlayer
             });
             else if (_playlist.Id > 1) Application.Current.Dispatcher.Dispatch(() =>
             {
-                SavePlaylistGui.Opacity = 1;
-                SavePlaylistGui.IsEnabled = true;
+                AddSongsGui.Opacity = 1;
+                AddSongsGui.IsEnabled = true;
+                RemoveSongsGui.Opacity = 1;
+                RemoveSongsGui.IsEnabled = true;
                 DeletePlaylistGui.Opacity = 1;
                 DeletePlaylistGui.IsEnabled = true;
                 EditPlaylistGui.Opacity = 1;
@@ -802,7 +823,7 @@ namespace MauiMediaPlayer
                 if (_songList.Count > 0) SearchCount.Text = $"{_songList.Count:n0}";
                 Searchby.SelectedItem = _searchBy;
                 SearchAction.SelectedItem = _searchAction;
-                var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";      
+                var Placeholder = "Search Title, Artist, Band, Album, Genre, or Path";
                 if (_by != null && _by != "Any") Placeholder = $"SearchBy: {_searchBy}     -     SearchAction: {_searchAction}";
                 _searchBar.Placeholder = Placeholder;
             });
@@ -820,8 +841,10 @@ namespace MauiMediaPlayer
             _label.BindingContext = tmp;
         }
 
+        private Boolean Gui_SaveAs = true;        // SaveAS vs Save vs Edit
         private void SaveAsPlaylistGui_Clicked(object sender, EventArgs e)
         {
+            Gui_SaveAs = true;
             var _sender = (Button)sender;
 
             if (SaveAsPlaylistFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
@@ -841,15 +864,12 @@ namespace MauiMediaPlayer
 
         }
 
-        private void SavePlaylistGui_Clicked(object sender, EventArgs e)
-        {
-            var _sender = (Button)sender;
-
-
-        }
 
         private async void DoSavePlaylistFrame_Clicked(object sender, EventArgs e)
         {
+            Enable_Gui(false);
+            await Task.Delay(1);
+
             var _sender = (Button)sender;
 
             var _name = SaveAsPlaylistName.Text;
@@ -857,8 +877,18 @@ namespace MauiMediaPlayer
 
             if (_name == null || _name == "")
             {
-                var _last = _dbContext.Playlists.ToList().LastOrDefault();
-                if (_last != null && _last.Id != null && _last.Id > 0) _name = $"Playlist {_last.Id + 1}";
+                var _lists = await _dbContext.Playlists.ToListAsync();
+                var _last = _lists?.LastOrDefault();
+                if (_last != null && _last.Id != null && _last.Id > 0)
+                {
+                    if (Gui_SaveAs) _name = $"Playlist {_last.Id + 1}";
+                    else
+                    {
+                        var _playlist = (Playlist)TestPlaylist.SelectedItem;
+                        if (_playlist == null) { Enable_Gui(true); return; } 
+                        _name = $"Playlist {_playlist.Id}";
+                    }
+                }
                 else
                 {
                     LogError("Playlists are null.");
@@ -871,17 +901,34 @@ namespace MauiMediaPlayer
 
             if (_name != null)
             {
-                var _playlist = new Playlist { Name = _name, Description = _desc, Songs = new List<Song>() };
-                _dbContext.Playlists.Add(_playlist);   
-                var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
-                foreach (Song _song in _songList)
-                    if (_song != null)
-                    {
-                        var _addSong = _dbContext.Songs.Find(_song.Id);             // cjm - EF Core Tracking I Hate You.
-                        if (_addSong != null) _playlist.Songs.Add(_addSong);
-                    }
-                _dbContext.SaveChanges();
+                Playlist _playlist = new Playlist();
+                if (Gui_SaveAs)
+                {
 
+                    _playlist = new Playlist { Name = _name, Description = _desc, Songs = new List<Song>() };
+                    _dbContext.Playlists.Add(_playlist);
+                    List<Song>? _songList = new List<Song>();
+                    await Task.Run( () => _songList = TestSonglist.ItemsSource.Cast<Song>().ToList());
+                    if (_songList == null) _songList = new List<Song>();
+                    int i = 0;
+                    foreach (Song _song in _songList)
+                        if (_song != null)
+                        {
+                            var _addSong = _dbContext.Songs.Find(_song.Id);             // cjm - EF Core Tracking I Hate You.
+                            if (_addSong != null) _playlist.Songs.Add(_addSong);
+                            if (i++ % 400 == 0) await Task.Delay(1);                    // roughly 25 fps on my machine.
+                            if (i % 10000 == 0) LogMsg($"Adding Songs: {i}");
+                        }
+                    _dbContext.SaveChanges();
+                }
+                else
+                {                    
+                    _playlist = (Playlist)TestPlaylist.SelectedItem;
+                    if (_playlist == null) { Enable_Gui(true); return; }
+                    _playlist.Name = _name;
+                    _playlist.Description = _desc;
+                    _dbContext.SaveChanges();
+                }
 
                 LogMsg($"Playlist Saved: [{_playlist.Id}] {_playlist.Name} - {_playlist.Description}");
                 var _playlists = _dbContext.Playlists.ToList();
@@ -903,10 +950,14 @@ namespace MauiMediaPlayer
                 SaveAsPlaylistDesc.Text = "";
             });
 
+            Enable_Gui(true);
         }
 
         private async void DeletePlaylistGui_Clicked(object sender, EventArgs e)
         {
+            // Need to clean everything up to use Repositories before we can try this again. // // _dbContext.ChangeTracker.Clear();
+            // It probably would speed things up, but right now it causes context tracking issues.      // cj 
+
             var _sender = (Button)sender;
             var _playlist = (Playlist)TestPlaylist.SelectedItem;
             if (_playlist == null || _playlist.Id == 1) return;
@@ -915,34 +966,205 @@ namespace MauiMediaPlayer
 
             if (answer)
             {
-                var _playlists = _dbContext.Playlists.OrderBy(s => s.Name).ToList();
+                Enable_Gui(false);
+                
+                
+                var spinner = 0;
+                var spinchar = new char[] { '|', '/', '-', '\\' };
+                var cts = new CancellationTokenSource();
+                var ct = cts.Token;
+                
+
+                Task spin = new Task(async () =>
+                {
+                    var id = _playlist.Id;
+                    var name = _playlist.Name;
+                    while (!ct.IsCancellationRequested)
+                    {
+                        LogMsg($"Deleting Playlist[{id}]: {(spinner++ == 0 ? name : spinchar[spinner % 4])}");
+                        await Task.Delay(3000);
+                    }
+                },  ct, TaskCreationOptions.LongRunning);
+                spin.Start();
+
+                LogDebug($"Deleting Playlist: [{_playlist.Id}] {_playlist.Name}");
+                var _playlists = await _dbContext.Playlists.OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase).ToListAsync();
                 var _index = _playlists.IndexOf(_playlist);
                 if (--_index < 0) _index = 0;
-                _dbContext.Playlists.Remove(_playlist);
-                _dbContext.SaveChanges();
-                _playlists = _dbContext.Playlists.ToList();
-                _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
+                await Task.Run(() =>
+                {
+                    LogDebug($"Removing[967] ... ");
+                    _dbContext.Playlists.Remove(_playlist);
+                    LogDebug($"Removed[968] ... ");
+                    LogDebug($"Saving[973] ... ");
+                    _dbContext.SaveChanges();
+                    LogDebug($"Saved[975] ... ");
+                });
+                TestPlaylist.SelectedItem = null;
+                //_playlists = await _dbContext.Playlists.ToListAsync();      // Already did this above ... 
+                //_playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 _playlist = _playlists.ElementAtOrDefault(_index);
-                Application.Current.Dispatcher.Dispatch(async () =>
+                LogDebug($"Dispatching[976] ... ");
+                await Application.Current.Dispatcher.DispatchAsync(async () =>
                 {
                     TestPlaylist.ItemsSource = _playlists;
                     await Task.Delay(1);
-                    if (_playlist != null) TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
+                    if (_playlist != null)
+                    {
+                        TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
+                        TestPlaylist.SelectedItem = _playlist;  
+                    }
                 });
+
+                cts.Cancel();
+                Enable_Gui(true);
             }
 
 
 
         }
 
-        private void AddSongsGui_Clicked(object sender, EventArgs e)    // cjm - remove later
+       private void Enable_Gui(bool _enable) {  
+            LogMsg($"* {(_enable ? "En" : "Dis")}abling Controls");
+            var _opacity = _enable ? 1 : 0.25;
+            TestPlaylist.IsEnabled = _enable;
+            TestPlaylist.Opacity = _opacity;
+            EditFrame.IsEnabled = _enable;
+            EditFrame.Opacity = _opacity;
+            SearchBarStandard.IsEnabled = _enable;
+            SearchBarStandard.Opacity = _opacity;
+            AdvancedSearchGrid.IsEnabled = _enable;            
+            AdvancedSearchGrid.Opacity = _opacity;
+            MenuBox.IsEnabled = _enable;
+            MenuBox.Opacity = _opacity;
+        }
+        private async void AddSongsGui_Clicked(object sender, EventArgs e)    // cjm - remove later
+        {
+            LogMsg("Checking Playlist");
+            var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
+            Enable_Gui(false);
+            LogMsg($"Reading Songs ... ");
+            var _sender = (Button)sender;
+            var _songs = (List<vSong>) TestSonglist.ItemsSource;
+            if (_songs != null)
+            {
+                LogMsg($"Adding {_songs.Count} Songs");
+                int i = 0;
+                foreach (var _song in _songs)
+                {
+                    if (_song != null) AddRemoveSong(_song, true);
+                    if (++i % 30 == 0) LogMsg($"Adding Songs: {i}");
+                    await Task.Delay(1);
+                }
+            }
+            Enable_Gui(true);
+        }
+        private async void RemoveSongsGui_Clicked(object sender, EventArgs e)
+        {
+            LogMsg("Checking Playlist");
+            var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
+            Enable_Gui(false);
+            LogMsg($"Reading Songs ... ");
+            var _sender = (Button)sender;
+            var _songs = (List<vSong>)TestSonglist.ItemsSource;
+            if (_songs != null)
+            {
+                LogMsg($"Remove {_songs.Count} Songs");
+                int i = 0;
+                foreach (var _song in _songs)
+                {
+                    if (_song != null) await AddRemoveSong(_song, false);
+                    if (++i % 30 == 0) LogMsg($"Removing Songs: {i}");
+                    await Task.Delay(1);
+                }
+                Enable_Gui(true);
+            }
+        }
+        private async Task AddRemoveSong(vSong _song, bool _add)
+        {
+            if (_song == null) return;
+            var _playlist = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlist == null) return;
+            if (_playlist.Id == 1) return;
+
+            var _dbSong = await _dbContext.Songs.Include(s => s.Playlists).Where(s => s.Id == _song.Id).FirstOrDefaultAsync();
+            if (_dbSong == null) return;
+            var _dbPlaylist = await _dbContext.Playlists.Where(p => p.Id == _playlist.Id).FirstOrDefaultAsync();
+            if (_add)
+            {
+                _song.Star = true;
+                _dbSong.Playlists.Add(_playlist);
+                if (_playlist.Songs != null) _playlist.Songs.Add(_dbSong);
+            }
+            else
+            {
+                _song.Star = false;
+                _dbSong.Playlists.Remove(_playlist);
+                if (_playlist.Songs != null) _playlist.Songs.Remove(_dbSong);
+            }
+
+            var results = _dbContext.SaveChanges();
+            LogTrace($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_add ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
+        }
+
+        private void OnStar_Clicked(object sender, EventArgs e)
         {
             var _sender = (Button)sender;
-            var _song = (vSong)TestSonglist.SelectedItem;
+            var _song = (vSong)_sender.BindingContext;
             if (_song == null) return;
-            LogMsg($"Add Song[{_song.Star}]: {_song.Title}");
+            var _playlist = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlist == null) return;
+            if (_playlist.Id == null) return;
+            if (_playlist.Id <= 1) return;
+
+            LogDebug($"Star Song[{_song.Star}]: {_song.Title}");
             _song.Star = !_song.Star;
-            LogMsg($"Result[{_song.Star}]: {_song.Title}");
+
+            var _dbSong = _dbContext.Songs.Include(s => s.Playlists).Where(s => s.Id == _song.Id).FirstOrDefault();
+            var _dbPlaylist = _dbContext.Playlists.Where(p => p.Id == _playlist.Id).FirstOrDefault();
+            if (_song.Star)
+            {
+                _dbSong.Playlists.Add(_playlist);
+                if (_playlist.Songs != null) _playlist.Songs.Add(_dbSong);
+            }
+            else
+            {
+                _dbSong.Playlists.Remove(_playlist);
+                if (_playlist.Songs != null) _playlist.Songs.Remove(_dbSong);
+            }
+
+            var results = _dbContext.SaveChanges();
+            LogMsg($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_song.Star ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
+        }
+
+        private void EditPlaylistGui_Clicked(object sender, EventArgs e)        // cjm 
+        {
+            Gui_SaveAs = false;
+            var _sender = (Button)sender;
+            var _playlist = (Playlist)TestPlaylist.SelectedItem;
+            if (_playlist == null || _playlist.Id == 1) return;
+            var _name = _playlist.Name;
+            var _desc = _playlist.Description;
+            if (_name == null) _name = "";
+            if (_desc == null) _desc = "";
+
+            if (SaveAsPlaylistFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SaveAsPlaylistFrame.IsVisible = false;
+                SaveAsPlaylistName.Text = "";
+                SaveAsPlaylistDesc.Text = "";
+            });
+
+            else Application.Current.Dispatcher.Dispatch(() =>
+            {
+                SaveAsPlaylistFrame.IsVisible = true;
+                SaveAsPlaylistName.Text = _name;
+                SaveAsPlaylistDesc.Text = _desc;
+            });
+            return;
+
         }
     }
 
