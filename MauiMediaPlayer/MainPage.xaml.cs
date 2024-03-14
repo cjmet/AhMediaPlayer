@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 
+
 namespace MauiMediaPlayer
 {
     public partial class MainPage : ContentPage
@@ -52,6 +53,7 @@ namespace MauiMediaPlayer
             _dbContext = dbcontext;
             _playlistRepository = playlistRepository;
             _songRepository = songRepository;
+            SearchCount.Text = $"v{Const.InternalVersion}";
 
             _ = DeliverMessageQueue(_messageQueue, spinBox, messageBox);
             _ = SecondWindow(Application.Current, AngelHornetLogo);

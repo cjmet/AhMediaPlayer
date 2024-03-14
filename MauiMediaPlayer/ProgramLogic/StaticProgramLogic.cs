@@ -65,7 +65,7 @@ namespace MauiMediaPlayer.ProgramLogic
                         }
                         else
                         {
-                            queuedMsg = $"Angel Hornet Media Player ({Const.InternalVersion})";
+                            queuedMsg = $"Angel Hornet Media Player";
                             queuedMsgLevel = 1000;
                         }
                     }

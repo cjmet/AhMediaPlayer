@@ -853,7 +853,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="12"/>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
