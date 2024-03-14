@@ -24,8 +24,8 @@ namespace AhConfig
         public const string SpinChars = " ▪️";                   // " ▪️" : ⚬ ▪️ • The characters to use for the spinner.
         public const int ClockTick = 250;                       // 250  : Anything 250 to 1000 is good. Over 1000 is laggy.
                                                                 //      : Definitely don't go less than say 40, aka: 25fps.      
-        public static readonly int SongPathFrameHeight
-            = (int)(1.5 * SongPathFontSize);                   // N/A  : The height of the song path frame.
+        public static readonly int SongPathFrameHeight = 
+                     (int)(1.5 + SongPathFontSize * 1.5);       // ~=13 : The height of the song path frame. ~= 1 + 1.5 * SongPathFontSize.  "+1" If it's not high enough it will cause a crash.
 
         // *** ************************************
         // You probably don't want to change these

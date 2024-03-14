@@ -40,8 +40,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 * * GUI responsiveness suffers to SMB WAN Operations.  
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
   * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely solved the issue.
-* EF Core does not like multiple DbContexts Async.  This means you can't scan a disk for music while doing other Db related queries.
-  * I probably need to run the scan for music on a separate DbContext set to no-tracking.  I just recently moved it to the same context for consistency, but it turns out that might not be the best idea.
+
 
 ## Suggestions
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
@@ -216,6 +215,13 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* **Warning** Negative Padding can be dangerous.
+  * Cause a crash if you also set IsVisble=False.  
+  * Some elements won't accept it at all or always crash.
+  * Others it works with so long as you don't zero them out, aka padding has be be less than half the smallest dimension / 2 - 1.
+* Fixed another Bug
+  * ***WARNING*** Minimum Text Height needs to be approximately RoundUp( 1 + FontSize * 1.5 ) ... The +1 is to keep it from crashing
+  * ***HEIGHT*** is effecting width, near edges.  Maybe because of the corner rounding?  But that's then causing a stutter? and layout looping crash
 * Fixed a bug I introduced in the delete method.  I KNEW better, but forgot.
   * You can't OrdinalIgnoreCase in EF on the Database side, only the client side.  This is one way to do it, the second line evaluates OrdinalIgnoreCase on the client side.
     ```

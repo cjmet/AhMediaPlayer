@@ -45,7 +45,8 @@
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!-- ... Playlists, Settings, Edit Playlists, Etc ... ▲ ▼ ... -->
-        <ContentView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+        <ContentView x:Name="PlaylistAndSettings"
+            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                      VerticalOptions="End"  
                      MaximumHeightRequest="70" 
                      ZIndex="1">
@@ -165,12 +166,14 @@
 
 
 
+        <!--... *** WARNING *** : Negative padding numbers are dangerous ...-->
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!--... Standard Search Bar ...-->
         <!--... Padding="0,-10,-10,0"  Margin="0,0,-40,0" ... -->
+        <!--... This -10 means you can't turn isVisible=false  ...--> 
         <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
                HorizontalOptions="Center" ZIndex="2" Padding="-10"  Margin="0,0,0,0">
-            <SearchBar x:Name="SearchBarStandard"
+            <SearchBar x:Name="StandardSearchBar"
                 IsEnabled="False"
                 Opacity=".25"
                 MinimumWidthRequest="315"
@@ -751,11 +754,16 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <!--... Star ⭐ ★ ✪ ✸ ... -->
-                                    <Button Text="{Binding StarSymbol}"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                                    <Button Text="{Binding StarSymbol}"  
+                                        Grid.Column="0" 
+                                        Grid.Row="0" 
+                                        Grid.ColumnSpan="2"
                                         Clicked="OnStar_Clicked"
                                         Scale=".65"
                                         Padding="0"
-                                        Margin="-20,-12,0,0"
+                                        Margin="-20,-14,0,-15"
+                                        MaximumWidthRequest="25"
+                                        MaximumHeightRequest="25"
                                         TextColor="{Binding StarColor}"
                                         BackgroundColor="Transparent"
                                         FontSize="32"
@@ -800,27 +808,33 @@
                                         LineBreakMode="TailTruncation"                                           
                                         FontSize="Caption"
                                         ZIndex="1"/>
-                                    <!--... This kept jumping around, but putting in in a frame fixed it ...--> 
-                                    <Frame Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"
-                                           Padding="0" Margin="-1" CornerRadius="0"
-                                           BorderColor="Transparent" BackgroundColor="Transparent"
-                                           MaximumHeightRequest="{Binding Source={x:Static local:MainPage.FilePathFrameHeight}}"
-                                           HorizontalOptions="Fill">
+                                    <!--... This kept jumping around, but putting in in a frame fixed it ...-->
+                                    <!--... It's no longer jumping, now it's *** CRASHING *** ... on  Width / Diagonal Resize ...  -->
+                                    <!--... *** WARNING *** Minimum Text Height needs to be RoundUp( 1 + FontSize * 1.5 ) ... The +1 is to keep it from crashing ...-->
+                                    <!--... *** HEIGHT *** is effecting width.  Maybe because of the corner rounding?  But that's then causing a stutter? and layout looping crash ...-->
+                                    <!--<Frame 
+                                        Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"
+                                        Padding="0" Margin="-1" CornerRadius="0"
+                                        BorderColor="Transparent" BackgroundColor="Transparent"
+                                        MaximumHeightRequest="{Binding Source={x:Static local:MainPage.FilePathFrameHeight}}"
+                                        HorizontalOptions="Fill">-->
                                         <Label x:Name="FilePathDebug"
-                                            SizeChanged="FilePathDebug_SizeChanged"
-                                            Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}" 
-                                            Style="{StaticResource NormalText}" 
-                                            Padding="0"
-                                            Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
-                                            Grid.Column="0"  
-                                            Grid.ColumnSpan="2"
-                                            Grid.Row="3"
-                                            HorizontalOptions="End"
-                                            LineBreakMode="HeadTruncation"
-                                            FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
-                                            TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
-                                            ZIndex="1"/>
-                                    </Frame>
+                                             SizeChanged="FilePathDebug_SizeChanged"
+                                             Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}" 
+                                             Style="{StaticResource NormalText}" 
+                                             Padding="10,0"
+                                             Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
+                                             MaximumHeightRequest="{Binding Source={x:Static local:MainPage.FilePathFrameHeight}}"
+                                             Grid.Column="0"  
+                                             Grid.ColumnSpan="2"
+                                             Grid.Row="3"
+                                             HorizontalOptions="End"
+                                             VerticalOptions="Start"
+                                             LineBreakMode="HeadTruncation"
+                                             FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
+                                             TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
+                                             ZIndex="1"/>
+                                    <!--</Frame>-->
                                 </Grid>
                             </Frame>
                         </ViewCell>
