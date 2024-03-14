@@ -84,12 +84,12 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 
 ## Project Plan
 Create a music library Web API and simple Media Player
-* ### To-Do List
-- [ ] Delete Operation Optimization
-- [ ] Search For Music Separate DbContext with No-Tracking
-- [ ] Fix GitHub insisting on messing up lowercase file names.
+* ### General To-Do List
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
+- [ ] Code Cleanup, Refactoring, and Organization
+- [ ] Repository Pattern and Interfaces
+- [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
 ---
 
 
@@ -119,7 +119,6 @@ Create a music library Web API and simple Media Player
   - [x] Deleting Playlists GUI (Delete)
   - [x] Adding Songs to Playlists GUI (Update)
   - [x] Removing Songs from Playlists GUI (Update)
-- [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
 
 
 * ### Common Library 
@@ -137,9 +136,6 @@ Create a music library Web API and simple Media Player
 - [x] Extract ScanForMedia() into /CommonLibrary/CommonProgramLogic.cs 
 - [x] Create Random Playlists for Testing
 - [x] More Fluent Advanced Search with Parsing, to replace both Search and Advanced Search.
-- [ ] Work on general logic around the DB and App  
-- [ ] Convert CommonLibrary to the Repository Pattern and Interfaces.
-- [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
 
    
 * ### Data Library
@@ -215,6 +211,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* I think I'm gonna call this Version 0.1.  Then mostly work on fixing bugs, cleaning things up, refactoring, and organizing code.
 * **Warning** Negative Padding can be dangerous.
   * Cause a crash if you also set IsVisble=False.  
   * Some elements won't accept it at all or always crash.
