@@ -4,8 +4,7 @@
 #### This project is for Educational purposes.
 The goal is to create a simple Media Player, with Media Library and WebAPI using .Net MAUI.  
 
-The application will have a simple system to Play MP3s, ... and hopefully Add, Update, and Delete Songs and Playlists.  In addition to the MAui App, I'd like to add API, CLI, and a Web application.  This is a learning experience.
-
+The application will have a simple system to Play MP3s, ... and Add, Update, and Delete Songs and Playlists.  In addition to the MAui App, I'd like to eventually add API, CLI, and a Web application.  This is a learning experience.
 
 ### See Also: 
 * One nice example of what Microsoft has done with Maui
@@ -27,7 +26,6 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 * Run the App First.  Due to windows app virtualization of the %AppData% file-system, as well as other directories.
 * You'll Also need: 
   * https://github.com/cjmet/AngelHornetLibrary
-* ...
 
 
 ## Known Issues
@@ -35,23 +33,43 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
   * Since I'm not officially publishing, I have to "guess" where this directory will end up.
 * The first time you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a LAN NAS, and Hours for a WAN NAS.
-  * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan button.
+  * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan.
 * Swagger can only load about 1000 songs, any more and it locks up.  Use Postman if you want to test a larger query.
-* * GUI responsiveness suffers to SMB WAN Operations.  
+* GUI responsiveness suffers to SMB WAN Operations.  
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
-  * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely solved the issue.
+  * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely alleviated the issue.
 
 
 ## Suggestions
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
-* MAUI Debugging is sometimes fairly generic and unhelpful. 
-* Buy a Wholesale Truckload of Salt: 
+* MAUI Debugging is sometimes horribly generic and unhelpful. 
+* Buy a Wholesale ~~Truckload~~ Super Tanker of Salt: 
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
-  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with extreme caution, particularly on any more complicated issues.
+  * Many older examples and tutorials may not even compile.
+  * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with caution, particularly on more complicated issues.
 
 <br>
 
 ## Current Project Questions
+1. &nbsp; General Program Design Principles.
+   1. Now that I've gotten this far, I can absolutely see the advantages of, and wish in hind-sight I'd had both more experience and considerably more time to better implement things like repository and MvvM.  And I would like to discuss and look at general design principles more closely.
+        ``` 
+        [ Windows Android iOS MacOS MauiBlazorWeb ]  CLI   Web
+              --------- Maui Gui --~~ ? ~~            |     |
+                -----------MvvM ----------------------      |  
+                     --- Interface ---                       |
+             General Business Logic and Services ~~~ ? ~~~ API
+                     --- Interface -------------------------    
+                  Repository / DAO Layer
+                 DbContext / Data Storage
+        ```
+   1. Unfortunately, right now the majority of my logic is in the Maui layer.  It would be very beneficial to move as much as possible into MvvM layers.
+   1. Also, right now, most of the data access is directly in the dbContext, with only one or two Maui Methods and the API using the IRepository.  It would be very beneficial to move Data Access to the IRepository.
+   1. But that still leaves things pretty tightly coupled.
+   1. I already had to move some logic into the repository, because I wanted it accessible to the API, but it really probably doesn't logically go there.
+   1. To decouple the Front from the Back, it seems most of the logic really needs to go into the middle Logic/Services Layer, and in addition, the API likely needs to couple to the middle Logic/Services Layer, and not directly to the repository layer.  Then have the API feed an MvvM layer that works with the (Web) UI layer.  Otherwise you have to move or duplicate logic either in the front or back.  In the back couples and binds you while the front duplicates efforts.
+   1. So a more robust middle services and logic layer is where I'm heading with this line of thought, as well as coupling the API to the middle layer instead of the lower layers. But that's also what I'd like to discuss.
+
 1. &nbsp; In the process of eliminating one question, I get three more:
    1. &nbsp; Class: MvvM, Data Transformation Objects (or Data Transfer Objects or Data Transport Objects), Authentication, and Authorization.
    1. &nbsp; Question about MvvM and planning and layout.  View as a whole, whole page, partial page(s), or organized by data structures and sections?
@@ -63,7 +81,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 1. &nbsp; Predicate Builder for search and filter.
 1. &nbsp; ExecuteUpdate on linked Songs item in Playlists? 
 ---
-1. &nbsp; What is the correct place to put the second window's initialization code?
+1. &nbsp; What is the correct place to put the second window's initialization code?  Probably NOT where it is now.
 1. &ensp; What is the correct way to Check that a window element is open and finished rendering before trying to access it?  
    1. I'm currently checking it's Height as an easy check
 `while (await this.Dispatcher.DispatchAsync(() => WebView.Height) < 1) await Task.Delay(1000);`
@@ -85,12 +103,11 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### General To-Do List
-- [ ] Work on Partial Classes, and clean up MainPage with some partial classes.
+- [ ] Demo Video
 - [ ] Learn how to package the App for distribution
 - [ ] More API work?  Where do we go from here with the API?
-- [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
-- [ ] Code Cleanup, Refactoring, and Organization
 - [ ] Repository Pattern and Interfaces
+- [ ] MauiProgramLogic, General SOLID Principles, Refactoring, Model views, General Logic, more organized engineering and design.
 - [ ] Uniquely ID each song to eliminate duplicates, including duplicates with different filenames
 ---
 
@@ -159,6 +176,9 @@ Create a music library Web API and simple Media Player
   - [x] Basic Song API
   - [x] Basic CRUD API 
   - [x] API Locking of Playlist 1 and Songs Db as internal "All Songs" Playlist". (This is only locked in the API.)
+- [x] Basic API Authentication Demo
+- [ ] Actual API Authentication Implementation
+- [ ] API Authorization
 - [ ] API Playlist Validation
 - [ ] API Song Validation
 - [ ] API Orphaned Songs?
@@ -171,7 +191,8 @@ Create a music library Web API and simple Media Player
     - [ ] Automate an Advanced Search Test
 - [ ] Rework to scan filenames and pathnames only first, partially filling in song info. Then go back and scan and decode the id3 headers to fill in the rest of the information.  
 - [ ] QueenBee Controller to monitor and direct all the worker tasks.  Add redundancy and restarts as well as monitoring to the background task(s).   We currently can only get about 1000 songs at a time over the wan before it breaks due to a time-out or noise on the lines.
-- [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav
+- [ ] Refactoring all the various tasks to better task design patterns.  Particularly better use of TaskCreationOptionsLongRunning.  Better combining of tasks were possible, and overall optimization of the tasks.
+- [ ] Modify GetFilesAsync to use a List<string> of search patterns.  Aka: "mp3", "flac", "wav", "m4a", "mp4", "wma", "aac", "alac" ...  mpeg4, mpeg3, mpeg2, adts, asf, riff, avi, ac-3, amr, 3gp, flac, wav.  Just be mindful in the implementation that we don't want to cause async db issues as a tertiary effect.
 - [ ] Consolidate a single log-file reader that sends data to both the log-viewer and message queue.
 - [ ] Add a drive check first time we touch each drive ... cache the result.   That way we don't keep pinging off-line or malfunctioning drives.
 - [ ] Maybe only cache drives that take more than 3-5 seconds to load a file.
@@ -213,11 +234,12 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* General cleanup and organization.  Updated double-tap gesture loading.  It should be a little safer now.
 * I think I'm gonna call this Version 0.1.  Then mostly work on fixing bugs, cleaning things up, refactoring, and organizing code.
 * **Warning** Negative Padding can be dangerous.
   * Cause a crash if you also set IsVisble=False.  
   * Some elements won't accept it at all or always crash.
-  * Others it works with so long as you don't zero them out, aka padding has be be less than half the smallest dimension / 2 - 1.
+  * Others it works with so long as you don't zero them out, as in negative padding has be less than half the smallest dimension / 2 - 1.
 * Fixed another Bug
   * ***WARNING*** Minimum Text Height needs to be approximately RoundUp( 1 + FontSize * 1.5 ) ... The +1 is to keep it from crashing
   * ***HEIGHT*** is effecting width, near edges.  Maybe because of the corner rounding?  But that's then causing a stutter? and layout looping crash
@@ -229,7 +251,6 @@ Create a music library Web API and simple Media Player
     ```  
 * Holy Swiss Cheese!  30 songs per second to 10k songs per second.
   * At first the new version was hard locking.  I fixed that by making the list 'smarter', and I strongly suspect that's related to 'setting already set' AND using SaveChangesAsync() in place of SaveChages().  I can't explain the WHY, but the results are dramatic.
-  * Adding a song that's already added causes a MASSIVE slowdown and even causes the SaveChangesAsync to hard lock sometimes. It might be better to use SaveChanges() no Async.  However, making a 'smart' list of changes only, avoids the 'setting already set' problem which in turn avoids the massive slowdown and hard lock. Just 30 songs 'setting already set' was enough to cause a hard lock.
 * GitHub continues downloading Pascal Case image names to windows, but we can't compile them that way.  So I renamed everything _lc in lower case to hopefully force it to download lowercase.
 * `AliceBlue #FFF0F8FF`
 `Platform/Windows/App.Xaml`

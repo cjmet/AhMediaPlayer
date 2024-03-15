@@ -1,24 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AhConfig;
-using AngelHornetLibrary;
+﻿using AngelHornetLibrary;
 using CommonNet8;
 using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
 using DataLibrary;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Globalization;
 using static AngelHornetLibrary.AhLog;
-using static CommonNet8.AllSongsPlaylist;
 using static CommonNet8.SearchForMusicFiles;
-using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
 using static DataLibrary.DataLibraryAdvancedSearch;
-using Microsoft.EntityFrameworkCore;
-
 
 
 
@@ -29,9 +15,6 @@ namespace MauiMediaPlayer
 {
     public partial class MainPage : ContentPage
     {
-
-
-
 
         private void RandomPersistentLogo(string data, int found)
         {
@@ -72,7 +55,6 @@ namespace MauiMediaPlayer
                 AngelHornetLogo.Source = ImageSource.FromFile(images[index]);
             });
         }
-
         private async void SearchDirectories_Clicked(object sender, EventArgs e)
         {
             var folder = Environment.SpecialFolder.UserProfile;
@@ -88,7 +70,6 @@ namespace MauiMediaPlayer
                 _ = SearchUserProfileMusic(_dbContext, _progress, _path);
             }
         }
-
         private void MenuBox_Clicked(object sender, EventArgs e)
         {
             if (AdvandedSearchFrame.IsVisible) this.Dispatcher.Dispatch(() =>
@@ -191,9 +172,6 @@ namespace MauiMediaPlayer
                 _searchBar.Placeholder = Placeholder;
             });
         }
-
-
-
         private void Enable_Gui(bool _enable)
         {
             LogMsg($"* {(_enable ? "En" : "Dis")}abling Controls");
@@ -209,7 +187,6 @@ namespace MauiMediaPlayer
             MenuBox.IsEnabled = _enable;
             MenuBox.Opacity = _opacity;
         }
-
 
     }
 }

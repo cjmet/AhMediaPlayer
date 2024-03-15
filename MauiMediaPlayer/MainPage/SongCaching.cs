@@ -1,28 +1,6 @@
 ﻿using AhConfig;
 using DataLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AhConfig;
-using AngelHornetLibrary;
-using CommonNet8;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
-using DataLibrary;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Globalization;
 using static AngelHornetLibrary.AhLog;
-using static CommonNet8.AllSongsPlaylist;
-using static CommonNet8.SearchForMusicFiles;
-using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using static DataLibrary.DataLibraryAdvancedSearch;
-using Microsoft.EntityFrameworkCore;
-
-
-
 
 
 
@@ -30,7 +8,6 @@ namespace MauiMediaPlayer
 {
     public partial class MainPage : ContentPage
     {
-
 
         private async Task SongCache(Song _song, List<Song> _list, int _index)
         {
@@ -49,7 +26,6 @@ namespace MauiMediaPlayer
                 LogDebug("Song is null");
                 return;
             }
-
 
 
 
@@ -74,7 +50,6 @@ namespace MauiMediaPlayer
             // Signal the SongPlayTask
             _playSongStack.Push(_song);
         }
-
         private async Task<string> CopySongToCache(string _source, string _destination, long _fileSize, CancellationToken _token)
         {
             LogTrace($"Source: {_source}");
@@ -130,7 +105,6 @@ namespace MauiMediaPlayer
             LogTrace($"  Cached: {_fileName}");
             return _source;
         }
-
         private async Task CacheSongTask()
         {
             LogMsg($"SongCacheTask is Starting");
@@ -223,7 +197,6 @@ namespace MauiMediaPlayer
                 }
             }
         }
-
         private async Task PlaySongTask()
         {
             LogMsg("SongPlayTask is Starting");

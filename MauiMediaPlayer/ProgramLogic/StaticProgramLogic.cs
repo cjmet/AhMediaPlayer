@@ -1,8 +1,6 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using AhConfig;
 using DataLibrary;
-using Microsoft.EntityFrameworkCore.InMemory.Design.Internal;
-using AhConfig;
+using System.Collections.Concurrent;
 
 
 namespace MauiMediaPlayer.ProgramLogic
@@ -21,7 +19,7 @@ namespace MauiMediaPlayer.ProgramLogic
             int msgLevel = -1;
             int lastSongCount = 0;
 
-            
+
 
             Dictionary<string, int> msgLevelDict = new Dictionary<string, int>
             {
@@ -34,7 +32,8 @@ namespace MauiMediaPlayer.ProgramLogic
             };
 
             // Sub-Task
-            new Task(async () => {
+            new Task(async () =>
+            {
                 while (true)
                 {
                     if (queuedMsgLevel >= 0 && queuedMsg != "")
@@ -98,10 +97,11 @@ namespace MauiMediaPlayer.ProgramLogic
         public static async Task sendMessages(string message, Label messageBox, string? spin = null, Label? spinBox = null)
         {
             if (message != null && messageBox != null)
-                await messageBox.Dispatcher.DispatchAsync(() => {
+                await messageBox.Dispatcher.DispatchAsync(() =>
+                {
                     if (spin != null && spinBox != null) spinBox.Text = spin;
                     messageBox.Text = message;
-                    });
+                });
         }
     }
 }

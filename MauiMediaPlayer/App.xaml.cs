@@ -1,6 +1,5 @@
-﻿using static AngelHornetLibrary.AhLog;
-using CommonNet8;
-using AhConfig;
+﻿using AhConfig;
+using static AngelHornetLibrary.AhLog;
 
 namespace MauiMediaPlayer
 {
@@ -30,7 +29,7 @@ namespace MauiMediaPlayer
             // BONUS -> Center-ish the window
             var minXLoc = 1280 - Const.AppWidth - Const.AppDisplayBorder / 2;
             var minDisplayXLoc = (int)(displayInfo.Width / displayInfo.Density - Const.AppWidth - Const.AppDisplayBorder / 2);
-            window.X = int.Min(minXLoc,minDisplayXLoc);
+            window.X = int.Min(minXLoc, minDisplayXLoc);
             if (window.X < 1152 - Const.AppWidth - Const.AppDisplayBorder / 2)
                 window.X = 1152 - Const.AppWidth - Const.AppDisplayBorder / 2;
             window.Y = (displayInfo.Height / displayInfo.Density - window.Height) / 2 - Const.AppDisplayBorder / 2;

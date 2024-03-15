@@ -1,24 +1,6 @@
 ﻿using DataLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AhConfig;
-using AngelHornetLibrary;
-using CommonNet8;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
-using DataLibrary;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Globalization;
-using static AngelHornetLibrary.AhLog;
-using static CommonNet8.AllSongsPlaylist;
-using static CommonNet8.SearchForMusicFiles;
-using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using static DataLibrary.DataLibraryAdvancedSearch;
 using Microsoft.EntityFrameworkCore;
+using static AngelHornetLibrary.AhLog;
 
 namespace MauiMediaPlayer
 {
@@ -39,8 +21,6 @@ namespace MauiMediaPlayer
             }
             else LogMsg("Playlist is null");
         }
-
-
         private async void ChangePlaylist(Playlist playlist)
         {
             if (playlist != null) LogMsg($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
@@ -51,10 +31,6 @@ namespace MauiMediaPlayer
 
             await DispatchSonglist(_songList);
         }
-
-
-
-
         private Boolean Gui_SaveAs = true;        // SaveAS vs Save vs Edit
         private void SaveAsPlaylistGui_Clicked(object sender, EventArgs e)
         {
@@ -77,8 +53,6 @@ namespace MauiMediaPlayer
             return;
 
         }
-
-
         private async void DoSavePlaylistFrame_Clicked(object sender, EventArgs e)      // cj - Currently Disabled ... probably not coming back?
         {
             Enable_Gui(false);
@@ -166,7 +140,6 @@ namespace MauiMediaPlayer
 
             Enable_Gui(true);
         }
-
         private async void DeletePlaylistImproved(object sender, EventArgs e)
         {
             // Removing the songs first, with a smart selective list, makes the delete playlist 100x faster.
@@ -235,16 +208,13 @@ namespace MauiMediaPlayer
             if (answer) DeletePlaylistImproved(sender, e);
             return;
         }
-
-
-
         private async Task AddRemoveSongList(object sender, EventArgs e, List<vSong>? _songlist, Boolean _addSongs)
         {
             // cjm - Holy Swiss Cheese!  
             // Adding a song that's already added causes a MASSIVE slowdown and even causes the SaveChangesAsync to hard lock sometimes.
             // It might be better to use SaveChanges() no Async.
             // However, making a 'smart' list of changes only, avoids the 'setting already set' problem which in turn avoids the massive slowdown and hard lock.
-            // Just 30 songs 'setting already set' was enough to cause a hard lock.
+            // Just 30 or 40 songs 'setting already set' was enough to cause a hard lock.
             // ... now to test more extensively.
 
             LogMsg("Intercepting Add/Remove Song");
@@ -318,7 +288,6 @@ namespace MauiMediaPlayer
         {
             throw new Exception("This is not used anymore.");
         }
-
         private void OnStar_Clicked(object sender, EventArgs e)
         {
             var _sender = (Button)sender;
@@ -348,7 +317,6 @@ namespace MauiMediaPlayer
             var results = _dbContext.SaveChanges();
             LogMsg($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_song.Star ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
         }
-
         private void EditPlaylistGui_Clicked(object sender, EventArgs e)
         {
             Gui_SaveAs = false;
@@ -376,10 +344,6 @@ namespace MauiMediaPlayer
             return;
 
         }
-
-
-
-
 
     }
 }

@@ -1,24 +1,6 @@
-﻿using DataLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AhConfig;
-using AngelHornetLibrary;
-using CommonNet8;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using DataLibrary;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Globalization;
 using static AngelHornetLibrary.AhLog;
-using static CommonNet8.AllSongsPlaylist;
-using static CommonNet8.SearchForMusicFiles;
-using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using static DataLibrary.DataLibraryAdvancedSearch;
-using Microsoft.EntityFrameworkCore;
 
 namespace MauiMediaPlayer
 {
@@ -54,8 +36,6 @@ namespace MauiMediaPlayer
                 });
             }
         }
-
-
         private void PlaySong(Song _song, String _cachedPath)
         {
             LogMsg($"PlaySong: {(_song != null ? _song.Title : _song.FileName)}");
@@ -99,8 +79,6 @@ namespace MauiMediaPlayer
 
                 }, TaskCreationOptions.LongRunning).Start();
         }
-
-
         private async void Shuffle_Clicked(object sender, EventArgs e)
         {
             LogMsg("Shuffle");
@@ -111,7 +89,6 @@ namespace MauiMediaPlayer
             await DispatchSonglist(_list);
 
         }
-
         private void NextTrack_Clicked(object sender, EventArgs e)
         {
             LogMsg("Next Track");
@@ -123,7 +100,6 @@ namespace MauiMediaPlayer
             if (_newSong != null)
                 this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
-
         private void PreviousTrack_Clicked(object sender, EventArgs e)
         {
             LogMsg("Previous Track");
@@ -135,7 +111,6 @@ namespace MauiMediaPlayer
             if (_newSong != null)
                 this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
-
         private void RepeatList_Clicked(object sender, EventArgs e)
         {
             LogMsg($"Repeat Playlist: {_repeatPlaylist}");
@@ -145,7 +120,6 @@ namespace MauiMediaPlayer
                 RepeatList.BackgroundColor = _repeatPlaylist ? Color.Parse("LightBlue") : Color.Parse("Transparent");
             });
         }
-
         private void FirstTrack_Clicked(object sender, EventArgs e)
         {
             LogMsg("First Track");
@@ -155,7 +129,6 @@ namespace MauiMediaPlayer
             if (_newSong != null)
                 this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
-
         private void LastTrack_Clicked(object sender, EventArgs e)
         {
             LogMsg("Last Track");
@@ -165,7 +138,6 @@ namespace MauiMediaPlayer
             if (_newSong != null)
                 this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
-
 
     }
 }

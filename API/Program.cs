@@ -31,13 +31,14 @@ namespace API
             AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel, "ApiLog.log");
             if (Const.ApiAllowMusicSearch)
             {
+                var _privateDbContext = new PlaylistContext();
                 var task = new Task(async () =>
                 {
                     LogMsg("Api Init: Searching for Music");
-                    await SearchUserProfileMusic(new ReportByAction(LogTrace));
+                    await SearchUserProfileMusic(_privateDbContext, new ReportByAction(LogTrace));
                     foreach (var _path in Const.ApiMusicSearchPaths)
                     {
-                        await SearchUserProfileMusic(new ReportByAction(LogTrace), _path);
+                        await SearchUserProfileMusic(_privateDbContext, new ReportByAction(LogTrace), _path);
                     }
                 }, TaskCreationOptions.LongRunning);
                 task.Start();

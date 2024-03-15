@@ -1,18 +1,11 @@
 ﻿using AhConfig;
-using AngelHornetLibrary;
 using CommonNet8;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
 using DataLibrary;
 using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Globalization;
 using static AngelHornetLibrary.AhLog;
 using static CommonNet8.AllSongsPlaylist;
 using static CommonNet8.SearchForMusicFiles;
 using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using static DataLibrary.DataLibraryAdvancedSearch;
-using Microsoft.EntityFrameworkCore;
 
 
 
@@ -81,7 +74,7 @@ namespace MauiMediaPlayer
                 TestPlaylist.ItemsSource = _playlists;
                 var _songList = _dbContext.Songs.ToList();
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-                DispatchSonglist(_songList);
+                _ = DispatchSonglist(_songList);
                 if (_playlists.Count < 1) UpdateAllSongsPlaylist(_dbContext).Wait();  // cj this won't take effect till we re-load, but it's better than nothing.
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
                 LogDebug("=== /Database Loading Complete =============================== ===");
@@ -115,7 +108,7 @@ namespace MauiMediaPlayer
                 this.Dispatcher.Dispatch(() =>
                                TestPlaylist.ItemsSource = _playlists);
 
-                var _songList = _dbContext.Songs.ToList();
+                var _songList = _dbContext.Songs.ToList();      // _dbContext does not allow OrdinalIgnoreCase
                 _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 await DispatchSonglist(_songList);
                 await Task.Delay(1);
@@ -133,15 +126,15 @@ namespace MauiMediaPlayer
                     LogDebug("Double Tapped!");
                 };
                 //Dispatch Doubletap ... we have to hope they are loaded by then ... 
-                this.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(3), () =>
+                LogDebug("Loading Double Tap Gesture(s) =============================== ===");
+                while (TestPlaylist.Height < 1) await Task.Delay(25);               
+                while (TestSonglist.Height < 1) await Task.Delay(25);
+                this.Dispatcher.Dispatch( () =>
                 {
-                    while (TestPlaylist.Height < 1) Task.Delay(25);
-                    TestPlaylist.GestureRecognizers.Add(tapGestureRecognizer);
-                    while (TestSonglist.Height < 1) Task.Delay(25);
+                    TestPlaylist.GestureRecognizers.Add(tapGestureRecognizer);   
                     TestSonglist.GestureRecognizers.Add(tapGestureRecognizer);
                     LogDebug("=== Double Tap Gesture(s) Loaded");
                 });
-                LogDebug("Delay Loading Double Tap Gesture(s) =============================== ===");
 
                 await Task.Delay(1000);
                 _ = this.Dispatcher.DispatchAsync(async () =>
@@ -155,21 +148,6 @@ namespace MauiMediaPlayer
 
         }  // /Constructor /Main Page
 
-
     }
-
-
-
-
-
-
-       
-
-
-       
-
-
-
-
 
 }

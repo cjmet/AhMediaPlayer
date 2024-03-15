@@ -1,11 +1,5 @@
 ﻿using DataLibrary;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static AngelHornetLibrary.AhLog;
 
 namespace MauiMediaPlayer
 {
@@ -18,7 +12,7 @@ namespace MauiMediaPlayer
         {
         }
 
-        public vSong(Song song) 
+        public vSong(Song song)
         {
             this.Id = song.Id;
             this.Playlists = song.Playlists;
@@ -26,13 +20,13 @@ namespace MauiMediaPlayer
 
             this.FileSize = song.FileSize;
             this.Title = song.Title;
-            
+
             this.Artist = song.Artist;
             this.Band = song.Band;
             this.Album = song.Album;
 
             this.Track = song.Track;
-            this.Year = song.Year;            
+            this.Year = song.Year;
             this.Genre = song.Genre;
 
             this.Length = song.Length;

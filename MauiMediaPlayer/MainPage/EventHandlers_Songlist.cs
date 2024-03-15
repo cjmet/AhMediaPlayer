@@ -1,25 +1,7 @@
 ﻿using AhConfig;
 using DataLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AhConfig;
-using AngelHornetLibrary;
-using CommonNet8;
-using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Maui.Views;
-using DataLibrary;
-using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Globalization;
 using static AngelHornetLibrary.AhLog;
-using static CommonNet8.AllSongsPlaylist;
-using static CommonNet8.SearchForMusicFiles;
-using static MauiMediaPlayer.ProgramLogic.StaticProgramLogic;
-using static DataLibrary.DataLibraryAdvancedSearch;
-using Microsoft.EntityFrameworkCore;
 
 namespace MauiMediaPlayer
 {
@@ -36,8 +18,6 @@ namespace MauiMediaPlayer
             if (Const.UseSongCache) await SongCache(_song, _list, _index);
             else PlaySong(_song, _song.PathName);
         }
-
-
         private async Task DispatchSonglist(List<Song> _songList)
         {
             // EF Core I Hate you More!
@@ -84,8 +64,6 @@ namespace MauiMediaPlayer
             });
 
         }
-
-
         private void FilePathDebug_SizeChanged(object sender, EventArgs e)
         {
             var _label = (Label)sender;
@@ -97,9 +75,6 @@ namespace MauiMediaPlayer
             _label.BindingContext = null;
             _label.BindingContext = tmp;
         }
-
-
-
 
     }
 
@@ -116,7 +91,6 @@ namespace MauiMediaPlayer
             int len = (int)(width / denom);
             return AngelHornetLibrary.AhStrings.HeadTruncate(str, len);
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value as string;
