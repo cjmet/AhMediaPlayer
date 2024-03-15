@@ -40,9 +40,6 @@ namespace MauiMediaPlayer.ProgramLogic
                     if (queuedMsgLevel >= 0 && queuedMsg != "")
                     {
                         // 'x'=60, 'M'= 38, Pixels=390 - 20 = 370;  Avg=6.2, Wide=9.7
-                        //var grid = messageBox.Parent as Grid;
-                        //var page = grid.Parent as Page;
-                        //Debug.WriteLine($"Page:{page.Width}   Grid:{grid.Width}   Msg:{messageBox.Width}");
                         // Default FontSize is 12, and since the 12 is hard coded, might as well well card code the 6.5 too.
                         //var denom = 12 / Const.FontSizeDivisor;
                         var width = (int)(messageBox.Width / 6.5) - 1;

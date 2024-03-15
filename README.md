@@ -85,6 +85,8 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### General To-Do List
+- [ ] Work on Partial Classes, and clean up MainPage with some partial classes.
+- [ ] Learn how to package the App for distribution
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] /MauiProgramLogic and General SOLID Principles Refactoring  
 - [ ] Code Cleanup, Refactoring, and Organization

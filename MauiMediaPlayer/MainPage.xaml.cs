@@ -17,7 +17,8 @@ using Microsoft.EntityFrameworkCore;
 
 
 
-
+// *** WARNING *** Do NOT trust references numbers when it relates to XAML event handlers.
+// await Task.Delay(1);  // This allows the GUI to render a frame, and has been inserted as needed where performance lagged, even in async contexts if it was needed.
 
 namespace MauiMediaPlayer
 {
@@ -50,10 +51,10 @@ namespace MauiMediaPlayer
             // to: this.Dispatcher.Dispatch
 
             InitializeComponent();
+            SearchCount.Text = $"v{Const.InternalVersion}";
             _dbContext = dbcontext;
             _playlistRepository = playlistRepository;
             _songRepository = songRepository;
-            SearchCount.Text = $"v{Const.InternalVersion}";
 
             _ = DeliverMessageQueue(_messageQueue, spinBox, messageBox);
             _ = SecondWindow(Application.Current, AngelHornetLogo);
@@ -64,23 +65,13 @@ namespace MauiMediaPlayer
                 _ = CacheSongTask();
             }
 
-            //if (Debugger.IsAttached)
-            //{
-            //    // Hack to space stuff down below the debug toolbar.  I know we can collapse it, but it's still in the way even then.
-            //    var debugSpacer = new Label { Text = "Debug Toolbar Spacer ", HeightRequest = 48, HorizontalOptions = LayoutOptions.Center };
-            //    MainGrid.Children.Add(debugSpacer);
-            //    Grid.SetColumnSpan(debugSpacer, 2);
-            //}
 
-            // I went to a lot of trouble to create this, and now after input from others I'm going to make it permanent instead of a DEBUG_ONLY feature.
-            // Heinous Hack-Stockings!
-            // cj - My God this is a Horrible Hack to get around broken Maui HeadTruncate Controls.  
-            //       Worse it only updates when you run a new search to redraw the list.
-            //       We could probably put an event in for on width change. 
-            FilePathFontSize = Const.SongPathFontSize;
-            FilePathFrameHeight = Const.SongPathFrameHeight;
-            FilePathFontColor = "Black";
-            // /Heinous Hack-Stockings
+            {
+                // I went to a lot of trouble to create this, and now after input from others I'm going to make it permanent instead of a DEBUG_ONLY feature.
+                FilePathFontSize = Const.SongPathFontSize;
+                FilePathFrameHeight = Const.SongPathFrameHeight;
+                FilePathFontColor = "Black";
+            }
 
             // Load Databases
             {
@@ -95,18 +86,20 @@ namespace MauiMediaPlayer
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
                 LogDebug("=== /Database Loading Complete =============================== ===");
             }
+            // /Load Databases
 
             // Load Advanced Search Help List
             Task.Run(async () =>
             {
                 while (AdvancedSearchHelpList.Height < 1) await Task.Delay(25);
-                Application.Current.Dispatcher.Dispatch(() =>
+                this.Dispatcher.Dispatch(() =>
                 {
                     List<string> list = new List<string>();
                     list = DataLibraryAdvancedSearch.ShortHelpText();
                     AdvancedSearchHelpList.ItemsSource = list;
                 });
             });
+            // / Advanced Search Help List
 
             // Search for More Music
             Task.Run(async () =>
@@ -155,9 +148,10 @@ namespace MauiMediaPlayer
                 {
                     Enable_Gui(true);
                     await Task.Delay(1000);
-                    LogMsg("*** Startup Complete ***");     
+                    LogMsg("*** Startup Complete ***");
                 });
             });
+            // /Search for More Music
 
         }  // /Constructor /Main Page
 
@@ -212,7 +206,7 @@ namespace MauiMediaPlayer
             if (_newSong != null)
             {
                 // The selection action dispatched below triggers the selected event which in turn triggers the PlaySong() method.
-                this.Dispatcher.Dispatch(() =>        // We definitely need to use dispatcher here.
+                this.Dispatcher.Dispatch(() =>        // We definitely need to use dispatcher here, OR ELSE!
                 {
                     TestSonglist.SelectedItem = _newSong;
                     TestSonglist.ScrollTo(_newSong, ScrollToPosition.Start, true);
@@ -405,7 +399,7 @@ namespace MauiMediaPlayer
                     await sourceStream.CopyToAsync(destinationStream, _token);
 
                 // Lets try this to see if it's more responsive to the GUI. ... This is about the same, maybe a little more responsive, but less diagnostic.
-                //await File.WriteAllBytesAsync(_destination, await File.ReadAllBytesAsync(_source, _token), _token);
+                // Reference: await File.WriteAllBytesAsync(_destination, await File.ReadAllBytesAsync(_source, _token), _token);
             }
             catch (TaskCanceledException)
             {
@@ -629,7 +623,7 @@ namespace MauiMediaPlayer
             var _selectedSongIndex = _songList.IndexOf(_selectedSong);
             var _newSong = _songList.ElementAtOrDefault(_selectedSongIndex + 1);
             if (_newSong != null)
-                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+                this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
 
         private void PreviousTrack_Clicked(object sender, EventArgs e)
@@ -641,14 +635,14 @@ namespace MauiMediaPlayer
             var _selectedSongIndex = _songList.IndexOf(_selectedSong);
             var _newSong = _songList.ElementAtOrDefault(_selectedSongIndex - 1);
             if (_newSong != null)
-                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+                this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
 
         private void RepeatList_Clicked(object sender, EventArgs e)
         {
             LogMsg($"Repeat Playlist: {_repeatPlaylist}");
             _repeatPlaylist = !_repeatPlaylist;
-            Application.Current.Dispatcher.Dispatch(() =>
+            this.Dispatcher.Dispatch(() =>
             {
                 RepeatList.BackgroundColor = _repeatPlaylist ? Color.Parse("LightBlue") : Color.Parse("Transparent");
             });
@@ -661,7 +655,7 @@ namespace MauiMediaPlayer
             var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
             var _newSong = _songList.ElementAtOrDefault(0);
             if (_newSong != null)
-                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+                this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
 
         private void LastTrack_Clicked(object sender, EventArgs e)
@@ -671,7 +665,7 @@ namespace MauiMediaPlayer
             var _songList = TestSonglist.ItemsSource.Cast<Song>().ToList();
             var _newSong = _songList.ElementAtOrDefault(_songList.Count - 1);
             if (_newSong != null)
-                Application.Current.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
+                this.Dispatcher.Dispatch(() => TestSonglist.SelectedItem = _newSong);
         }
 
         private void RandomPersistentLogo(string data, int found)
@@ -680,7 +674,7 @@ namespace MauiMediaPlayer
             data = data.ToLower().Trim();
             var num = data.GetHashCode();
             var images = new string[]
-            {   // cj - I can't seem to find a way to read these, so I'm just going to hard code them.
+            {   // cj - I can't seem to find a way to read these (from the package), so I'm just going to hard code them.
                 "angel_hornet_logo_cropped.png", "azrael_lc.png",
                 "bad_grim_lc.png", "baxters_lc.png", "big_moon_lc.png",
                 "brie_lc.png", "bubby_lc.png", "chex_lc.png", "damnit_gizmo_lc.png",
@@ -708,7 +702,7 @@ namespace MauiMediaPlayer
             Name = Name.Replace(" Lc", "");                 // Curse you GitHub for making me rename the files so you'd respect lower case!
             LogMsg($"{Name} found you {found} Songs!");
 
-            Application.Current.Dispatcher.Dispatch(() =>
+            this.Dispatcher.Dispatch(() =>
             {
                 AngelHornetLogo.Source = ImageSource.FromFile(images[index]);
             });
@@ -732,13 +726,13 @@ namespace MauiMediaPlayer
 
         private void MenuBox_Clicked(object sender, EventArgs e)
         {
-            if (AdvandedSearchFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
+            if (AdvandedSearchFrame.IsVisible) this.Dispatcher.Dispatch(() =>
             {
                 AdvandedSearchFrame.IsVisible = false;
                 MenuBox.BackgroundColor = Color.Parse("Transparent");
                 StandardSearchBar.IsEnabled = true;
             });
-            else Application.Current.Dispatcher.Dispatch(() =>
+            else this.Dispatcher.Dispatch(() =>
             {
                 SetEditBarState();
                 AdvandedSearchFrame.IsVisible = true;
@@ -751,7 +745,7 @@ namespace MauiMediaPlayer
         private void SetEditBarState()
         {
             Playlist? _playlist = (Playlist)TestPlaylist.SelectedItem;
-            if (_playlist == null || _playlist.Id == 1) Application.Current.Dispatcher.Dispatch(() =>
+            if (_playlist == null || _playlist.Id == 1) this.Dispatcher.Dispatch(() =>
             {
                 AddSongsGui.Opacity = 0.25;
                 AddSongsGui.IsEnabled = false;
@@ -762,7 +756,7 @@ namespace MauiMediaPlayer
                 EditPlaylistGui.Opacity = 0.25;
                 EditPlaylistGui.IsEnabled = false;
             });
-            else if (_playlist.Id > 1) Application.Current.Dispatcher.Dispatch(() =>
+            else if (_playlist.Id > 1) this.Dispatcher.Dispatch(() =>
             {
                 AddSongsGui.Opacity = 1;
                 AddSongsGui.IsEnabled = true;
@@ -822,13 +816,13 @@ namespace MauiMediaPlayer
                 await DispatchSonglist(_songList);
             }
 
-            Application.Current.Dispatcher.Dispatch(() =>
+            this.Dispatcher.Dispatch(() =>
             {
                 if (_songList.Count > 0) SearchCount.Text = $"{_songList.Count:n0}";
                 Searchby.SelectedItem = _searchBy;
                 SearchAction.SelectedItem = _searchAction;
                 var Placeholder = "Title, Artist, Band, Album, Genre, Path";
-                if (_by != null && _action != null && ( _by.ToLower() != "any"  || _action.ToUpper() != "SEARCH")) Placeholder = $"SearchAction: {_searchAction}     -     SearchBy: {_searchBy}";
+                if (_by != null && _action != null && (_by.ToLower() != "any" || _action.ToUpper() != "SEARCH")) Placeholder = $"SearchAction: {_searchAction}     -     SearchBy: {_searchBy}";
                 _searchBar.Placeholder = Placeholder;
             });
         }
@@ -838,7 +832,7 @@ namespace MauiMediaPlayer
             var _label = (Label)sender;
 
             // cj - This is working, but there HAS to be another better way!
-            //_label.SetBinding(Label.TextProperty, new Binding("PathName", source: _label.BindingContext, converter: new HeadTruncateConverter()));  // This might be correct Syntax?!?  Co-Pilot suggested it.
+            // Co-Pilot:  _label.SetBinding(Label.TextProperty, new Binding("PathName", source: _label.BindingContext, converter: new HeadTruncateConverter()));  // This might be correct Syntax?!?  Co-Pilot suggested it.
             FilePathWindowWidth = int.Max((int)TestSonglist.Width, Const.AppMinimumWidth);
             var tmp = _label.BindingContext;
             _label.BindingContext = null;
@@ -851,14 +845,14 @@ namespace MauiMediaPlayer
             Gui_SaveAs = true;
             var _sender = (Button)sender;
 
-            if (SaveAsPlaylistFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
+            if (SaveAsPlaylistFrame.IsVisible) this.Dispatcher.Dispatch(() =>
             {
                 SaveAsPlaylistFrame.IsVisible = false;
                 SaveAsPlaylistName.Text = "";
                 SaveAsPlaylistDesc.Text = "";
             });
 
-            else Application.Current.Dispatcher.Dispatch(() =>
+            else this.Dispatcher.Dispatch(() =>
             {
                 SaveAsPlaylistFrame.IsVisible = true;
                 SaveAsPlaylistName.Text = "";
@@ -869,7 +863,7 @@ namespace MauiMediaPlayer
         }
 
 
-        private async void DoSavePlaylistFrame_Clicked(object sender, EventArgs e)
+        private async void DoSavePlaylistFrame_Clicked(object sender, EventArgs e)      // cjm - check this
         {
             Enable_Gui(false);
             await Task.Delay(1);
@@ -937,7 +931,7 @@ namespace MauiMediaPlayer
                 LogMsg($"Playlist Saved: [{_playlist.Id}] {_playlist.Name} - {_playlist.Description}");
                 var _playlists = _dbContext.Playlists.ToList();
                 _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
-                Application.Current.Dispatcher.Dispatch(async () =>
+                this.Dispatcher.Dispatch(async () =>
                 {
                     TestPlaylist.ItemsSource = _playlists;
                     await Task.Delay(1);
@@ -947,7 +941,7 @@ namespace MauiMediaPlayer
                 });
             }
 
-            Application.Current.Dispatcher.Dispatch(() =>
+            this.Dispatcher.Dispatch(() =>
             {
                 SaveAsPlaylistFrame.IsVisible = false;
                 SaveAsPlaylistName.Text = "";
@@ -964,10 +958,10 @@ namespace MauiMediaPlayer
             LogMsg("Intercepting DeletePlaylistGui_Clicked");
             var _songs = (List<vSong>)TestSonglist.ItemsSource;
             if (_songs == null) return;
-            
+
             Enable_Gui(false);
             await AddRemoveSongList(sender, e, _songs, false);
-            
+
             var _appPlaylist = (Playlist)TestPlaylist.SelectedItem;
             var _playlistID = _appPlaylist.Id;
 
@@ -993,10 +987,10 @@ namespace MauiMediaPlayer
             _playlists = await _dbContext.Playlists.ToListAsync();
             _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
             var _index = _playListIndex - 1;
-            _index = _index < 0 ? 0 : _index;   
+            _index = _index < 0 ? 0 : _index;
             _appPlaylist = _playlists.ElementAtOrDefault(_index);
             LogDebug($"Dispatching[976] ... ");
-            await Application.Current.Dispatcher.DispatchAsync(async () =>
+            await this.Dispatcher.DispatchAsync(async () =>
             {
                 TestPlaylist.ItemsSource = _playlists;
                 await Task.Delay(1);
@@ -1021,71 +1015,9 @@ namespace MauiMediaPlayer
             bool answer = await DisplayAlert("Delete Playlist", _playlist.Name, "Delete", "Cancel");
 
             // cjm 
-            // Interecept this and lets see if we can make it better.
+            // Intercept this and lets see if we can make it better.
             if (answer) DeletePlaylistImproved(sender, e);
             return;
-
-
-            //if (answer)
-            //{
-            //    Enable_Gui(false);
-
-
-            //    var spinner = 0;
-            //    var spinchar = new char[] { '|', '/', '-', '\\' };
-            //    var cts = new CancellationTokenSource();
-            //    var ct = cts.Token;
-
-
-            //    Task spin = new Task(async () =>
-            //    {
-            //        var id = _playlist.Id;
-            //        var name = _playlist.Name;
-            //        while (!ct.IsCancellationRequested)
-            //        {
-            //            LogMsg($"Deleting Playlist[{id}]: {(spinner++ == 0 ? name : spinchar[spinner % 4])}");
-            //            await Task.Delay(3000);
-            //        }
-            //    }, ct, TaskCreationOptions.LongRunning);
-            //    spin.Start();
-
-            //    LogDebug($"Deleting Playlist[990]: [{_playlist.Id}] {_playlist.Name}");
-            //    // WARNING:  You can't do StringComparer in dbContext.  I knew that, but forgot.
-            //    var _playlists = await _dbContext.Playlists.ToListAsync();
-            //    _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
-            //    var _index = _playlists.IndexOf(_playlist);
-            //    if (--_index < 0) _index = 0;
-            //    await Task.Run(() =>
-            //    {
-            //        LogDebug($"Removing[967] ... ");
-            //        _dbContext.Playlists.Remove(_playlist);
-            //        LogDebug($"Removed[968] ... ");
-            //        LogDebug($"Saving[973] ... ");
-            //        _dbContext.SaveChanges();
-            //        LogDebug($"Saved[975] ... ");
-            //    });
-            //    TestPlaylist.SelectedItem = null;
-            //    _playlists = await _dbContext.Playlists.ToListAsync();    
-            //    _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
-            //    _playlist = _playlists.ElementAtOrDefault(_index);
-            //    LogDebug($"Dispatching[976] ... ");
-            //    await Application.Current.Dispatcher.DispatchAsync(async () =>
-            //    {
-            //        TestPlaylist.ItemsSource = _playlists;
-            //        await Task.Delay(1);
-            //        if (_playlist != null)
-            //        {
-            //            TestPlaylist.ScrollTo(_playlist, ScrollToPosition.Start, true);
-            //            TestPlaylist.SelectedItem = _playlist;
-            //        }
-            //    });
-
-            //    cts.Cancel();
-            //    Enable_Gui(true);
-            //}
-
-
-
         }
 
         private void Enable_Gui(bool _enable)
@@ -1116,7 +1048,7 @@ namespace MauiMediaPlayer
             var _sender = (Button)sender;
             var _playlist = (Playlist)TestPlaylist.SelectedItem;
             var _playlistId = _playlist.Id;
-            //var _songlist = (List<vSong>)TestSonglist.ItemsSource; // Pass this in instead, then I can use this method for other things as well.
+            // Pass this in instead, then I can use this method for other things as well. //Removed: var _songlist = (List<vSong>)TestSonglist.ItemsSource; 
             var _songlistIds = _songlist.Select(s => s.Id).ToList();
             if (_playlist == null || _playlist.Id <= 1) return;
             if (_songlist == null) return;
@@ -1127,8 +1059,8 @@ namespace MauiMediaPlayer
                 var _existingIds = await _dbContext.Songs.Where(s => s.Playlists.Any(p => p.Id == _playlistId)).Select(s => s.Id).ToListAsync();
                 var _newSongIds = _songlistIds.Except(_existingIds).ToList();
                 LogMsg($"Adding {_newSongIds.Count} Songs to Playlist (DB)[{_playlistId}]");
-                // cjm - check for null playlists.  Use "?" notation!
-                await _dbContext.Songs.Where(s => _newSongIds.Contains(s.Id)).Include(s => s.Playlists).ForEachAsync(s =>{ s.Playlists?.Add(_playlist); });  
+                // cj - check for null playlists.  Use "?" notation!
+                await _dbContext.Songs.Where(s => _newSongIds.Contains(s.Id)).Include(s => s.Playlists).ForEachAsync(s => { s.Playlists?.Add(_playlist); });
                 await Task.Delay(1);
 
                 // Stars are just a visual aid, we don't have to actually set them in the database, just the View.
@@ -1137,7 +1069,7 @@ namespace MauiMediaPlayer
 
                 LogMsg($"Saving ... ");
                 var results = await _dbContext.SaveChangesAsync();
-                if (results < _newSongIds.Count ) LogError($"ERROR: Saved [{results}] of [{_newSongIds.Count}] ");
+                if (results < _newSongIds.Count) LogError($"ERROR: Saved [{results}] of [{_newSongIds.Count}] ");
                 LogMsg($"Saved [{results}] ... ");
             }
             else
@@ -1145,8 +1077,8 @@ namespace MauiMediaPlayer
                 var _existingIds = await _dbContext.Songs.Where(s => s.Playlists.Any(p => p.Id == _playlistId)).Select(s => s.Id).ToListAsync();
                 var _removeSongIds = _songlistIds.Intersect(_existingIds).ToList();
                 LogMsg($"Removing {_removeSongIds.Count} Songs from Playlist (DB)[{_playlistId}]");
-                // cjm - check for null playlists.  Use "?" notation!
-                await _dbContext.Songs.Where(s => _removeSongIds.Contains(s.Id)).Include(s => s.Playlists).ForEachAsync(s => { s.Playlists?.Remove(_playlist); }); 
+                // cj - check for null playlists.  Use "?" notation!
+                await _dbContext.Songs.Where(s => _removeSongIds.Contains(s.Id)).Include(s => s.Playlists).ForEachAsync(s => { s.Playlists?.Remove(_playlist); });
                 await Task.Delay(1);
 
                 // Stars are just a visual aid, we don't have to actually set them in the database, just the View.
@@ -1168,27 +1100,6 @@ namespace MauiMediaPlayer
             await AddRemoveSongList(sender, e, _songs, true);
             Enable_Gui(true);
             return;
-
-
-            //LogMsg("Checking Playlist");
-            //var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
-            //if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
-            //Enable_Gui(false);
-            //LogMsg($"Reading Songs ... ");
-            //var _sender = (Button)sender;
-            //var _songs = (List<vSong>)TestSonglist.ItemsSource;
-            //if (_songs != null)
-            //{
-            //    LogMsg($"Adding {_songs.Count} Songs");
-            //    int i = 0;
-            //    foreach (var _song in _songs)
-            //    {
-            //        if (_song != null) AddRemoveSong(_song, true);
-            //        if (++i % 30 == 0) LogMsg($"Adding Songs: {i}");
-            //        await Task.Delay(1);
-            //    }
-            //}
-            //Enable_Gui(true);
         }
         private async void RemoveSongsGui_Clicked(object sender, EventArgs e)
         {
@@ -1199,53 +1110,10 @@ namespace MauiMediaPlayer
             await AddRemoveSongList(sender, e, _songs, false);
             Enable_Gui(true);
             return;
-
-            //LogMsg("Checking Playlist");
-            //var _playlistCheck = (Playlist)TestPlaylist.SelectedItem;
-            //if (_playlistCheck == null || _playlistCheck.Id <= 1) return;
-            //Enable_Gui(false);
-            //LogMsg($"Reading Songs ... ");
-            //var _sender = (Button)sender;
-            //var _songs = (List<vSong>)TestSonglist.ItemsSource;
-            //if (_songs != null)
-            //{
-            //    LogMsg($"Remove {_songs.Count} Songs");
-            //    int i = 0;
-            //    foreach (var _song in _songs)
-            //    {
-            //        if (_song != null) await AddRemoveSong(_song, false);
-            //        if (++i % 30 == 0) LogMsg($"Removing Songs: {i}");
-            //        await Task.Delay(1);
-            //    }
-            //    Enable_Gui(true);
-            //}
         }
         private async Task AddRemoveSong(vSong _song, bool _add)
         {
             throw new Exception("This is not used anymore.");
-            //if (_song == null) return;
-            //var _playlist = (Playlist)TestPlaylist.SelectedItem;
-            //if (_playlist == null) return;
-            //if (_playlist.Id == 1) return;
-
-            //var _dbSong = await _dbContext.Songs.Include(s => s.Playlists).Where(s => s.Id == _song.Id).FirstOrDefaultAsync();
-            //if (_dbSong == null) return;
-            //var _dbPlaylist = await _dbContext.Playlists.Where(p => p.Id == _playlist.Id).FirstOrDefaultAsync();
-            //if (_add)
-            //{
-            //    _song.Star = true;
-            //    _dbSong.Playlists.Add(_playlist);
-            //    if (_playlist.Songs != null) _playlist.Songs.Add(_dbSong);
-            //}
-            //else
-            //{
-            //    _song.Star = false;
-            //    _dbSong.Playlists.Remove(_playlist);
-            //    if (_playlist.Songs != null) _playlist.Songs.Remove(_dbSong);
-            //}
-
-            //var results = _dbContext.SaveChanges();
-            //LogTrace($"Id[{_playlist.Id}]: {_playlist.Name}   [{(_add ? "Adding" : "Removing")}]: {_song.Title}   Results: {results}");
         }
 
         private void OnStar_Clicked(object sender, EventArgs e)
@@ -1289,14 +1157,14 @@ namespace MauiMediaPlayer
             if (_name == null) _name = "";
             if (_desc == null) _desc = "";
 
-            if (SaveAsPlaylistFrame.IsVisible) Application.Current.Dispatcher.Dispatch(() =>
+            if (SaveAsPlaylistFrame.IsVisible) this.Dispatcher.Dispatch(() =>
             {
                 SaveAsPlaylistFrame.IsVisible = false;
                 SaveAsPlaylistName.Text = "";
                 SaveAsPlaylistDesc.Text = "";
             });
 
-            else Application.Current.Dispatcher.Dispatch(() =>
+            else this.Dispatcher.Dispatch(() =>
             {
                 SaveAsPlaylistFrame.IsVisible = true;
                 SaveAsPlaylistName.Text = _name;

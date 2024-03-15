@@ -92,9 +92,6 @@
                                 </Grid>
                             </Frame>
                         </ViewCell>
-                        <!--<TextCell Text="{Binding LineItem}"  
-                                  Detail="{Binding Description}" 
-                                  TextColor="Black"/>-->
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -170,7 +167,7 @@
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
         <!--... Standard Search Bar ...-->
         <!--... Padding="0,-10,-10,0"  Margin="0,0,-40,0" ... -->
-        <!--... This -10 means you can't turn isVisible=false  ...--> 
+        <!--... *** WARNING *** : This -10 means you can't turn isVisible=false  ...--> 
         <Frame Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="5" 
                HorizontalOptions="Center" ZIndex="2" Padding="-10"  Margin="0,0,0,0">
             <SearchBar x:Name="StandardSearchBar"
@@ -812,29 +809,22 @@
                                     <!--... It's no longer jumping, now it's *** CRASHING *** ... on  Width / Diagonal Resize ...  -->
                                     <!--... *** WARNING *** Minimum Text Height needs to be RoundUp( 1 + FontSize * 1.5 ) ... The +1 is to keep it from crashing ...-->
                                     <!--... *** HEIGHT *** is effecting width.  Maybe because of the corner rounding?  But that's then causing a stutter? and layout looping crash ...-->
-                                    <!--<Frame 
-                                        Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"
-                                        Padding="0" Margin="-1" CornerRadius="0"
-                                        BorderColor="Transparent" BackgroundColor="Transparent"
+                                    <Label x:Name="FilePathDebug"
+                                        SizeChanged="FilePathDebug_SizeChanged"
+                                        Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}" 
+                                        Style="{StaticResource NormalText}" 
+                                        Padding="10,0"
+                                        Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
                                         MaximumHeightRequest="{Binding Source={x:Static local:MainPage.FilePathFrameHeight}}"
-                                        HorizontalOptions="Fill">-->
-                                        <Label x:Name="FilePathDebug"
-                                             SizeChanged="FilePathDebug_SizeChanged"
-                                             Text="{Binding Path=PathName, Converter={local:HeadTruncateConverter}}" 
-                                             Style="{StaticResource NormalText}" 
-                                             Padding="10,0"
-                                             Margin="{Binding Source={x:Static local:MainPage.FilePathFontMargin}}"
-                                             MaximumHeightRequest="{Binding Source={x:Static local:MainPage.FilePathFrameHeight}}"
-                                             Grid.Column="0"  
-                                             Grid.ColumnSpan="2"
-                                             Grid.Row="3"
-                                             HorizontalOptions="End"
-                                             VerticalOptions="Start"
-                                             LineBreakMode="HeadTruncation"
-                                             FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
-                                             TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
-                                             ZIndex="1"/>
-                                    <!--</Frame>-->
+                                        Grid.Column="0"  
+                                        Grid.ColumnSpan="2"
+                                        Grid.Row="3"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        LineBreakMode="HeadTruncation"
+                                        FontSize="{Binding Source={x:Static local:MainPage.FilePathFontSize}}"
+                                        TextColor="{Binding Source={x:Static local:MainPage.FilePathFontColor}}"
+                                        ZIndex="1"/>
                                 </Grid>
                             </Frame>
                         </ViewCell>
