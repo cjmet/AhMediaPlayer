@@ -6,19 +6,6 @@ namespace MauiCli
     public static class CliProgramLogic
     {
 
-        public static async Task FindFilesQueueFunc(string path)
-        {
-            Console.WriteLine($"FindFilesQueueFunc: {path}");
-            await foreach (string filename in new AhGetFiles().GetFilesAsync(path, "*.mp3"))
-            {
-                Console.WriteLine($"Adding[61]: {filename}");
-                await AddFilenameToSongDb(filename);
-            }
-            return;
-        }
-
-
-
         public static int RollD20() => RollDie(20);
         public static int RollDie(int sides = 6)
         {

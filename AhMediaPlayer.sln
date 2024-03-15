@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngelHornetLibrary", "..\An
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maui Cli", "CLI\Maui Cli.csproj", "{CA9EC9DD-9947-4336-8597-7608B524B3AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "..\Sandbox\Sandbox.csproj", "{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{40619503-73BC-4B32-B1E7-D5E659F0C5BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonNet8", "CommonNet8\CommonNet8.csproj", "{EBD62B7C-A983-4EF4-AC66-C0921377BADF}"
@@ -18,8 +16,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiEndpoints", "API\ApiEndpoints.csproj", "{7CA3ED34-DB7B-417F-A0B9-A971716E1236}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AhConfig", "Const\AhConfig.csproj", "{511EB28C-A8C8-4944-9789-A90CD6CF6B31}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +37,6 @@ Global
 		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA9EC9DD-9947-4336-8597-7608B524B3AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DDBFE25-DC77-4F8F-8A53-2617B02EBB3F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{40619503-73BC-4B32-B1E7-D5E659F0C5BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{40619503-73BC-4B32-B1E7-D5E659F0C5BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40619503-73BC-4B32-B1E7-D5E659F0C5BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,12 +53,6 @@ Global
 		{511EB28C-A8C8-4944-9789-A90CD6CF6B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{511EB28C-A8C8-4944-9789-A90CD6CF6B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{511EB28C-A8C8-4944-9789-A90CD6CF6B31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFA032CB-E7E6-47DB-94D5-4AB28E87FE7E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
