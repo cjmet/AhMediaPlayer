@@ -13,7 +13,7 @@ The application will have a simple system to Play MP3s, ... and Add, Update, and
 
 
 ### Code Kentucky
-Code Kentucky is a software development boot camp in Louisville, Kentucky.  The course is designed to teach the fundamentals of software development and to prepare students for a career in the field.  The course is taught by experienced professionals in the field.
+Code Kentucky is a software development program in Louisville, Kentucky.  The course is designed to teach the fundamentals of software development and to prepare students for a career in the field.  The course is taught by experienced professionals in the field.
 
 * https://codekentucky.org/
 * https://codelouisville.org/
@@ -22,27 +22,33 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 <br>
 
 ## Instructions
-* Requires: Updated Visual Studio 2022, C#12, .Net 8, .Net MAUI
-* Run the App First.  Due to windows app virtualization of the %AppData% file-system, as well as other directories.
+* Requires: Updated Visual Studio 2022, C#12, .Net 8, .Net MAUI.  Anything older than Nov 2023 will definitely not work.
 * You'll Also need: 
   * https://github.com/cjmet/AngelHornetLibrary
+* Run the App First.  Due to windows App virtualization of the %AppData% file-system, as well as other directories.
+
 
 
 ## Known Issues
+* Only Windows is currently supported.
+* Make sure to select Windows in the upper left corner of Visual Studio Editor, as well as Maui in the upper middle, and Windows in the upper right.  Anything else can lead to unexpected behavior.
 * Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
   * Since I'm not officially publishing, I have to "guess" where this directory will end up.
-* The first time you load the Maui App, it will scan your %userprofile%/music, this may take a while.
-  * Seconds for my local machine, 25 minutes for a LAN NAS, and Hours for a WAN NAS.
+* When you load the Maui App, it will scan your %userprofile%/music, this may take a while.
+  * Seconds for my local machine, 25 minutes for a large LAN NAS, and Hours for a WAN NAS.
   * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan.
-* Swagger can only load about 1000 songs, any more and it locks up.  Use Postman if you want to test a larger query.
+  * This startup sequence was not an issue after the first scan, even with the large NAS, but it is possible that it could be given the right circumstances.
+* Swagger can only load about 1000 songs, any more and it locks up.  Use Postman and enable larger queries in AhConfig.Constants if you want to test a larger query.  Or just use the App for the larger queries.
 * GUI responsiveness suffers to SMB WAN Operations.  
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
-  * I've further isolated the synchronous operations into a sub-task, which has helped, but not entirely alleviated the issue.
+  * I've further isolated the synchronous SMB/OS operations into a sub-task, which has helped, but not entirely alleviated the issue.
+* MP3s required.  
+  * A short private demo for class can be arranged if needed.  But publicly publishing even extremely short samples of audio gets into issues I'd rather avoid.
 
 
 ## Suggestions
-* If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.
-* MAUI Debugging is sometimes horribly generic and unhelpful. 
+* If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.  My pain is your gain.
+* MAUI Debugging is sometimes horribly generic and unhelpful, . . . or worse.
 * Buy a Wholesale ~~Truckload~~ Super Tanker of Salt: 
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
   * Many older examples and tutorials may not even compile.
@@ -56,10 +62,10 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
         ``` 
         [ Windows Android iOS MacOS MauiBlazorWeb ]  CLI   Web
               --------- Maui Gui --~~ ? ~~            |     |
-                -----------MvvM ----------------------      |  
-                     --- Interface ---                       |
+                -----------MvvM ----------------------'     |  
+                     --- Interface ---                      |
              General Business Logic and Services ~~~ ? ~~~ API
-                     --- Interface -------------------------    
+                     --- Interface -------------------------'    
                   Repository / DAO Layer
                  DbContext / Data Storage
         ```
@@ -69,7 +75,7 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
    1. I already had to move some logic into the repository, because I wanted it accessible to the API, but it really probably doesn't logically go there.
    1. To decouple the Front from the Back, it seems most of the logic really needs to go into the middle Logic/Services Layer, and in addition, the API likely needs to couple to the middle Logic/Services Layer, and not directly to the repository layer.  Then have the API feed an MvvM layer that works with the (Web) UI layer.  Otherwise you have to move or duplicate logic either in the front or back.  In the back couples and binds you while the front duplicates efforts.
    1. So a more robust middle services and logic layer is where I'm heading with this line of thought, as well as coupling the API to the middle layer instead of the lower layers. But that's also what I'd like to discuss.
-
+---
 1. &nbsp; In the process of eliminating one question, I get three more:
    1. &nbsp; Class: MvvM, Data Transformation Objects (or Data Transfer Objects or Data Transport Objects), Authentication, and Authorization.
    1. &nbsp; Question about MvvM and planning and layout.  View as a whole, whole page, partial page(s), or organized by data structures and sections?
@@ -103,7 +109,6 @@ Code Kentucky is a software development boot camp in Louisville, Kentucky.  The 
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### General To-Do List
-- [ ] Demo Video
 - [ ] Learn how to package the App for distribution
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] Repository Pattern and Interfaces
@@ -234,6 +239,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Bottom line on an actual demo video (unless it's muted) is complicated.  This makes demoing a music player unnecessarily complicated, but that's where we are.
+* Worked on cleanup and demos.  I've also asked for input on some additional free mp3s I could include just in case for demos.  
 * General cleanup and organization.  Updated double-tap gesture loading.  It should be a little safer now.
 * I think I'm gonna call this Version 0.1.  Then mostly work on fixing bugs, cleaning things up, refactoring, and organizing code.
 * **Warning** Negative Padding can be dangerous.

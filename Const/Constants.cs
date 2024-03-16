@@ -9,6 +9,7 @@ namespace AhConfig
 
         public const int MinimumLogLevel = 2;                   // 2    : 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
         public const bool UseSongCache = true;                  // TRUE :
+        public const bool ShowSongPath = true;                  // TRUE : Show the song path in the GUI.
         public const int SongPathFontSize = 8;                  // 8    : The font size for the song path.
 
         public const bool ApiAllowSongAdmin = false;            // FALSE: Allows adding, removing, and modifying raw song data.
@@ -27,7 +28,8 @@ namespace AhConfig
         public const int ClockTick = 250;                       // 250  : Anything 250 to 1000 is good. Over 1000 is laggy.
                                                                 //      : Definitely don't go less than say 40, aka: 25fps.      
         public static readonly int SongPathFrameHeight = 
-                     (int)(1.5 + SongPathFontSize * 1.5);       // ~=13 : The height of the song path frame. ~= 1 + 1.5 * SongPathFontSize.  "+1" If it's not high enough it will cause a crash.
+                     (int)(1.5 + SongPathFontSize * 1.5);       // ~=13 : The height of the song path frame. ~= 1 + 1.5 * SongPathFontSize.
+        //                                                      //        "+1" If it's not high enough it will cause a crash.
 
         // *** ************************************
         // You probably don't want to change these

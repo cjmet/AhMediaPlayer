@@ -59,7 +59,7 @@ namespace MauiMediaPlayer
             }
 
 
-            {
+            if (Const.ShowSongPath) {
                 // I went to a lot of trouble to create this, and now after input from others I'm going to make it permanent instead of a DEBUG_ONLY feature.
                 FilePathFontSize = Const.SongPathFontSize;
                 FilePathFrameHeight = Const.SongPathFrameHeight;

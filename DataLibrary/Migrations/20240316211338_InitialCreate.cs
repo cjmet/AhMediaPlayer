@@ -5,7 +5,7 @@
 namespace DataLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrateStar : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,7 +33,6 @@ namespace DataLibrary.Migrations
                     PathName = table.Column<string>(type: "TEXT", nullable: false),
                     FileSize = table.Column<long>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    AlphaTitle = table.Column<string>(type: "TEXT", nullable: false),
                     Artist = table.Column<string>(type: "TEXT", nullable: true),
                     Band = table.Column<string>(type: "TEXT", nullable: true),
                     Album = table.Column<string>(type: "TEXT", nullable: true),
@@ -41,7 +40,8 @@ namespace DataLibrary.Migrations
                     Year = table.Column<int>(type: "INTEGER", nullable: true),
                     Genre = table.Column<string>(type: "TEXT", nullable: true),
                     Length = table.Column<string>(type: "TEXT", nullable: true),
-                    Star = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Star = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AlphaTitle = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
