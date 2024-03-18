@@ -239,6 +239,20 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* We have a .Zip Package! Via command line publishing.  
+  * .Zip: 	dotnet publish -f net8.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win10-x64  -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true --output C:\Users\cjmetcalfe\Local\Packages\tmp\ 
+  * .MSIX:  dotnet publish -f net8.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win10-x64 -p:PackageCertificateThumbprint=...... --sc
+  * Tested it on a remote VM and a local desktop.  Both worked, with the following exceptions:
+    * The Resource song would not play on the remote
+    * I'm guessing Resources do not register nor play in the .Zip version.  Probably because it's NOT a "package" and resources are more accurately "'package' resources" 
+* WARNING: Do ***NOT*** try to publish using Visual Studio 2022 as of March 2024.  There are multiple issues.  Use the command line instead.  There are still issues, but they are more manageable.
+  * I suspect it's breaking or missing the equivalent of the -f and -p:Override above. It may also be trying to rebuild and recompile the entire solution with Maui options, which would definitely lead to unexpected results.
+  * There was a warning about limiting publish scope, but no explanation of what that means or how to limit the scope such that Maui doesn't try to compile non-Maui
+* These workarounds are unsuccessful for me.  I'll keep trying, and keep looking for other answers, but I'm not very hopeful.  
+    * https://developercommunity.visualstudio.com/t/Assets-file-projectassetsjson-doesnt-/10461984
+* Publish for Maui in Visual Studio is known broken.  Awesome.  Edited one file to fix one error related to target ID, but there are more edits required.  I'll either work more on that tomorrow or try publishing on the command line instead.
+
+* Fixed a minor bug.  The code cleanup automation deleted a couple of using statements that were still needed.
 * Bottom line on an actual demo video (unless it's muted) is complicated.  This makes demoing a music player unnecessarily complicated, but that's where we are.
 * Worked on cleanup and demos.  I've also asked for input on some additional free mp3s I could include just in case for demos.  
 * General cleanup and organization.  Updated double-tap gesture loading.  It should be a little safer now.

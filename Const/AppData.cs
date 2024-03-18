@@ -63,7 +63,7 @@ namespace AhConfig
                     }
                 }
 
-                LogDebug("AppDataPath: " + _appDataPath);
+                LogInfo("AppDataPath: " + _appDataPath);
                 return _appDataPath;
             }
             private set { _appDataPath = value; }

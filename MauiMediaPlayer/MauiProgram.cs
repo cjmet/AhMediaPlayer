@@ -4,7 +4,8 @@ using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using DataLibrary;
 using static AngelHornetLibrary.AhLog;
-
+using Serilog;
+using Microsoft.Extensions.Logging;
 
 
 
@@ -59,7 +60,7 @@ namespace MauiMediaPlayer
             {
                 LogError($"Database Failed to Load");
                 LogError($"ERROR[050]: {ex.Message}");
-                throw ex;
+                throw;
             }
 
             return result;
