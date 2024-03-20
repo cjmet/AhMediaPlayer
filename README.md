@@ -26,6 +26,8 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * You'll Also need: 
   * https://github.com/cjmet/AngelHornetLibrary
 * Run the App First.  Due to windows App virtualization of the %AppData% file-system, as well as other directories.
+* The App now has an installable .Zip package, if you have any trouble compiling it, you can use the .Zip package instead.
+  * [AhMediaPlayer/Packages](https://github.com/cjmet/AhMediaPlayer/tree/main/Packages "AhMediaPlayer/Packages")
 
 
 
