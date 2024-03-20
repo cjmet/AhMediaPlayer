@@ -47,12 +47,27 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 
 ## Suggestions
+* I highly recommend that, if possible, if you are not under hard time constraints, that you: 
+  * Spend the extra time to use at least a generic repository pattern as discussed in class yesterday.
+  * Spend the extra time to use MvvM at least to a minimal degree. Some Maui controls are just not designed to work well without it.
+  * I did neither of these at first, and I am already regretting it.  On the other side of that, TIME is an issue and I would likely be a week or two behind if I had.
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.  My pain is your gain.
 * MAUI Debugging is sometimes horribly generic and unhelpful, . . . or worse.
 * Buy a Wholesale ~~Truckload~~ Super Tanker of Salt: 
   * Advice from earlier than Dec 2023 may be outdated or even incorrect.
   * Many older examples and tutorials may not even compile.
   * However, a fair amount of earlier advice and info on Xamarin can still be helpful.  Just use it with caution, particularly on more complicated issues.
+* Fragility of the layouts has been a major issue for me.  These are my recommendations:
+  * Use defaults as much as possible.
+  * Keep the padding around the edges as much as possible.
+  * Beware anything that auto-sizes.  
+  * If you have ANY flicker or wobble or stutter at all in the layout, FIX IT!  It will only lead to a crash later.
+  * The worst case I have fixed so far was an 8 pixel font 12 pixels high had to be increased to 13 pixels high to stop the layout from crashing.
+  * My entire Layout #2 is currently unstable, so I had to roll it back.  I'll debug it one element at a time till I find and/or fix the issue. It's going to be worse to fix than the font was.
+  * Test vigorously.
+  * Use a 4k monitor for testing if possible.  Most of the fragility never showed up on a 1080p, but happens primarily on resizing on a 4k.  
+  * For me Resize bottom right, top left on the 4k, is fairly deadly to the layout if it's unstalble.
+  * 
 
 <br>
 
@@ -239,6 +254,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Updated Layout was not stable. Reverted it. I'll have to re-enable it one item at a time until I can find the unstable item.  The fragility of MAUI layouts is frustrating.
+* Updated the layout.  Moved the kittens to the corner, and gained room for one extra Playlist and Song each.
 * We have a .Zip Package! Via command line publishing.  
   * .Zip: 	dotnet publish -f net8.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win10-x64  -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true --output C:\Users\cjmetcalfe\Local\Packages\tmp\ 
   * .MSIX:  dotnet publish -f net8.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win10-x64 -p:PackageCertificateThumbprint=...... --sc

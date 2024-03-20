@@ -10,4 +10,7 @@ Americana Rock
 True Detective Expanded Playlist:
 	IS Album SEARCH True Detective IS Artist OR Leonard Cohen OR Handsome OR Lera Lynn OR Nick Cave OR Warren Ellis OR John Paul White OR Alexandra Savior OR Cassandra Wilson OR Bob Dylan OR Bonnie "Prince" Billy OR Father John Misty OR Istwa IS Title NOT Beethoven IS Album NOT Casino de Montreux NOT Live in Laugardal IS Any NOT Live In NOT Live At
 
+Goddess
+	IS Genre Goddess OR Diva IS Artist OR Alanis OR Avril OR Adele OR Swift OR McK or Ashley Mac 
+
 ...
