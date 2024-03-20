@@ -34,8 +34,10 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 ## Known Issues
 * Only Windows is currently supported.
 * Make sure to select Windows in the upper left corner of Visual Studio Editor, as well as Maui in the upper middle, and Windows in the upper right.  Anything else can lead to unexpected behavior.
-* Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations.
-  * Since I'm not officially publishing, I have to "guess" where this directory will end up.
+* Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations. Since I'm not officially publishing, I have to "guess" where this directory will end up.
+  * (for me) the .Zip %appdata% translated to: ...\AppData\Local\Packages\AhMediaPlayer-Maui_211c6eazxbp80\LocalCache\Local\_AhMediaPlayer
+  * (for me) the compiled version translated to: ...\AppData\Local\Packages\com.companyname.ahmediaplayer_9zz4h110yvjzm\LocalCache\Local\_AhMediaPlayer
+  * I imagine a packaged version will pick yet another location, and I'm also unsure if this location will change with each new machine or user.  It's been stable on the three machines I tested, but I'm unsure of it's behavior in a broader context, as even with three machines, it was still my account, my compilier, my compiler settings, etc.
 * When you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a large LAN NAS, and Hours for a WAN NAS.
   * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan.
