@@ -72,7 +72,7 @@
         <!-- ... Playlists, Settings, Edit Playlists, Etc ... ▲ ▼ ... -->
         <ContentView x:Name="PlaylistAndSettings" 
             Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="1"
-                     VerticalOptions="End"  
+                     VerticalOptions="Center"  
                      MaximumHeightRequest="105" 
                      ZIndex="1">
             <ListView x:Name="TestPlaylist"
@@ -151,7 +151,7 @@
 
 
         <!-- 🕵🏻‍♀️    🎶 🗃️ 🐕‍🦺 💻 -->
-        <!--// Search and Advanced Search -->
+        <!--// Search  -->
         <Frame 
             Grid.Row="1" Grid.RowSpan="2" 
             Padding="0" Margin="5,0"
@@ -241,6 +241,7 @@
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            HorizontalOptions="Fill"
             VerticalOptions="Fill"
             ZIndex="3">
 
@@ -252,12 +253,12 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <!--... Search Directories for Music Files Button ... 💾 💽 💻 🗃️ ...-->
@@ -290,9 +291,9 @@
                 <!--   SearchAction ...  -->
                 <Picker 
                     x:Name="SearchAction"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,-5"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0,-5,-5,-5"
                     BackgroundColor="LightGray"
                     WidthRequest="150"
                     FontSize="26"
@@ -313,9 +314,9 @@
                 <!--  SearchBy ...   -->
                 <Picker 
                     x:Name="Searchby"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="3"
-                    Margin="0,-5"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Margin="-30,-5,0,-5"
                     BackgroundColor="LightGray"
                     WidthRequest="130"
                     FontSize="26"
@@ -342,7 +343,7 @@
                     Grid.Row="1" Grid.RowSpan="1"
                     CornerRadius="5"
                     Padding="0,0,0,0"
-                    Margin="10,0,10,0"
+                    Margin="0"
                     HeightRequest="27"
                     VerticalOptions="Start"
                     ZIndex="4">
@@ -351,9 +352,8 @@
                         Grid.ColumnSpan="4"
                         Grid.Row="1"
                         Grid.RowSpan="1"
-                        Margin="-25,-10,0,0"
-                        MinimumWidthRequest="315"
-                        HorizontalOptions="Center"
+                        Margin="0,-10,0,0"
+                        HorizontalOptions="Fill"
                         VerticalOptions="Center"
                         HorizontalTextAlignment="Center"
                         VerticalTextAlignment="Center"
@@ -382,7 +382,7 @@
                         FontSize="12"
                         BorderWidth="0"
                         BorderColor="Blue"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         VerticalOptions="End"
                         ZIndex="3"/>
                 <Button x:Name="AddSongsGui"
@@ -390,7 +390,7 @@
                         Grid.Column="1" Grid.Row="2"
                         Padding="0"
                         Margin="0,-10,0,0"
-                        Text="➕Selected"
+                        Text="➕Songs"
                         Scale="1"
                         TextColor="Black"
                         FontAttributes="Bold"
@@ -398,7 +398,7 @@
                         FontSize="12"
                         BorderWidth="0"
                         BorderColor="Blue"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         VerticalOptions="Start"
                         ZIndex="3"/>
                 <Button x:Name="RemoveSongsGui"
@@ -406,7 +406,7 @@
                         Grid.Column="2" Grid.Row="2"
                         Padding="0"
                         Margin="0,-10,0,0"
-                        Text="➖Remove"
+                        Text="➖Songs"
                         Scale="1"
                         TextColor="Black"
                         FontAttributes="Bold"
@@ -414,7 +414,7 @@
                         FontSize="12"
                         BorderWidth="0"
                         BorderColor="Blue"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         VerticalOptions="End"
                         ZIndex="3"/>
                 <Button x:Name="SavePlaylistGui"
@@ -430,7 +430,7 @@
                         FontSize="12"
                         BorderWidth="0"
                         BorderColor="Blue"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         VerticalOptions="End"
                         ZIndex="3"/>
                 <Button x:Name="EditPlaylistGui"
@@ -446,7 +446,7 @@
                         FontSize="12"
                         BorderWidth="0"
                         BorderColor="Blue"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         VerticalOptions="End"
                         ZIndex="3"/>
                 <Button x:Name="DeletePlaylistGui"
@@ -462,7 +462,7 @@
                         FontSize="12"
                         BorderWidth="0"
                         BorderColor="Blue"
-                        HorizontalOptions="Start"
+                        HorizontalOptions="Center"
                         VerticalOptions="End"
                         ZIndex="3"/>
                 <!--... SaveAsPlaylist Frame ...-->
