@@ -77,6 +77,7 @@ namespace MauiMediaPlayer
                 AdvandedSearchFrame.IsVisible = false;
                 MenuBox.BackgroundColor = Color.Parse("Transparent");
                 StandardSearchBar.IsEnabled = true;
+                MainGridFlexRow.Height = 15;
             });
             else this.Dispatcher.Dispatch(() =>
             {
@@ -86,6 +87,7 @@ namespace MauiMediaPlayer
                 Searchby.SelectedIndex = 0;
                 SearchAction.SelectedIndex = 0;
                 StandardSearchBar.IsEnabled = false;
+                MainGridFlexRow.Height = 105;
             });
         }
         private void SetEditBarState()
@@ -178,8 +180,6 @@ namespace MauiMediaPlayer
             var _opacity = _enable ? 1 : 0.25;
             TestPlaylist.IsEnabled = _enable;
             TestPlaylist.Opacity = _opacity;
-            EditFrame.IsEnabled = _enable;
-            EditFrame.Opacity = _opacity;
             StandardSearchBar.IsEnabled = _enable;
             StandardSearchBar.Opacity = _opacity;
             AdvancedSearchGrid.IsEnabled = _enable;

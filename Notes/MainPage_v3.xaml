@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -40,44 +40,6 @@
             Micro   = 14
             Caption = 12
         -->
-
-        <Frame 
-            Grid.ColumnSpan="2"
-            Padding="0"
-            Margin="0,0,10,0"
-            BackgroundColor="White"
-            HeightRequest="34"
-            VerticalOptions="Center" 
-            ZIndex="2">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                      <Label Text="Binding Name"  
-                            Margin="5,0"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Style="{StaticResource NormalText}"
-                            FontSize="13"
-                            FontAttributes="Bold" 
-                            HorizontalOptions="CenterAndExpand"
-                            VerticalOptions="StartAndExpand"
-                            LineBreakMode="TailTruncation"
-                            />
-                    <Label Text="Binding Description"   
-                        Margin="5,1"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Style="{StaticResource NormalText}" 
-                        FontSize="10"
-                        HorizontalOptions="CenterAndExpand"
-                        VerticalOptions="EndAndExpand"
-                        MaxLines="2"
-                        />
-            </Grid>
-        </Frame>
-
 
 
         <!-- === === === === === === === === === === === === === === === === === === === === === -->
@@ -124,18 +86,17 @@
                     <DataTemplate>
                         <ViewCell>
                             <Frame 
-                                   Padding="0"
                                    Margin="0,0,10,0"
                                    BackgroundColor="Transparent"
                                    HeightRequest="34"
                                    VerticalOptions="Center" >
                                 <Grid >
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Label Text="{Binding Name}"  
-                                          Margin="5,-25"
+                                          Margin="5,-15"
                                           Grid.Column="0"
                                           Style="{StaticResource NormalText}"
                                           FontSize="13"
