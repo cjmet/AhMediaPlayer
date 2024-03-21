@@ -128,7 +128,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### General To-Do List
-- [ ] Learn how to package the App for distribution
+- [ ] Save Method, Playlist Order, and other standard playlist controls.
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] Repository Pattern and Interfaces
 - [ ] MauiProgramLogic, General SOLID Principles, Refactoring, Model views, General Logic, more organized engineering and design.
@@ -258,6 +258,10 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* ***THIS SHOULD NOT HAPPEN !!!*** &nbsp; 🤬 The exact same layout, same dimensions, everything.  5 labels.
+  * **Stable:** 5 labels inside a 2x3 grid, Each in it's very own cell, with very precise buffers around the edges, it's stable.
+  * **Crashes** on resize: the very same 5 labels in one very large cell, and place them Upper Center, Middle Left, Middle Right, Bottom Left, Bottom Right 
+* Updated the Layout again.  The new layout is stable, but not as compact as I would like due to the stability bugs.
 * Updated Layout was not stable. Reverted it. I'll have to re-enable it one item at a time until I can find the unstable item.  The fragility of MAUI layouts is frustrating.
 * Updated the layout.  Moved the kittens to the corner, and gained room for one extra Playlist and Song each.
 * We have a .Zip Package! Via command line publishing.  

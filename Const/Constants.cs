@@ -5,7 +5,7 @@ namespace AhConfig
 {
     public static class Const
     {                                                           // Default: Description
-        public const string InternalVersion = "240314";         // N/A  : The internal version of the app.
+        public const string InternalVersion = "240321";         // N/A  : The internal version of the app.
 
         public const int MinimumLogLevel = 2;                   // 2    : 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
         public const bool UseSongCache = true;                  // TRUE :
@@ -27,9 +27,9 @@ namespace AhConfig
         public const string SpinChars = " ▪️";                   // " ▪️" : ⚬ ▪️ • The characters to use for the spinner.
         public const int ClockTick = 250;                       // 250  : Anything 250 to 1000 is good. Over 1000 is laggy.
                                                                 //      : Definitely don't go less than say 40, aka: 25fps.      
-        public static readonly int SongPathFrameHeight = 
-                     (int)(1.5 + SongPathFontSize * 1.5);       // ~=13 : The height of the song path frame. ~= 1 + 1.5 * SongPathFontSize.
-        //                                                      //        "+1" If it's not high enough it will cause a crash.
+        public static readonly int SongPathFrameHeight = 14;   // N/A  : The height of the song path frame.
+        //                                                     // If it's too small you'll cause a crash
+        //                                                     // 14x20y, 12x19y, 8x14y
 
         // *** ************************************
         // You probably don't want to change these

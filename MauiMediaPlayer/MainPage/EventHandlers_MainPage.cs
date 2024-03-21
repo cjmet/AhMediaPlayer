@@ -77,7 +77,7 @@ namespace MauiMediaPlayer
                 AdvandedSearchFrame.IsVisible = false;
                 MenuBox.BackgroundColor = Color.Parse("Transparent");
                 StandardSearchBar.IsEnabled = true;
-                MainGridFlexRow.Height = 15;
+                MainGridFlexRow.Height = 5;
             });
             else this.Dispatcher.Dispatch(() =>
             {
