@@ -17,7 +17,7 @@ namespace MauiMediaPlayer
         {
 
             AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel);
-            LogMsg($"{AppInfo.PackageName}");
+            LogMsg($"\"{AppInfo.PackageName}\"   -   [{AppInfo.Version}]   -    [{Const.InternalVersion}]");
 
             var builder = MauiApp.CreateBuilder();
             builder
