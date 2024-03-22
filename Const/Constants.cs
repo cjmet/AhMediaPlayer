@@ -5,9 +5,9 @@ namespace AhConfig
 {
     public static class Const
     {                                                           // Default: Description
-        public const string InternalVersion = "240321";         // N/A  : The internal version of the app.
+        public const string InternalVersion = "240322";         // N/A  : The internal version of the app.
 
-        public const int MinimumLogLevel = 1;                   // 2    : 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
+        public const int MinimumLogLevel = 2;                   // 2    : 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
         public const bool UseSongCache = true;                  // TRUE :
         public const bool ShowSongPath = true;                  // TRUE : Show the song path in the GUI.
         public const int SongPathFontSize = 8;                  // 8    : The font size for the song path.

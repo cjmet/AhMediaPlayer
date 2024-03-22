@@ -130,6 +130,7 @@ Create a music library Web API and simple Media Player
 * ### General To-Do List
 - [ ] Sort Order, Save Method, Playlist Order, and other standard playlist controls.
   - [ ] Search, Sort, and Filter " ", "", ' ', '', and NULL ... when sorting nulls take up a large part of the top of the list.
+  - [ ] Dictionary<Song>?  I'm probably going to regret this.
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] Repository Pattern and Interfaces
 - [ ] MauiProgramLogic, General SOLID Principles, Refactoring, Model views, General Logic, more organized engineering and design.
