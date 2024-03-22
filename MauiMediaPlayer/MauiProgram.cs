@@ -17,9 +17,11 @@ namespace MauiMediaPlayer
         {
 
             AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel);
-            LogMsg($"\"{AppInfo.PackageName}\"   -   [{AppInfo.Version}]   -    [{Const.InternalVersion}]");
+            LogMsg($"{AppInfo.PackageName}   Win:{AppInfo.Version}   Ver:{Const.InternalVersion}");
 
+            LogMsg(" CreateBuilder");
             var builder = MauiApp.CreateBuilder();
+            LogMsg(" Configuring");
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitMediaElement()
@@ -39,8 +41,10 @@ namespace MauiMediaPlayer
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
+            LogMsg(" Building");
             var result = builder.Build();
 
+            LogMsg(" Checking and/or Creating Database");
             try
             {
                 var _dbContext = new PlaylistContext();
@@ -50,19 +54,24 @@ namespace MauiMediaPlayer
                 {
                     LogWarning("WARNING: This is a debug build.  The database will be deleted and recreated.  Change this later. (MauiProgram.cs)");
                     _dbContext.Database.EnsureDeleted();
-                    LogDebug("Database Deleted");
+                    LogMsg("Database Deleted");
                 }
-                _dbContext.Database.EnsureCreated();
-                LogDebug("Database Created");
+                var dbCreated = _dbContext.Database.EnsureCreated();
                 _dbContext.Dispose();
+                if (dbCreated)
+                    LogMsg(" Database Created");
+                else
+                    LogMsg(" Database Checked");
+                
             }
             catch (Exception ex)
             {
-                LogError($"Database Failed to Load");
+                LogError($"ERROR: Database Failed to Load");
                 LogError($"ERROR[050]: {ex.Message}");
                 throw;
             }
 
+            LogMsg(" MauiProgram.cs Complete");
             return result;
         }
     }

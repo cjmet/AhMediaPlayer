@@ -260,6 +260,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Publish 0.1.19.  Fixed Shuffle, and several additional publishing issues.  Eventually I'm going to have to completely rebuild the project with a fresh install.
+* Oops. I broke shuffle
 * Since the entire project and machine got fried by the dynamic install option, I went ahead and fixed various small package related things.
 * ***DO NOT*** Try to publish a .zip that is not self-contained.   
   * It IS smaller, by half, but requires installing a command-line elevated package.  That package is very un-intuitive and un-diagnostic.  When I did get it installed, it fried my computer, and corrupted the project.  I had to disable android as a target completely to be able to compile or run anything.  Once I did finally have it all straightened out 4 or 5 hours later ... 

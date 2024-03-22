@@ -86,7 +86,7 @@ namespace MauiMediaPlayer
             var _songList = TestSonglist.ItemsSource.Cast<Song>().ToArray();
             new Random().Shuffle(_songList);
             var _list = _songList.ToList();
-            await DispatchSonglist(_list);
+            await DispatchSonglist(_list,"Shuffle");
 
         }
         private void NextTrack_Clicked(object sender, EventArgs e)

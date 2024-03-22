@@ -66,46 +66,50 @@ namespace MauiMediaPlayer
                     if (Searchby?.SelectedItem?.ToString() != null) _searchBy = Searchby.SelectedItem.ToString();
                     else _searchBy = "Any";
                 }
-                if (_searchBy == "Title" || _searchBy == "Any")
+                else if (_searchBy == "Title" || _searchBy == "Any")
                 {
                     _vSongList = _vSongList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                     LogDebug($"Dispatch[241]: Sorting by {_searchBy}");
                 }
-                if (_searchBy == "Artist") {
+                else if (_searchBy == "Artist") {
                     _vSongList = _vSongList
                         .OrderBy(s => s.Artist, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
                     LogDebug($"Dispatch[243]: Sorting by {_searchBy}");
                 }
-                if (_searchBy == "Album") {
+                else if (_searchBy == "Album") {
                     _vSongList = _vSongList
                         .OrderBy(s => s.Album, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
                     LogDebug($"Dispatch[245]: Sorting by {_searchBy}");
                 }
-                if (_searchBy == "Genre") {
+                else if (_searchBy == "Genre") {
                     _vSongList = _vSongList
                         .OrderBy(s => s.Genre, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
                     LogDebug($"Dispatch[247]: Sorting by {_searchBy}");
                 }
-                if (_searchBy == "Path") {
+                else if (_searchBy == "Path") {
                     _vSongList = _vSongList
                         .OrderBy(s => s.PathName, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
                     LogDebug($"Dispatch[249]: Sorting by {_searchBy}");
                 }
-                if (_searchBy == "Playlist")
+                else if (_searchBy == "Playlist")
                 {
                     _vSongList = _vSongList.Where(s => _playlistIndices.Contains(s.Id)).ToList();
                     _vSongList = _vSongList
                         .OrderBy(s => _playlistIndices.IndexOf(s.Id))
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
+                    LogDebug($"Dispatch[251]: Sorting by {_searchBy}");
+                }
+                else if (_searchBy == "Shuffle")
+                {
                     LogDebug($"Dispatch[251]: Sorting by {_searchBy}");
                 }
             }
