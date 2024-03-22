@@ -17,19 +17,17 @@ namespace MauiMediaPlayer
             if (_playList != null)
             {
                 LogMsg($"Playlist Selected: {_playList.Id}   {_playList.Name}   {_playList.Description}");
-                ChangePlaylist(_playList);
+                ChangePlaylist(_playList.Id);
             }
             else LogMsg("Playlist is null");
         }
-        private async void ChangePlaylist(Playlist playlist)
+        private async void ChangePlaylist(int Id)
         {
+            Playlist? playlist = await _dbContext.Playlists.Where(p => p.Id == Id).Include(p => p.Songs).FirstOrDefaultAsync();
             if (playlist != null) LogMsg($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
             else LogWarning("WARN[124] playlist is null");
 
-            var _songList = _dbContext.Songs.Where(s => s.Playlists.Contains(playlist)).ToList();
-            _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-
-            await DispatchSonglist(_songList);
+            await DispatchSonglist(playlist?.Songs); // cjm2
         }
         private Boolean Gui_SaveAs = true;        // SaveAS vs Save vs Edit
         private void SaveAsPlaylistGui_Clicked(object sender, EventArgs e)
@@ -203,14 +201,14 @@ namespace MauiMediaPlayer
 
             bool answer = await DisplayAlert("Delete Playlist", _playlist.Name, "Delete", "Cancel");
 
-            // cjm 
+            // cj
             // Intercept this and lets see if we can make it better.
             if (answer) DeletePlaylistImproved(sender, e);
             return;
         }
         private async Task AddRemoveSongList(object sender, EventArgs e, List<vSong>? _songlist, Boolean _addSongs)
         {
-            // cjm - Holy Swiss Cheese!  
+            // cj - Holy Swiss Cheese!  
             // Adding a song that's already added causes a MASSIVE slowdown and even causes the SaveChangesAsync to hard lock sometimes.
             // It might be better to use SaveChanges() no Async.
             // However, making a 'smart' list of changes only, avoids the 'setting already set' problem which in turn avoids the massive slowdown and hard lock.
@@ -264,7 +262,7 @@ namespace MauiMediaPlayer
                 LogMsg($"Saved [{results}] ... ");
             }
         }
-        private async void AddSongsGui_Clicked(object sender, EventArgs e)    // cjm 
+        private async void AddSongsGui_Clicked(object sender, EventArgs e)    // cj 
         {
             // Intercept and lets see if we can do this more efficiently.
             var _songs = (List<vSong>)TestSonglist.ItemsSource;

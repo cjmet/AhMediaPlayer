@@ -73,7 +73,8 @@ namespace MauiMediaPlayer
                 _playlists = _playlists.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase).ToList();
                 TestPlaylist.ItemsSource = _playlists;
                 var _songList = _dbContext.Songs.ToList();
-                _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
+                // Do this in dispatch so that we can sort by other things as well 
+                //_songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 _ = DispatchSonglist(_songList);
                 if (_playlists.Count < 1) UpdateAllSongsPlaylist(_dbContext).Wait();  // cj this won't take effect till we re-load, but it's better than nothing.
                 LogMsg($"Loaded {_playlists.Count} Playlists, and {_songList.Count} Songs.");
@@ -109,7 +110,8 @@ namespace MauiMediaPlayer
                                TestPlaylist.ItemsSource = _playlists);
 
                 var _songList = _dbContext.Songs.ToList();      // _dbContext does not allow OrdinalIgnoreCase
-                _songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
+                // do this in dispatch so we can sort by other things as well 
+                //_songList = _songList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
                 await DispatchSonglist(_songList);
                 await Task.Delay(1);
                 LogDebug("Database Dispatch Complete");

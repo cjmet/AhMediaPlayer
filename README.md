@@ -128,7 +128,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 ## Project Plan
 Create a music library Web API and simple Media Player
 * ### General To-Do List
-- [ ] Save Method, Playlist Order, and other standard playlist controls.
+- [ ] Sort Order, Save Method, Playlist Order, and other standard playlist controls.
 - [ ] More API work?  Where do we go from here with the API?
 - [ ] Repository Pattern and Interfaces
 - [ ] MauiProgramLogic, General SOLID Principles, Refactoring, Model views, General Logic, more organized engineering and design.
@@ -258,6 +258,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Working on Sort Order, in preparation for Playlist Order.  The database is not saving list by order, but instead is in song.id order.
 * ***THIS SHOULD NOT HAPPEN !!!*** &nbsp; 🤬 The exact same layout, same dimensions, everything.  5 labels.
   * **Stable:** 5 labels inside a 2x3 grid, Each in it's very own cell, with very precise buffers around the edges, it's stable.
   * **Crashes** on resize: the very same 5 labels in one very large cell, and place them Upper Center, Middle Left, Middle Right, Bottom Left, Bottom Right 

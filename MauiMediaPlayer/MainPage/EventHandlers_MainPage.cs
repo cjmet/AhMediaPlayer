@@ -159,11 +159,6 @@ namespace MauiMediaPlayer
 
             if (_searchAction != "IS" && _advancedResult != null) RandomPersistentLogo(_searchText, _songList.Count);
 
-            if (_songList.Count > 0)
-            {
-                await DispatchSonglist(_songList);
-            }
-
             this.Dispatcher.Dispatch(() =>
             {
                 if (_songList.Count > 0) SearchCount.Text = $"{_songList.Count:n0}";
@@ -173,6 +168,11 @@ namespace MauiMediaPlayer
                 if (_by != null && _action != null && (_by.ToLower() != "any" || _action.ToUpper() != "SEARCH")) Placeholder = $"SearchAction: {_searchAction}     -     SearchBy: {_searchBy}";
                 _searchBar.Placeholder = Placeholder;
             });
+
+            if (_songList.Count > 0)
+            {
+                await DispatchSonglist(_songList,_by);
+            }
         }
         private void Enable_Gui(bool _enable)
         {

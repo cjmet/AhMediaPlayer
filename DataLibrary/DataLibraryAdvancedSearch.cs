@@ -173,7 +173,7 @@ namespace DataLibrary
             {
                 var _repository = (ISongRepository)new SongRepository(_dbContext);
                 _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cj
-                if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
+                if (!(new string[] { "Any", "Title", "Artist", "Album", "Genre", "Path", "Playlist" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
                 LogTrace($"SelectionSet: {_selectionSet.Count}");
             }
             // ---
@@ -194,7 +194,7 @@ namespace DataLibrary
             else if (_action == "IS")
             {
                 _search = _search.Substring(0, 1).ToUpper() + _search.Substring(1); // Pascal Case
-                if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_search))) LogWarn($"Invalid SearchBy: [{_search}]");
+                if (!(new string[] { "Any", "Title", "Artist", "Album", "Genre", "Path", "Playlist" }.Contains(_search))) LogWarn($"Invalid SearchBy: [{_search}]");
                 else _by = _search;
                 _result = _currentSet;
             }
