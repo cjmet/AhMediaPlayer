@@ -260,6 +260,9 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Since the entire project and machine got fried by the dynamic install option, I went ahead and fixed various small package related things.
+* ***DO NOT*** Try to publish a .zip that is not self-contained.   
+  * It IS smaller, by half, but requires installing a command-line elevated package.  That package is very un-intuitive and un-diagnostic.  When I did get it installed, it fried my computer, and corrupted the project.  I had to disable android as a target completely to be able to compile or run anything.  Once I did finally have it all straightened out 4 or 5 hours later ... 
 * Working on Sort Order, in preparation for Playlist Order.  The database is not saving list by order, but instead is in song.id order.
 * ***THIS SHOULD NOT HAPPEN !!!*** &nbsp; 🤬 The exact same layout, same dimensions, everything.  5 labels.
   * **Stable:** 5 labels inside a 2x3 grid, Each in it's very own cell, with very precise buffers around the edges, it's stable.
