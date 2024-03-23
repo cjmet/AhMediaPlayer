@@ -47,7 +47,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
   * I've further isolated the synchronous SMB/OS operations into a sub-task, which has helped, but not entirely alleviated the issue.
 * MP3s required.  
-  * A short private demo for class can be arranged if needed.  But publicly publishing even extremely short samples of audio gets into issues I'd rather avoid.
+  * A short private demo for class can be arranged.  But publicly publishing even extremely short samples of audio gets into issues I'd rather avoid.
 
 
 ## Suggestions
@@ -55,6 +55,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
   * Spend the extra time to use at least a generic repository pattern as discussed in class yesterday.
   * Spend the extra time to use MvvM at least to a minimal degree. Some Maui controls are just not designed to work well without it.
   * I did neither of these at first, and I am already regretting it.  On the other side of that, TIME is an issue and I would likely be a week or two behind if I had.
+  * Save plenty of time for publishing and debugging the publishing process if you are going to publish.  It can be a nightmare.
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.  My pain is your gain.
 * MAUI Debugging is sometimes horribly generic and unhelpful, . . . or worse.
 * Buy a Wholesale ~~Truckload~~ Super Tanker of Salt: 
@@ -67,11 +68,11 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
   * Beware anything that auto-sizes.  
   * If you have ANY flicker or wobble or stutter at all in the layout, FIX IT!  It will only lead to a crash later.
   * The worst case I have fixed so far was an 8 pixel font 12 pixels high had to be increased to 13 pixels high to stop the layout from crashing.
-  * My entire Layout #2 is currently unstable, so I had to roll it back.  I'll debug it one element at a time till I find and/or fix the issue. It's going to be worse to fix than the font was.
+  * My entire Layout #2 is was unstable, so I had to roll it back.  Then I had to spend two days to debug it one element at a time till I found and fixed all the issues. 
   * Test vigorously.
   * Use a 4k monitor for testing if possible.  Most of the fragility never showed up on a 1080p, but happens primarily on resizing on a 4k.  
-  * For me Resize bottom right, top left on the 4k, is fairly deadly to the layout if it's unstalble.
-  * 
+  * For me Resize bottom right, top left on the 4k, is fairly deadly to the layout if it's unstable.
+ 
 
 <br>
 
@@ -260,6 +261,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Added NULL Keyword and Logic, and minor layout updates.
 * Publish 0.1.19.  Fixed Shuffle, and several additional publishing issues.  Eventually I'm going to have to completely rebuild the project with a fresh install.
 * Oops. I broke shuffle
 * Since the entire project and machine got fried by the dynamic install option, I went ahead and fixed various small package related things.

@@ -71,22 +71,38 @@ namespace DataLibrary
             }
             return new List<Song>();
         }
-        public async Task<List<Song>> SearchQuery(string _by, string _search)
+        public async Task<List<Song>> SearchQuery(string By, string Search)
         {
-            _by = _by.ToLower();
-            _by = _by.Substring(0, 1).ToUpper() + _by.Substring(1);  // Pascal Case
-            _search = _search.ToLower();
-
+            var _by = By.ToLower();
+            _by = By.Substring(0, 1).ToUpper() + By.Substring(1);  // Pascal Case
+            var _search = Search.ToLower();
             var _db = _context;
-            List<Song> _selectionSet = new List<Song>(); // cj
-            if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Title.ToLower().Contains(_search)),s => s.Id).ToList(); }
-            if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search)), s => s.Id).ToList(); }
-            if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Album.ToLower().Contains(_search)), s => s.Id).ToList(); }
-            if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Band.ToLower().Contains(_search)), s => s.Id).ToList(); }
-            if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search)), s => s.Id).ToList(); }
-            if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search)), s => s.Id).ToList(); }
+            List<Song> _selectionSet = new List<Song>(); 
+
+            if (Search == "NULL")
+            {
+                _search = "";
+                if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Title.ToLower() == ""), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Artist == null || s.Artist.ToLower() == ""), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Album == null || s.Album.ToLower() == ""), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Band == null || s.Band.ToLower() == ""), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Genre == null || s.Genre.ToLower() == ""), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.PathName.ToLower() == ""), s => s.Id).ToList(); }
+            }
+            else
+            {
+                
+                
+                if (_by == "Any" || _by == "Title") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Title.ToLower().Contains(_search)), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Artist") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Artist.ToLower().Contains(_search)), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Album") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Album.ToLower().Contains(_search)), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Band") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Band.ToLower().Contains(_search)), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Genre") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.Genre.ToLower().Contains(_search)), s => s.Id).ToList(); }
+                if (_by == "Any" || _by == "Path") { _selectionSet = _selectionSet.UnionBy(_db.Songs.Where(s => s.PathName.ToLower().Contains(_search)), s => s.Id).ToList(); }
+            }
             if (!(new string[] { "Any", "Title", "Artist", "Album", "Band", "Genre", "Path" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
 
+            LogDebug($"SongRepository.SearchQuery: [{By}] Search: [{Search}] Count: [{_selectionSet.Count}]");
             return _selectionSet.OrderBy(s => s.AlphaTitle).ToList();
         }
         

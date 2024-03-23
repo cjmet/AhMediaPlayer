@@ -58,7 +58,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Angel Hornet Media Player</ApplicationTitle>
 	  <ApplicationId>com.companyname.ahmediaplayer</ApplicationId>
-	  <ApplicationDisplayVersion>0.1.19</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.1.20</ApplicationDisplayVersion>
 	  <IsPublishable>True</IsPublishable>
 	</PropertyGroup>
 
@@ -71,7 +71,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Angel Hornet Media Player</ApplicationTitle>
 	  <ApplicationId>com.companyname.ahmediaplayer</ApplicationId>
-	  <ApplicationDisplayVersion>0.1.19</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.1.20</ApplicationDisplayVersion>
 	  <IsPublishable>True</IsPublishable>
 	</PropertyGroup>
 
@@ -154,6 +154,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\angelhornet.scale-100.png" />
+	  <None Remove="Resources\Images\angelhornet.scale-125.png" />
+	  <None Remove="Resources\Images\angelhornet.scale-150.png" />
+	  <None Remove="Resources\Images\angelhornet.scale-200.png" />
+	  <None Remove="Resources\Images\angelhornet.scale-400.png" />
+	  <None Remove="Resources\Splash\AngelHornet.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\..\AngelHornetLibrary\AngelHornetLibrary.csproj" />
 	  <ProjectReference Include="..\CommonNet8\CommonNet8.csproj" />
 	  <ProjectReference Include="..\DataLibrary\DataLibrary.csproj" />
@@ -161,6 +170,10 @@
 
 	<ItemGroup>
 	  <Folder Include="Properties\PublishProfiles\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Include="Resources\Splash\angelhornet.png" />
 	</ItemGroup>
 
 </Project>

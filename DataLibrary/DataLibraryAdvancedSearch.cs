@@ -19,6 +19,7 @@ namespace DataLibrary
                 "   ",
                 "OPERATORS: SEARCH ?? IS == OR || AND &&  NOT !!",
                 "Properties: Title, Artist, Album, Genre, Path",
+                "Special: NULL",
                 "Examples:",
                 "   Springsteen",
                 "   IS Any SEARCH Springst OR Petty OR Seger",
@@ -27,7 +28,8 @@ namespace DataLibrary
                 "   IS Genre SEARCH Soft Rock OR Heavy Metal",
                 "   == Genre ?? Soft Rock || Heavy Metal",
                 "   IS Path ?? Lang NOT Slang IS Artist NOT Lange",
-                "   == Path ?? Lang !! Slang == Artist !! Lange"
+                "   == Path ?? Lang !! Slang == Artist !! Lange",
+                "   IS Artist NOT NULL"
             ];
         }
 
@@ -38,6 +40,8 @@ namespace DataLibrary
         // OPERATORS: (AND|OR|NOT|IS|SEARCH)  ... Must be ALL CAPS to be recognzied as an operator
         // SYMBOLS:    &&  ||  !! ==   ??
         // PROPERTIES: Title, Artist, Album, Genre, Path
+        // SPECIAL:    NULL*                       
+        // * Implemented in the repository.  Not all properties support NULL.
 
         // CurrentSet is always implied.
         // SEARCH is ONLY implied at the beginning of the search string.
@@ -161,9 +165,6 @@ namespace DataLibrary
 
             var _by = _searchBy.ToLower();
             _by = _by.Substring(0, 1).ToUpper() + _by.Substring(1);  // Pascal Case
-            _search = _search.ToLower();
-
-
 
             // === ====================================================
             // vvv vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
