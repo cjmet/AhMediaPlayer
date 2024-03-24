@@ -35,9 +35,9 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * Only Windows is currently supported.
 * Make sure to select Windows in the upper left corner of Visual Studio Editor, as well as Maui in the upper middle, and Windows in the upper right.  Anything else can lead to unexpected behavior.
 * Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations. Since I'm not officially publishing, I have to "guess" where this directory will end up.
-  * (for me) the .Zip %appdata% translated to: ...\AppData\Local\Packages\AhMediaPlayer-Maui_211c6eazxbp80\LocalCache\Local\_AhMediaPlayer
+  * (for me) the .Zip %AppData% translated to: ...\AppData\Local\Packages\AhMediaPlayer-Maui_211c6eazxbp80\LocalCache\Local\_AhMediaPlayer
   * (for me) the compiled version translated to: ...\AppData\Local\Packages\com.companyname.ahmediaplayer_9zz4h110yvjzm\LocalCache\Local\_AhMediaPlayer
-  * I imagine a packaged version will pick yet another location, and I'm also unsure if this location will change with each new machine or user.  It's been stable on the three machines I tested, but I'm unsure of it's behavior in a broader context, as even with three machines, it was still my account, my compilier, my compiler settings, etc.
+  * I imagine a packaged version will pick yet another location, and I'm also unsure if this location will change with each new machine or user.  It's been stable on the three machines I tested, but I'm unsure of it's behavior in a broader context, as even with three machines, it was still my account, my compiler, my compiler settings, etc.
 * When you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a large LAN NAS, and Hours for a WAN NAS.
   * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan.
@@ -268,7 +268,7 @@ Create a music library Web API and simple Media Player
 * Oops. I broke shuffle
 * Since the entire project and machine got fried by the dynamic install option, I went ahead and fixed various small package related things.
 * ***DO NOT*** Try to publish a .zip that is not self-contained.   
-  * It IS smaller, by half, but requires installing a command-line elevated package.  That package is very un-intuitive and un-diagnostic.  When I did get it installed, it fried my computer, and corrupted the project.  I had to disable android as a target completely to be able to compile or run anything.  Once I did finally have it all straightened out 4 or 5 hours later ... 
+  * It IS smaller, by half, but requires installing a command-line elevated package.  That package is very unintuitive and undiagnostic.  When I did get it installed, it fried my computer, and corrupted the project.  I had to disable android as a target completely to be able to compile or run anything.  Once I did finally have it all straightened out 4 or 5 hours later ... 
 * Working on Sort Order, in preparation for Playlist Order.  The database is not saving list by order, but instead is in song.id order.
 * ***THIS SHOULD NOT HAPPEN !!!*** &nbsp; 🤬 The exact same layout, same dimensions, everything.  5 labels.
   * **Stable:** 5 labels inside a 2x3 grid, Each in it's very own cell, with very precise buffers around the edges, it's stable.
