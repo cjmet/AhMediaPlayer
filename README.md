@@ -261,6 +261,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Second Attempt to move the project into a new clean framework.  First attempt ended up with the same errors as before, and just turned into a complete disaster again.
+* Publishing and compiling is a disaster no matter what I do.  It's either wanting android stuff, or IOS stuff, or it's ignoring the windows app manifest.  Every way I try it, it's another different error.
 * Added NULL Keyword and Logic, and minor layout updates.
 * Publish 0.1.19.  Fixed Shuffle, and several additional publishing issues.  Eventually I'm going to have to completely rebuild the project with a fresh install.
 * Oops. I broke shuffle

@@ -5,7 +5,7 @@ namespace AhConfig
 {
     public static class Const
     {                                                           // Default: Description
-        public const string InternalVersion = "240322i";         // N/A  : The internal version of the app.
+        public const string InternalVersion = "240323";         // N/A  : The internal version of the app.
 
         public const int MinimumLogLevel = 2;                   // 2    : 0=Trace, 1=Debug, 2=Information, 3=Warning, 4=Error, 5=Critical
         public const bool UseSongCache = true;                  // TRUE :

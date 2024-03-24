@@ -154,11 +154,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Images\angelhornet.scale-100.png" />
-	  <None Remove="Resources\Images\angelhornet.scale-125.png" />
-	  <None Remove="Resources\Images\angelhornet.scale-150.png" />
-	  <None Remove="Resources\Images\angelhornet.scale-200.png" />
-	  <None Remove="Resources\Images\angelhornet.scale-400.png" />
 	  <None Remove="Resources\Splash\AngelHornet.png" />
 	</ItemGroup>
 

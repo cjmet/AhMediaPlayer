@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiMediaPlayer", "MauiMediaPlayer\MauiMediaPlayer.csproj", "{F863CBEF-1DF9-4D54-9C06-208F339F29A3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngelHornetLibrary", "..\AngelHornetLibrary\AngelHornetLibrary.csproj", "{598B7096-FEA4-413D-A60A-E1CE689AB6A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maui Cli", "CLI\Maui Cli.csproj", "{CA9EC9DD-9947-4336-8597-7608B524B3AA}"
@@ -17,18 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiEndpoints", "API\ApiEndp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AhConfig", "Const\AhConfig.csproj", "{511EB28C-A8C8-4944-9789-A90CD6CF6B31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AhMediaPlayer", "AhMediaPlayer\AhMediaPlayer.csproj", "{628BE669-7266-4925-AA18-667C34E04FDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F863CBEF-1DF9-4D54-9C06-208F339F29A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F863CBEF-1DF9-4D54-9C06-208F339F29A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F863CBEF-1DF9-4D54-9C06-208F339F29A3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{F863CBEF-1DF9-4D54-9C06-208F339F29A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F863CBEF-1DF9-4D54-9C06-208F339F29A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F863CBEF-1DF9-4D54-9C06-208F339F29A3}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{598B7096-FEA4-413D-A60A-E1CE689AB6A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{598B7096-FEA4-413D-A60A-E1CE689AB6A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{598B7096-FEA4-413D-A60A-E1CE689AB6A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,6 +47,12 @@ Global
 		{511EB28C-A8C8-4944-9789-A90CD6CF6B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{511EB28C-A8C8-4944-9789-A90CD6CF6B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{511EB28C-A8C8-4944-9789-A90CD6CF6B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{628BE669-7266-4925-AA18-667C34E04FDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{628BE669-7266-4925-AA18-667C34E04FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{628BE669-7266-4925-AA18-667C34E04FDE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{628BE669-7266-4925-AA18-667C34E04FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{628BE669-7266-4925-AA18-667C34E04FDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{628BE669-7266-4925-AA18-667C34E04FDE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
