@@ -27,11 +27,11 @@ namespace AhConfig
         public const string SpinChars = " ▪️";                   // " ▪️" : ⚬ ▪️ • The characters to use for the spinner.
         public const int ClockTick = 250;                       // 250  : Anything 250 to 1000 is good. Over 1000 is laggy.
                                                                 //      : Definitely don't go less than say 40, aka: 25fps.      
-        public static readonly int SongPathFrameHeight = 14;   // N/A  : The height of the song path frame.
-        //                                                     // If it's too small you'll cause a crash
-        //                                                     // 14x20y, 12x19y, 8x14y
+        public static readonly int SongPathFrameHeight = 14;    // 14   : The height of the song path frame.
+        //                                                      // If it's too small you'll cause a crash
+        //                                                      // 14x20y, 12x19y, 8x14y
 
-        // *** ************************************
+        // *** ************************************             // *** ************************************
         // You probably don't want to change these
         // ***                                                  //                      This is so it will be available to the non-app projects.
         public const string AppName = "ahmediaplayer";          // "ahmediaplayer"    : If you change the app name you'll need to change this too.

@@ -79,6 +79,7 @@ namespace DataLibrary
             var _db = _context;
             List<Song> _selectionSet = new List<Song>(); 
 
+            if (Search == "ALL") { _search = ""; }
             if (Search == "NULL")
             {
                 _search = "";

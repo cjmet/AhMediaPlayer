@@ -19,7 +19,7 @@ namespace DataLibrary
                 "   ",
                 "OPERATORS: SEARCH ?? IS == OR || AND &&  NOT !!",
                 "Properties: Title, Artist, Album, Genre, Path",
-                "Special: NULL",
+                "Special: NULL, ALL",
                 "Examples:",
                 "   Springsteen",
                 "   IS Any SEARCH Springst OR Petty OR Seger",
@@ -173,7 +173,7 @@ namespace DataLibrary
             List<Song> _selectionSet = new List<Song>();
             {
                 var _repository = (ISongRepository)new SongRepository(_dbContext);
-                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // cj
+                _selectionSet = _repository.SearchQuery(_by, _search).Result;            // QUERY cj
                 if (!(new string[] { "Any", "Title", "Artist", "Album", "Genre", "Path", "Playlist" }.Contains(_by))) LogWarn($"Invalid SearchBy: [{_by}]");
                 LogTrace($"SelectionSet: {_selectionSet.Count}");
             }
