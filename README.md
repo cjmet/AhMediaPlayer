@@ -261,6 +261,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Added ALL keyword.  Mostly Bug testing and minor documentation updates.
 * Third Attempt still has many of the same errors and bugs.  But is semi-stable.
 * Second Attempt to move the project into a new clean framework.  First attempt ended up with the same errors as before, and just turned into a complete disaster again.
 * Publishing and compiling is a disaster no matter what I do.  It's either wanting android stuff, or IOS stuff, or it's ignoring the windows app manifest.  Every way I try it, it's another different error.
