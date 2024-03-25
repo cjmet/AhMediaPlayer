@@ -164,9 +164,10 @@ namespace AhMediaPlayer
                 if (_songList.Count > 0) SearchCount.Text = $"{_songList.Count:n0}";
                 Searchby.SelectedItem = _searchBy;
                 SearchAction.SelectedItem = _searchAction;
-                var Placeholder = "Title, Artist, Band, Album, Genre, Path";
-                if (_by != null && _action != null && (_by.ToLower() != "any" || _action.ToUpper() != "SEARCH")) Placeholder = $"SearchAction: {_searchAction}     -     SearchBy: {_searchBy}";
-                _searchBar.Placeholder = Placeholder;
+                // Disabled after adding labels. This either needs binding or disabling or permanent deleting.
+                //var Placeholder = "Title, Artist, Album, Genre, Path";
+                //if (_by != null && _action != null && (_by.ToLower() != "any" || _action.ToUpper() != "SEARCH")) Placeholder = $"SearchAction: {_searchAction}     -     SearchBy: {_searchBy}";
+                //_searchBar.Placeholder = Placeholder;
             });
 
             if (_songList.Count > 0)

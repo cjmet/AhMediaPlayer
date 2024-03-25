@@ -201,7 +201,7 @@
                 IsSpellCheckEnabled="True"
                 FontAutoScalingEnabled="True"
                 FontSize="13"
-                Placeholder="Title, Artist, Band, Album, Genre, Path"
+                Placeholder="Title, Artist, Album, Genre, Path"
                 SearchButtonPressed="SearchBar_SearchButtonPressed"/>
         </Frame>
         <!--... Search Options Labels ...-->
