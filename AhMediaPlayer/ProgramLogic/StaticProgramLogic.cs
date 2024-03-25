@@ -1,7 +1,7 @@
 ﻿using AhConfig;
 using DataLibrary;
 using System.Collections.Concurrent;
-
+using System.Diagnostics;
 
 namespace AhMediaPlayer.ProgramLogic
 {
@@ -42,6 +42,7 @@ namespace AhMediaPlayer.ProgramLogic
                         // Default FontSize is 12, and since the 12 is hard coded, might as well well card code the 6.5 too.
                         //var denom = 12 / Const.FontSizeDivisor;
                         var width = (int)(messageBox.Width / 6.5) - 1;
+                        if (width < 30) width = 30;
                         queuedMsg = AngelHornetLibrary.AhStrings.MiddleTruncate(queuedMsg, width);
                         var spin = Const.SpinChars.Substring(spinner++ % 2, 1);
                         sendMessages(queuedMsg, messageBox, spin, spinBox);
@@ -101,6 +102,7 @@ namespace AhMediaPlayer.ProgramLogic
                 {
                     if (spin != null && spinBox != null) spinBox.Text = spin;
                     messageBox.Text = message;
+                    // Debug.WriteLine($"MessageBox:[{message}]");
                 });
         }
     }
