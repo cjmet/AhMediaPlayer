@@ -129,6 +129,8 @@
 	  <None Remove="Resources\Images\spicey_lc.png" />
 	  <None Remove="Resources\Images\stella_lc.png" />
 	  <None Remove="Resources\Images\tiger_lc.png" />
+	  <None Remove="Resources\Raw\gs-16b-1c-44100hz.mp3" />
+	  <None Remove="Resources\Raw\id3 Genre Numbers.txt" />
 	</ItemGroup>
 
 	<ItemGroup>

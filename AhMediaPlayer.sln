@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiEndpoints", "API\ApiEndp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AhConfig", "Const\AhConfig.csproj", "{511EB28C-A8C8-4944-9789-A90CD6CF6B31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AhMediaPlayer", "AhMediaPlayer\AhMediaPlayer.csproj", "{628BE669-7266-4925-AA18-667C34E04FDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AhMediaPlayer", "AhMediaPlayer\AhMediaPlayer.csproj", "{628BE669-7266-4925-AA18-667C34E04FDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
