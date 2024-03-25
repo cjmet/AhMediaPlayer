@@ -25,7 +25,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * Requires: Updated Visual Studio 2022, C#12, .Net 8, .Net MAUI.  Anything older than Nov 2023 will definitely not work.
 * You'll Also need: 
   * https://github.com/cjmet/AngelHornetLibrary
-* Run the App First.  Due to windows App virtualization of the %AppData% file-system, as well as other directories.
+* Compile and Run the App First.  Due to windows App virtualization of the %AppData% file-system, as well as other directories.  
 * The App now has an installable .Zip package, if you have any trouble compiling it, you can use the .Zip package instead.
   * [AhMediaPlayer/Packages](https://github.com/cjmet/AhMediaPlayer/tree/main/Packages "AhMediaPlayer/Packages")
 
@@ -33,11 +33,11 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 ## Known Issues
 * Only Windows is currently supported.
+* You may need to compile the Maui App separately from the rest of the project.  Compiling the solution as a whole almost always fails to run properly.
+* If you do not see the logo image, you need to clean and recompile the Maui App separately. 
 * Make sure to select Windows in the upper left corner of Visual Studio Editor, as well as Maui in the upper middle, and Windows in the upper right.  Anything else can lead to unexpected behavior.
 * Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations. Since I'm not officially publishing, I have to "guess" where this directory will end up.
-  * (for me) the .Zip %AppData% translated to: ...\AppData\Local\Packages\AhMediaPlayer-Maui_211c6eazxbp80\LocalCache\Local\_AhMediaPlayer
-  * (for me) the compiled version translated to: ...\AppData\Local\Packages\com.companyname.ahmediaplayer_9zz4h110yvjzm\LocalCache\Local\_AhMediaPlayer
-  * I imagine a packaged version will pick yet another location, and I'm also unsure if this location will change with each new machine or user.  It's been stable on the three machines I tested, but I'm unsure of it's behavior in a broader context, as even with three machines, it was still my account, my compiler, my compiler settings, etc.
+* If you use the pre-compiled zip, you may get a warning that it could not find the MSIX Package directory.  
 * When you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a large LAN NAS, and Hours for a WAN NAS.
   * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan.
@@ -52,10 +52,10 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 ## Suggestions
 * I highly recommend that, if possible, if you are not under hard time constraints, that you: 
-  * Spend the extra time to use at least a generic repository pattern as discussed in class yesterday.
+  * Spend the extra time to use at least a generic repository pattern as discussed in class.
   * Spend the extra time to use MvvM at least to a minimal degree. Some Maui controls are just not designed to work well without it.
   * I did neither of these at first, and I am already regretting it.  On the other side of that, TIME is an issue and I would likely be a week or two behind if I had.
-  * Save plenty of time for publishing and debugging the publishing process if you are going to publish.  It can be a nightmare.
+  * Save plenty of time for publishing and debugging the publishing process if you are going to attempt to publish.  I think I would recommend saving a week just for learning publishing.  It can be, and still is, a nightmare.
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.  My pain is your gain.
 * MAUI Debugging is sometimes horribly generic and unhelpful, . . . or worse.
 * Buy a Wholesale ~~Truckload~~ Super Tanker of Salt: 
@@ -67,8 +67,8 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
   * Keep the padding around the edges as much as possible.
   * Beware anything that auto-sizes.  
   * If you have ANY flicker or wobble or stutter at all in the layout, FIX IT!  It will only lead to a crash later.
-  * The worst case I have fixed so far was an 8 pixel font 12 pixels high had to be increased to 13 pixels high to stop the layout from crashing.
-  * My entire Layout #2 is was unstable, so I had to roll it back.  Then I had to spend two days to debug it one element at a time till I found and fixed all the issues. 
+  * The worst case I have fixed so far was an 8 pixel font in a label 12 pixels high had to be increased to 13 pixels high to stop the layout from crashing.
+  * My entire Layout #2 was unstable, so I had to roll it back.  Then I had to spend two days to debug it one element at a time till I found and fixed all the issues. 
   * Test vigorously.
   * Use a 4k monitor for testing if possible.  Most of the fragility never showed up on a 1080p, but happens primarily on resizing on a 4k.  
   * For me Resize bottom right, top left on the 4k, is fairly deadly to the layout if it's unstable.
@@ -77,6 +77,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 <br>
 
 ## Current Project Questions
+1. What is the best way to accomplish saving sort order to the Db?  
 1. &nbsp; General Program Design Principles.
    1. Now that I've gotten this far, I can absolutely see the advantages of, and wish in hind-sight I'd had both more experience and considerably more time to better implement things like repository and MvvM.  And I would like to discuss and look at general design principles more closely.
         ``` 
@@ -261,6 +262,7 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Third Attempt still has many of the same errors and bugs.  But is semi-stable.
 * Second Attempt to move the project into a new clean framework.  First attempt ended up with the same errors as before, and just turned into a complete disaster again.
 * Publishing and compiling is a disaster no matter what I do.  It's either wanting android stuff, or IOS stuff, or it's ignoring the windows app manifest.  Every way I try it, it's another different error.
 * Added NULL Keyword and Logic, and minor layout updates.
