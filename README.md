@@ -31,10 +31,11 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 
 
-## Known Issues
+## Known Issues and Additional Notes
 * Only Windows is currently supported.
 * Compiling the solution as a whole almost always fails to run properly. 
   * Make sure to select Windows in the upper left corner of Visual Studio Editor, as well as Maui in the upper middle, and Windows in the upper right.  Anything else can lead to unexpected behavior.
+  * If you change compiler options, (Debug, Release, Publish, etc.), You may need to not only clean the solution, but also clean the Maui App, AND force delete the Maui App's /bin and /obj folders.  Then Recompile the Maui App Separately.
 * Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations. Since I'm not officially publishing, I have to "guess" where this directory will end up.
 * If you use the pre-compiled zip, you may get a warning that it could not find the MSIX Package directory.  
 * When you load the Maui App, it will scan your %userprofile%/music, this may take a while.
@@ -54,7 +55,8 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
   * Spend the extra time to use at least a generic repository pattern as discussed in class.
   * Spend the extra time to use MvvM at least to a minimal degree. Some Maui controls are just not designed to work well without it.
   * I did neither of these at first, and I am already regretting it.  On the other side of that, TIME is an issue and I would likely be a week or two behind if I had.
-  * Save plenty of time for publishing and debugging the publishing process if you are going to attempt to publish.  I think I would recommend saving a week just for learning publishing.  It can be, and still is, a nightmare.
+* Before you publish, set aside several days to learn and debug the publishing process.
+  * I think I would recommend saving a week just for learning publishing.  It can be, and still is, a nightmare.
 * If you want cross-platform compatibility, keep at least an 'android' project target enabled at all times. And probably test it once a day.  My pain is your gain.
 * MAUI Debugging is sometimes horribly generic and unhelpful, . . . or worse.
 * Buy a Wholesale ~~Truckload~~ Super Tanker of Salt: 
@@ -261,6 +263,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Publishing you have to keep MSIX package enabled or Visual Studio IDE will not Compile
+  * Once you enable Publishing, even once, afterwards if you change the compiler options, you may have to clean the solution, clean the Maui App, and force delete the Maui App's /bin and /obj folders.  Then Recompile the Maui App Separately.
 * Added ALL keyword.  Mostly Bug testing and minor documentation updates.
 * Third Attempt still has many of the same errors and bugs.  But is semi-stable.
 * Second Attempt to move the project into a new clean framework.  First attempt ended up with the same errors as before, and just turned into a complete disaster again.
