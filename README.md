@@ -28,8 +28,12 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * Compile and Run the Maui App First.  If you do not see the logo image, you need to clean and recompile the Maui App separately. 
 * The App now has an installable .Zip package, if you have any trouble compiling it, you can use the .Zip package instead.
   * [AhMediaPlayer/Packages](https://github.com/cjmet/AhMediaPlayer/tree/main/Packages "AhMediaPlayer/Packages")
-
-
+* MP3s required. If you need some short free MP3s for testing, here are some options: 
+  * [PYC Music Sample - Creative Commons License](https://1drv.ms/f/s!AlJWy_K2TX4okopZHILLEWXty_GUXg?e=SkE939)
+  * https://pycmusic.bandcamp.com/music
+  * https://pixabay.com/music/search/?duration=0-30
+  * https://freemusicarchive.org/home
+  
 
 ## Known Issues and Additional Notes
 * Only Windows is currently supported.
@@ -46,8 +50,6 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * GUI responsiveness suffers to SMB WAN Operations.  Unless you are SMB WANing long distance, this should not be a practical issue.
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
   * I've further isolated the synchronous SMB/OS operations into a sub-task, which has helped, but not entirely alleviated the issue.
-* MP3s required.  
-  * A short private demo for class can be arranged.  But publicly publishing even extremely short samples of audio gets into issues I'd rather avoid.
 
 
 ## Suggestions
