@@ -30,6 +30,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
   * [AhMediaPlayer/Packages](https://github.com/cjmet/AhMediaPlayer/tree/main/Packages "AhMediaPlayer/Packages")
 * MP3s required. If you need some short free MP3s for testing, here are some options: 
   * [PYC Music Sample - Creative Commons License](https://1drv.ms/f/s!AlJWy_K2TX4okopZHILLEWXty_GUXg?e=SkE939)
+  * [Misc Music Samples - Creative Commons License](https://1drv.ms/f/s!AlJWy_K2TX4okophodSgQ2NF90d0mg?e=t1XX8u)
   * https://pycmusic.bandcamp.com/music
   * https://pixabay.com/music/search/?duration=0-30
   * https://freemusicarchive.org/home
@@ -37,7 +38,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 ## Known Issues and Additional Notes
 * Only Windows is currently supported.
-* Compiling the solution as a whole almost always fails to run properly. 
+* Compiling the solution as a whole almost always fails to run properly. Compile Maui First, then the other primary projects.
   * Make sure to select Windows in the upper left corner of Visual Studio Editor, as well as Maui in the upper middle, and Windows in the upper right.  Anything else can lead to unexpected behavior.
   * If you change compiler options, (Debug, Release, Publish, etc.), You may need to not only clean the solution, but also clean the Maui App, AND force delete the Maui App's /bin and /obj folders.  Then Recompile the Maui App Separately.
 * Maui Apps have a virtualized and redirected file system.  This can cause issues with file paths and locations. Since I'm not officially publishing, I have to "guess" where this directory will end up.
