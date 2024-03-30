@@ -23,10 +23,13 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 ## Instructions
 * Requires: Updated Visual Studio 2022, C#12, .Net 8, .Net MAUI.  Anything older than Nov 2023 will definitely not work.
-* You'll Also need: 
+* https://github.com/cjmet/AhMediaPlayer/assets/142361234/653a62ac-2123-4962-9b59-f2d21854083c
+* You'll want to Git Clone AngelHornetLibrary First: 
   * https://github.com/cjmet/AngelHornetLibrary
-* Compile and Run the Maui App First.  If you do not see the logo image, you need to clean and recompile the Maui App separately. 
-* The App now has an installable .Zip package, if you have any trouble compiling it, you can use the .Zip package instead.
+* Then Git Clone AhMediaPlayer.
+* Then Compile and Run the AhMediaPlayer Maui App First.  
+  * If you do not see the logo image, you need to clean and recompile the Maui App separately. 
+* The App now has an installable .Zip package, you can use the .Zip package instead of compiling if you want.
   * [AhMediaPlayer/Packages](https://github.com/cjmet/AhMediaPlayer/tree/main/Packages "AhMediaPlayer/Packages")
 * MP3s required. If you need some short free MP3s for testing, here are some options: 
   * [PYC Music Sample - Creative Commons License](https://1drv.ms/f/s!AlJWy_K2TX4okopZHILLEWXty_GUXg?e=SkE939)
@@ -46,7 +49,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * When you load the Maui App, it will scan your %userprofile%/music, this may take a while.
   * Seconds for my local machine, 25 minutes for a large LAN NAS, and Hours for a WAN NAS.
   * This scan will ***NOT*** follow re-parse points.  This may cause it to miss some redirected paths, particularly with OneDrive.  If that happens you can use the manual scan.
-  * This startup sequence was not an issue after the first scan, even with the large NAS, but it is possible that it could be given the right circumstances.
+  * This startup sequence was not an issue after the first scan, even with the large Library, but it is possible that it could be given the right circumstances.
 * Swagger can only load 250 to 1000 songs, any more and it locks up.  Use Postman and enable larger queries in AhConfig.Constants if you want to test a larger query.  Or just use the App for the larger queries.
 * GUI responsiveness suffers to SMB WAN Operations.  Unless you are SMB WANing long distance, this should not be a practical issue.
   * This is in some cases lagging the entire OS, not just the application.  This is as much an OS issue as programming issue.  
@@ -266,6 +269,11 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Started work in the dev branch on saving playlist order.  Converted Playlist to Playlist : IList, and started updating various logic.
+
+---
+
+Code-Ky Class Project - End Date
 * Publishing you have to keep MSIX package enabled or Visual Studio IDE will not Compile
   * Once you enable Publishing, even once, afterwards if you change the compiler options, you may have to clean the solution, clean the Maui App, and force delete the Maui App's /bin and /obj folders.  Then Recompile the Maui App Separately.
 * Added ALL keyword.  Mostly Bug testing and minor documentation updates.

@@ -33,7 +33,7 @@ namespace DataLibrary
         public async Task<int> UpdatePlaylistAsync(int Id, Playlist playlist)
         {
             if (playlist.Songs == null) playlist.Songs = new List<Song>();
-            // Can NOT use .Include(p => p.songs) in an ExecuteUpdateAsync() call?!?  Probably because it's an attached property, not a direct column?  - cjm
+            // Can NOT use .Include(p => p.songs) in an ExecuteUpdateAsync() call?!?  Probably because it's an attached property, not a direct column?  - cj
             var _results = await _context.Playlists.Where(p => p.Id == Id).ExecuteUpdateAsync(setters => setters
                  .SetProperty(p => p.Name, playlist.Name)
                  .SetProperty(p => p.Description, playlist.Description)

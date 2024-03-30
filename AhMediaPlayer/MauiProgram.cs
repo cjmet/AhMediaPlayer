@@ -48,9 +48,8 @@ namespace AhMediaPlayer
             try
             {
                 var _dbContext = new PlaylistContext();
-                // *** DEBUG ***
-                if (false)                //cj
-                // *** DEBUG ***    
+
+                if (!Const.SaveDatabase)                
                 {
                     LogWarning("WARNING: This is a debug build.  The database will be deleted and recreated.  Change this later. (MauiProgram.cs)");
                     _dbContext.Database.EnsureDeleted();

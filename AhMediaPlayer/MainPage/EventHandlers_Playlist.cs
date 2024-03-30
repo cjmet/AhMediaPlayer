@@ -27,7 +27,7 @@ namespace AhMediaPlayer
             if (playlist != null) LogMsg($"ChangePlaylist: {playlist.Id}   {playlist.Name}   {playlist.Description}");
             else LogWarning("WARN[124] playlist is null");
 
-            await DispatchSonglist(playlist?.Songs); // cjm2
+            await DispatchSonglist(playlist?.Songs); // cjm 
         }
         private Boolean Gui_SaveAs = true;        // SaveAS vs Save vs Edit
         private void SaveAsPlaylistGui_Clicked(object sender, EventArgs e)
@@ -101,7 +101,7 @@ namespace AhMediaPlayer
                         if (_song != null)
                         {
                             var _addSong = _dbContext.Songs.Find(_song.Id);             // EF Core Tracking I Hate You.
-                            if (_addSong != null) _playlist.Songs.Add(_addSong);
+                            if (_addSong != null) _playlist.Add(_addSong); // cjm 
                             if (i++ % 400 == 0) await Task.Delay(1);                    // roughly 25 fps on my machine.
                             if (i % 10000 == 0) LogMsg($"Adding Songs: {i}");
                         }
@@ -215,7 +215,7 @@ namespace AhMediaPlayer
             // Just 30 or 40 songs 'setting already set' was enough to cause a hard lock.
             // ... now to test more extensively.
 
-            LogMsg("Intercepting Add/Remove Song");
+            LogMsg("Intercepting Add/Remove Song"); // cjm 
             var _sender = (Button)sender;
             var _playlist = (Playlist)TestPlaylist.SelectedItem;
             var _playlistId = _playlist.Id;
@@ -301,15 +301,10 @@ namespace AhMediaPlayer
 
             var _dbSong = _dbContext.Songs.Include(s => s.Playlists).Where(s => s.Id == _song.Id).FirstOrDefault();
             var _dbPlaylist = _dbContext.Playlists.Where(p => p.Id == _playlist.Id).FirstOrDefault();
-            if (_song.Star)
+            if (_dbSong != null && _dbPlaylist != null)
             {
-                _dbSong.Playlists.Add(_playlist);
-                if (_playlist.Songs != null) _playlist.Songs.Add(_dbSong);
-            }
-            else
-            {
-                _dbSong.Playlists.Remove(_playlist);
-                if (_playlist.Songs != null) _playlist.Songs.Remove(_dbSong);
+                if (_song.Star) _dbPlaylist.Add(_dbSong);
+                else _dbPlaylist.Remove(_dbSong);
             }
 
             var results = _dbContext.SaveChanges();

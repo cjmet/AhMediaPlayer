@@ -81,7 +81,7 @@ public static class SongEndpoints
         group.MapPut("/{id}", async Task<Results<Ok, NotFound, UnauthorizedHttpResult>> (int id, Song song, ISongRepository
             _repository) =>
         {
-            if (!Const.ApiAllowSongAdmin) return TypedResults.Unauthorized();
+            if (Const.ApiDenySongAdmin) return TypedResults.Unauthorized();
             var result = await _repository.UpdateSongAsync(id, song);
             return result > 0
                 ? TypedResults.Ok()
@@ -94,7 +94,7 @@ public static class SongEndpoints
         // the confusing one again.
         group.MapPost("/", async Task<Results<Created<Song>, BadRequest, UnauthorizedHttpResult>> (Song song, ISongRepository _repository) =>
         {
-            if (!Const.ApiAllowSongAdmin) return TypedResults.Unauthorized();
+            if (Const.ApiDenySongAdmin) return TypedResults.Unauthorized();
             var result = await _repository.AddSongAsync(song);
             return result > 0
                 ? TypedResults.Created($"/api/Song/{song.Id}", song)
@@ -106,7 +106,7 @@ public static class SongEndpoints
 
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound, UnauthorizedHttpResult>> (int id, ISongRepository _repository) =>
         {
-            if (!Const.ApiAllowSongAdmin) return TypedResults.Unauthorized();
+            if (Const.ApiDenySongAdmin) return TypedResults.Unauthorized();
             var result = await _repository.DeleteSongAsync(id);
             return result >= 1
                 ? TypedResults.Ok()

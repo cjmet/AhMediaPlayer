@@ -19,107 +19,117 @@ namespace AhMediaPlayer
             if (Const.UseSongCache) await SongCache(_song, _list, _index);
             else PlaySong(_song, _song.PathName);
         }
-        private async Task DispatchSonglist(List<Song> _songList, string? _searchBy = null)
+        private async Task DispatchSonglist(List<Song> _songList, string? _sortby = null)
         {
             // EF Core I Hate you More!
             // Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
-            LogDebug($"DispatchSongList[202]");
+            LogTrace(true); // cjm 
+            LogDebug($"DispatchSongList[202]: Songs[{_songList.Count}]   Sortby[{_sortby}]");
             if (_songList == null) return;
             var _currentPlaylist = (Playlist)TestPlaylist.SelectedItem;
             int _currentPlaylistId = _currentPlaylist != null ? _currentPlaylist.Id : -1;
-            List<int> _playlistIndices = new List<int>();
-
-            if (_currentPlaylist != null && _currentPlaylistId > 1)
-            {
-                var _dbPlaylist = await _dbContext.Playlists.Where(p => p.Id == _currentPlaylistId).Include(p => p.Songs).FirstOrDefaultAsync();
-                if (_dbPlaylist != null)
-                {
-                    var _dbSonglist = _dbPlaylist?.Songs;  /// cjm2
-                    if (_dbSonglist != null)
-                    {
-                        _playlistIndices = _dbSonglist.Select(s => s.Id).ToList();
-                    }
-                }
-            }
-
-            foreach (var _song in _songList)
-            {
-                if (_song == null) continue;
-                _song.Star = false;
-                if (_song.Id == null) continue;
-                if (_playlistIndices.Contains(_song.Id)) _song.Star = true;
-            }
-            var tmp = _songList.Where(s => s.Star).Count();
-            LogDebug($"Dispatch[231]: {tmp} Songs Selected");
 
             List<vSong> _vSongList = new List<vSong>();
-            foreach (var _song in _songList)
+            var _songListIds = _songList.Select(s => s.Id).ToList();
+
+            List<int> _sortOrderList = new List<int>();  // Current Playlist Sort Order
+            List<int> _starsList = new List<int>();      // Songs on the current Playlist but not in the SortOrder
+            List<int> _appendList = new List<int>();     // Songs not on the current Playlist
+
+            if (_currentPlaylist?.SongIds != null) _sortOrderList = _currentPlaylist.SongIds.ToList();
+            if (_currentPlaylist?.Songs != null) _starsList = _currentPlaylist.Songs.Select(s => s.Id).ToList();    
+            LogTrace($"Dispatch[211]: Playlist[{_currentPlaylistId}]   Sort[{_sortOrderList.Count}]   Star[{_starsList.Count}]   Songs[{_songListIds.Count}]");
+
+            _starsList = _starsList.Intersect(_songListIds).ToList();
+            _appendList = _songListIds.Except(_starsList).ToList();
+            _sortOrderList = _sortOrderList.Intersect(_starsList).ToList();
+            _starsList = _starsList.Except(_sortOrderList).ToList();
+            
+
+            LogTrace($"Dispatch[221]: Playlist[{_currentPlaylistId}]   Sort[{_sortOrderList.Count}]   Star[{_starsList.Count}]   Append[{_appendList.Count}]");
+            foreach (var _id in _sortOrderList)
             {
-                if (_song == null) continue;
+                var _song = _songList.FirstOrDefault(s => s.Id == _id);
+                var _vsong = new vSong(_song);
+                _vsong.Star = true;
+                _vSongList.Add(_vsong);
+            }
+            foreach (var id in _starsList)
+            {
+                var _song = _songList.FirstOrDefault(s => s.Id == id);
+                var _vsong = new vSong(_song);
+                _vsong.Star = true;
+                _vSongList.Add(_vsong);
+            }
+            foreach (var _id in _appendList)
+            {
+                var _song = _songList.FirstOrDefault(s => s.Id == _id);
                 _vSongList.Add(new vSong(_song));
             }
 
             // Sort by ... 
-             {
-                if (_searchBy == null)
+            {
+                if (_sortby == null)
                 {
-                    if (Searchby?.SelectedItem?.ToString() != null) _searchBy = Searchby.SelectedItem.ToString();
-                    else _searchBy = "Any";
+                    if (Searchby?.SelectedItem?.ToString() != null) _sortby = Searchby.SelectedItem.ToString();
+                    else _sortby = "Any";
                 }
-                else if (_searchBy == "Title" || _searchBy == "Any")
+
+                if (_sortby == "Title" )
                 {
                     _vSongList = _vSongList.OrderBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase).ToList();
-                    LogDebug($"Dispatch[241]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[241]: Sorting by {_sortby}");
                 }
-                else if (_searchBy == "Artist") {
+                else if (_sortby == "Artist")
+                {
                     _vSongList = _vSongList
                         .OrderBy(s => s.Artist, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
-                    LogDebug($"Dispatch[243]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[243]: Sorting by {_sortby}");
                 }
-                else if (_searchBy == "Album") {
+                else if (_sortby == "Album")
+                {
                     _vSongList = _vSongList
                         .OrderBy(s => s.Album, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
-                    LogDebug($"Dispatch[245]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[245]: Sorting by {_sortby}");
                 }
-                else if (_searchBy == "Genre") {
+                else if (_sortby == "Genre")
+                {
                     _vSongList = _vSongList
                         .OrderBy(s => s.Genre, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
-                    LogDebug($"Dispatch[247]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[247]: Sorting by {_sortby}");
                 }
-                else if (_searchBy == "Path") {
+                else if (_sortby == "Path")
+                {
                     _vSongList = _vSongList
                         .OrderBy(s => s.PathName, StringComparer.OrdinalIgnoreCase)
                         .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
                         .ToList();
-                    LogDebug($"Dispatch[249]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[249]: Sorting by {_sortby}");
                 }
-                else if (_searchBy == "Playlist")
+                else if (_sortby == "Playlist" || _sortby == "Any")  // IS Playlist 
                 {
-                    _vSongList = _vSongList.Where(s => _playlistIndices.Contains(s.Id)).ToList();
-                    _vSongList = _vSongList
-                        .OrderBy(s => _playlistIndices.IndexOf(s.Id))
-                        .ThenBy(s => s.AlphaTitle, StringComparer.OrdinalIgnoreCase)
-                        .ToList();
-                    LogDebug($"Dispatch[251]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[251]: Sorting by {_sortby}");
                 }
-                else if (_searchBy == "Shuffle")
+                else if (_sortby == "Shuffle")
                 {
-                    LogDebug($"Dispatch[251]: Sorting by {_searchBy}");
+                    LogTrace($"Dispatch[251]: Sorting by {_sortby}");
                 }
             }
             // /Sort
 
             LogDebug($"Dispatching[261]: {_vSongList.Count} Songs");
+
             await this.Dispatcher.DispatchAsync(() =>
             {   // DispatchSonglist()
                 TestSonglist.ItemsSource = _vSongList;
             });
+            LogTrace(false);
 
         }
         private void FilePathDebug_SizeChanged(object sender, EventArgs e)

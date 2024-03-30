@@ -29,7 +29,7 @@ namespace API
         public static void Main(string[] args)
         {
             AhLog.Start((Serilog.Events.LogEventLevel)Const.MinimumLogLevel, "ApiLog.log");
-            if (Const.ApiAllowMusicSearch)
+            if (!Const.ApiDenyMusicSearch)
             {
                 var _privateDbContext = new PlaylistContext();
                 var task = new Task(async () =>
@@ -61,7 +61,7 @@ namespace API
                 .AddIdentityCookies();
             builder.Services.AddAuthorizationBuilder();
 
-            {   // cjm - why did this not work when written the other way like in the Maui App?
+            {   // cj - why did this not work when written the other way like in the Maui App?
                 var _path = AppData.AppDataPath;
                 Directory.CreateDirectory(_path);
                 File.SetAttributes(_path, FileAttributes.Hidden);
@@ -79,7 +79,7 @@ namespace API
             var app = builder.Build();
 
             {
-                // cjm - I'm assuming this doesn't work here because it's before app.run()?
+                // cj - I'm assuming this doesn't work here because it's before app.run()?
                 // var _dbContext = app.Services.GetService<ApiDbContext>();  
                 // _dbContext.Database.EnsureCreated();
             }

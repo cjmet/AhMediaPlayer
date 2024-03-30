@@ -1,0 +1,21 @@
+https://github.com/cjmet/AngelHornetLibrary.git
+
+https://github.com/cjmet/AhMediaPlayer.git
+
+"C:\Users\cjmetcalfe\source\repos\AhMediaPlayer\Const\Constants.cs"
+
+Advanced Search
+IS Path SEARCH Jackson Brodie IS Artist OR Lucinda Williams OR First Aid Kit OR Lucinda Williams OR Iris DeMent OR Lori McKenna OR Cowboy Junkies OR Eliza Gilkyson OR Gillian Welch OR Kris DelmHorst OR Lynn Miles OR Madison Violet OR Mary Gauthier OR Nanci Griffith OR Sarah McLachlan
+
+New List
+Edit List
+Edit Songs
+Remove Songs
+Arrows
+Add Songs Back
+Delete List
+
+Disk Search
+
+
+
