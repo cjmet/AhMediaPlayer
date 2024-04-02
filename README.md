@@ -23,7 +23,7 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 
 ## Instructions
 * Requires: Updated Visual Studio 2022, C#12, .Net 8, .Net MAUI.  Anything older than Nov 2023 will definitely not work.
-* https://github.com/cjmet/AhMediaPlayer/assets/142361234/653a62ac-2123-4962-9b59-f2d21854083c
+* [Clone, Compile, and Demo Video](https://github.com/cjmet/AhMediaPlayer/assets/142361234/653a62ac-2123-4962-9b59-f2d21854083c)
 * You'll want to Git Clone AngelHornetLibrary First: 
   * https://github.com/cjmet/AngelHornetLibrary
 * Then Git Clone AhMediaPlayer.
