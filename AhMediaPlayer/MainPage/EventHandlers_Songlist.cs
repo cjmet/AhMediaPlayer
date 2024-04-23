@@ -23,7 +23,7 @@ namespace AhMediaPlayer
         {
             // EF Core I Hate you More!
             // Horses Mouth.  Get lists directly from db, use those to make the indices and lists and compare.
-            LogTrace(true); // cjm 
+
             LogDebug($"DispatchSongList[202]: Songs[{_songList.Count}]   Sortby[{_sortby}]");
             if (_songList == null) return;
             var _currentPlaylist = (Playlist)TestPlaylist.SelectedItem;
@@ -129,7 +129,7 @@ namespace AhMediaPlayer
             {   // DispatchSonglist()
                 TestSonglist.ItemsSource = _vSongList;
             });
-            LogTrace(false);
+
 
         }
         private void FilePathDebug_SizeChanged(object sender, EventArgs e)
