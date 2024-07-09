@@ -12,6 +12,9 @@ True Detective Expanded Playlist:
 
 Goddess
 	IS Genre Goddess OR Diva IS Artist OR Alanis OR Avril OR Adele OR Swift OR McK or Ashley Mac 
+	
+Sample Goddess
+	?? ALL == Genre ?? Goddess || Diva ==  Genre && Country == Artist || Tori == Album || Pink !! Pele !! Earthquakes !! Native !! sing == Genre && Rock == Title
 
 Avril and Friends
 	IS Artist SEARCH Avril OR Alanis OR Pink OR Hayley OR Michelle Branch OR Gwen Stefani OR Carlton OR Jardine OR Miley OR ParaMore OR Hole OR Aguilera OR PussyCat OR Evanescence OR Pale Waves OR Olivia Rodrigo OR Eilish OR Ashnikko OR IS Genre OR Pop Punk OR Post-Grunge IS Artist NOT Neil Young NOT Butthole NOT Perri 
