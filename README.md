@@ -27,7 +27,9 @@ Code Kentucky is a software development program in Louisville, Kentucky.  The co
 * You'll want to Git Clone AngelHornetLibrary First: 
   * https://github.com/cjmet/AngelHornetLibrary
 * Then Git Clone AhMediaPlayer.
-* Then Compile and Run the AhMediaPlayer Maui App First.  
+* Then Right-Click Build AngelHornetLibrary
+* Then Right-Click Build AhMediaPlayer
+* Then Compile and Run the AhMediaPlayer Maui App.  
   * If you do not see the logo image, you need to clean and recompile the Maui App separately. 
 * The App now has an installable .Zip package, you can use the .Zip package instead of compiling if you want.
   * [AhMediaPlayer/Packages](https://github.com/cjmet/AhMediaPlayer/tree/main/Packages "AhMediaPlayer/Packages")
@@ -269,6 +271,8 @@ Create a music library Web API and simple Media Player
 <br>
 
 ## Dev Blog
+* Moved to a new dev VM and recompiled this as a test. It's a new version of VS Studio as well.  The Project was as difficult as ever to compile.  However, I may have found a better compile method.  It appears to compile more easily if I right-click build AngelHornetLibrary, then right-click build AHMediaPlayer, then select AhMediaPlayer -> WindowsMachine -> Debug&Run_Triangle.
+* The project is mostly archived at this point.
 * Started work in the dev branch on saving playlist order.  Converted Playlist to Playlist : IList, and started updating various logic.
 
 ---
